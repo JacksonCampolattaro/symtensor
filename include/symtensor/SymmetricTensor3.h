@@ -320,12 +320,6 @@ namespace symtensor {
             return (lhs * (1 / rhs));
         }
 
-        // todo: this could be generalized to arbitrary lower-order tensors
-        friend SymmetricTensor3<Order + 1> outerProduct(const SymmetricTensor3<Order> &lhs,
-                                                        const SymmetricTensor3<Order> &rhs) {
-            return SymmetricTensor3<Order + 1>::outerProduct(lhs, rhs);
-        }
-
         friend SymmetricTensor3<Order + 1> outerProduct(const SymmetricTensor3<Order> &lhs,
                                                         const glm::vec3 &rhs) {
             return SymmetricTensor3<Order + 1>::outerProduct(lhs, rhs);
@@ -341,20 +335,6 @@ namespace symtensor {
                                        const glm::vec3 &vector) {
             if constexpr (Order == 2) return tensor * vector;
             else return fullyContract((tensor * vector), vector);
-        }
-
-        static SymmetricTensor3<Order> outerProduct(const SymmetricTensor3<Order - 1> &lhs,
-                                                    const SymmetricTensor3<Order - 1> &rhs) {
-
-            SymmetricTensor3<Order> matrix{};
-            [&]<std::size_t... I>(std::index_sequence<I...>) {
-                ((
-                        matrix.get<lexicographicalIndex<I>()>() =
-                                lhs.template get<(head<lexicographicalIndex<I>()>())>() *
-                                rhs.template get<(tail<lexicographicalIndex<I>()>())>()
-                ), ...);
-            }(std::make_index_sequence<NumValues>());
-            return matrix;
         }
 
         static SymmetricTensor3<Order> outerProduct(const SymmetricTensor3<Order - 1> &lhs,
