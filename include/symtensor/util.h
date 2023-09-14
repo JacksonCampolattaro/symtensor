@@ -29,6 +29,13 @@ namespace symtensor {
         return pascal(D - 1, R);
     }
 
+    template<std::size_t R, typename I>
+    static constexpr int kroneckerDelta(std::array<I, R> dimensionalIndices) {
+        return [&]<std::size_t... i>(std::index_sequence<i...>) {
+            return ((dimensionalIndices[i]) == ...) ? 1 : 0;
+        }(std::make_index_sequence<R>());
+    }
+
     template<typename T, std::size_t N>
     static constexpr auto tail(std::array<T, N> array) {
         if constexpr (N == 0)
@@ -38,29 +45,6 @@ namespace symtensor {
             std::array<T, N - 1> copy{};
             std::copy(array.begin() + 1, array.end(), copy.begin());
             return copy;
-        }
-    }
-
-    template<std::size_t R, typename I>
-    constexpr std::size_t linearIndex(std::array<I, R> dimensionalIndices, std::size_t D, std::size_t lowestIndex = 0) {
-
-        // Base case: a vector has a single index
-        if (R == 1) return static_cast<std::size_t>(dimensionalIndices[0]) - lowestIndex;
-
-        // Ensure the indices are in the canonical order
-        std::sort(dimensionalIndices.begin(), dimensionalIndices.end());
-
-        if (dimensionalIndices[0] == I{lowestIndex}) {
-            // If the first index is X, then we know we are in the first portion of the range,
-            // we can defer to lower-rank indexing
-            return linearIndex(tail(dimensionalIndices), D, lowestIndex);
-
-        } else {
-            // Otherwise, we know that the dimensional index does not contain _any_ Xs,
-            // so we must be in the second portion of the range.
-            return numUniqueValuesInSymmetricTensor(D, R - 1) +
-                   // We can treat our indices as though the dimension is lower, since they don't contain X
-                   linearIndex(dimensionalIndices, D - 1, lowestIndex + 1);
         }
     }
 
