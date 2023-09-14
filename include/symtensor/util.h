@@ -31,9 +31,10 @@ namespace symtensor {
 
     template<std::size_t R, typename I>
     static constexpr int kroneckerDelta(std::array<I, R> dimensionalIndices) {
-        return [&]<std::size_t... i>(std::index_sequence<i...>) {
-            return ((dimensionalIndices[i]) == ...) ? 1 : 0;
-        }(std::make_index_sequence<R>());
+        return std::all_of(
+                dimensionalIndices.begin(), dimensionalIndices.end(),
+                [&](auto i) { return i == dimensionalIndices[0]; }
+        );
     }
 
     template<typename T, std::size_t N>

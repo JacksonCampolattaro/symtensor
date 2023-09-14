@@ -6,6 +6,7 @@
 #include <symtensor/SymmetricTensor3.h>
 #include <symtensor/SymmetricTensorBase.h>
 #include <numeric>
+#include "glm/vec2.hpp"
 
 using namespace symtensor;
 
@@ -123,6 +124,19 @@ TEST_CASE("Member access to a 3x3x3x3 symmetric tensor", "[SymmetricTensor]") {
 
 }
 
+TEST_CASE("Symmetric tensor constructors", "[SymmetricTensor]") {
+
+    CHECK(SymmetricTensor2f<2>::Identity() == SymmetricTensor2f<2>{1, 0, 1});
+    CHECK(SymmetricTensor2f<3>::Identity() == SymmetricTensor2f<3>{1, 0, 0, 1});
+    CHECK(SymmetricTensor2f<4>::Identity() == SymmetricTensor2f<4>{1, 0, 0, 0, 1});
+    CHECK(SymmetricTensor2f<5>::Identity() == SymmetricTensor2f<5>{1, 0, 0, 0, 0, 1});
+
+    CHECK(SymmetricTensor3f<2>::Identity() == SymmetricTensor3f<2>{1, 0, 0, 1, 0, 1});
+    CHECK(SymmetricTensor3f<3>::Identity() == SymmetricTensor3f<3>{1, 0, 0, 0, 0, 0, 1, 0, 0, 1});
+    CHECK(SymmetricTensor3f<4>::Identity() == SymmetricTensor3f<4>{1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1});
+
+}
+
 TEST_CASE("Symmetric tensor comparison", "[SymmetricTensor]") {
 
     SymmetricTensor3f<1> s1a{0.0f, 1.0f, 2.0f};
@@ -168,7 +182,7 @@ TEST_CASE("Symmetric tensor arithmetic", "[SymmetricTensor]") {
             SymmetricTensor3f < 2 > ::Identity()
     };
     auto identity5 = std::reduce(identities.begin(), identities.end());
-    CHECK(identity5 == SymmetricTensor3f < 2 > ::Identity() * 5);
+    CHECK(identity5 == SymmetricTensor3f < 2 > ::Identity() * 5.0f);
 }
 
 
@@ -232,29 +246,33 @@ TEST_CASE("Symmetric tensor index format conversion", "[SymmetricTensor]") {
 
 TEST_CASE("Symmetric tensor initialization with an expression", "[SymmetricTensor]") {
 
-    using enum SymmetricTensor3f<3>::Index;
+    using
+    enum SymmetricTensor3f<3>::Index;
 
-    auto ones = SymmetricTensor3f<3>::NullaryExpression([](auto _) {
+    auto ones = SymmetricTensor3f < 3 > ::NullaryExpression([](auto _) {
         return 1.0f;
     });
-    REQUIRE(ones == SymmetricTensor3f<3>{1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f});
+    REQUIRE(ones == SymmetricTensor3f < 3 > {1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f});
 
     int i = 0;
-    auto sequence = SymmetricTensor3f<3>::NullaryExpression([&](auto _) {
+    auto sequence = SymmetricTensor3f < 3 > ::NullaryExpression([&](auto _) {
         return i++;
     });
-    REQUIRE(sequence == SymmetricTensor3f<3>{0.0f, 1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f, 7.0f, 8.0f, 9.0f});
+    REQUIRE(sequence == SymmetricTensor3f < 3 > {0.0f, 1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f, 7.0f, 8.0f, 9.0f});
 
-    auto sumOfDimensions = SymmetricTensor3f<3>::NullaryExpression([&](auto dimensions) {
+    auto sumOfDimensions = SymmetricTensor3f < 3 > ::NullaryExpression([&](auto dimensions) {
         return (float) dimensions[0] + (float) dimensions[1] + (float) dimensions[2];
     });
-    REQUIRE(sumOfDimensions == SymmetricTensor3f<3>{0.0f, 1.0f, 2.0f, 2.0f, 3.0f, 4.0f, 3.0f, 4.0f, 5.0f, 6.0f});
+    REQUIRE(sumOfDimensions == SymmetricTensor3f < 3 > {0.0f, 1.0f, 2.0f, 2.0f, 3.0f, 4.0f, 3.0f, 4.0f, 5.0f, 6.0f});
 
 }
 
 TEST_CASE("Symmetric tensor product with a vector", "[SymmetricTensor]") {
 
-    glm::vec3 vector{0, 1, 2};
+    REQUIRE(SymmetricTensor2f<2>::Identity() * glm::vec2{1, 2} ==
+            SymmetricTensor2f<3>{1.0f, 0.0f, 1.0f, 2.0f});
 
+    REQUIRE(SymmetricTensor3f<2>::Identity() * glm::vec3{0, 1, 2} ==
+            SymmetricTensor3f<3>{0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 2.0f});
     // todo
 }

@@ -2,6 +2,7 @@
 #define SYMTENSOR_SYMMETRICTENSORBASE_H
 
 #include "util.h"
+#include "concepts.h"
 #include "Index.h"
 
 #include <array>
@@ -33,7 +34,7 @@ namespace symtensor {
 
         SymmetricTensorBase() = default;
 
-        explicit SymmetricTensorBase(auto ...s) : _data{s...} {}
+        explicit SymmetricTensorBase(auto ...s) : _data{static_cast<S>(s)...} {}
 
         static constexpr Self Identity() {
             Self result{};
@@ -95,10 +96,14 @@ namespace symtensor {
 
     public: // tensor-vector operations
 
-        template<typename Vector>
-        SymmetricTensorBase<S, D, R + 1, I> operator*(const Vector &vector) {
-
+        template<indexable Vector>
+        friend auto operator*(const Self &tensor, const Vector &vector) {
+            // fixme: this isn't correct
+            return SymmetricTensorBase<S, D, R + 1, I>::NullaryExpression([&](auto indices) {
+                return vector[static_cast<std::size_t>(indices[0])] + tensor[tail(indices)];
+            });
         }
+
 
     public:
 
@@ -125,6 +130,9 @@ namespace symtensor {
         }
 
     };
+
+    template<std::size_t R>
+    using SymmetricTensor2f = SymmetricTensorBase<float, 2, R>;
 
     template<std::size_t R>
     using SymmetricTensor3f = SymmetricTensorBase<float, 3, R>;
