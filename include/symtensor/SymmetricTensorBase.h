@@ -32,38 +32,32 @@ namespace symtensor {
 
     public:
 
-        SymmetricTensorBase() = default;
+        constexpr SymmetricTensorBase() = default;
 
-        explicit SymmetricTensorBase(auto ...s) : _data{static_cast<S>(s)...} {}
+        explicit constexpr SymmetricTensorBase(auto ...s) : _data{static_cast<S>(s)...} {}
 
-        static constexpr Self Identity() {
-            Self result{};
-            [&]<std::size_t... i>(std::index_sequence<i...>) {
-                ((result._data[i] = kroneckerDelta(dimensionalIndices(i))), ...);
-            }(std::make_index_sequence<NumUniqueValues>());
-            return result;
+        static consteval Self Identity() {
+            return NullaryExpression([](auto indices) { return kroneckerDelta(indices); });
         }
 
         template<typename F>
         static constexpr Self NullaryExpression(const F &function) {
             Self result{};
-            [&]<std::size_t... i>(std::index_sequence<i...>) {
-                ((result._data[i] = function(dimensionalIndices(i))), ...);
-            }(std::make_index_sequence<NumUniqueValues>());
+            for (int i = 0; i < NumUniqueValues; ++i) {
+                result._data[i] = function(dimensionalIndices(i));
+            }
             return result;
         }
 
     public:
 
         constexpr const Scalar &operator[](std::array<Index, R> dimensionalIndices) const {
-            auto i = flatIndex(dimensionalIndices);
-            assert(i < _data.size());
             return _data[flatIndex(dimensionalIndices)];
         }
 
         constexpr const Scalar &operator[](auto flatIndex) const {
             static_assert(std::is_integral_v<decltype(flatIndex)>);
-            return _data(static_cast<std::size_t>(flatIndex));
+            return _data[static_cast<std::size_t>(flatIndex)];
         }
 
     public: // tensor-scalar operators

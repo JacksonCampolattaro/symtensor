@@ -15,24 +15,24 @@ TEST_CASE("Member access to a 3x3 symmetric tensor", "[SymmetricTensor]") {
     using Quadrupole = SymmetricTensor3f<2>;
 
     // Construct a quadrupole with known values
-    Quadrupole q{0, 1, 2, 3, 4, 5};
+    constexpr Quadrupole q{0, 1, 2, 3, 4, 5};
     using
     enum Quadrupole::Index;
 
-    CHECK(q[{X, X}] == 0);
+    static_assert(q[{X, X}] == 0);
 
-    CHECK(q[{X, Y}] == 1);
-    CHECK(q[{Y, X}] == 1);
+    static_assert(q[{X, Y}] == 1);
+    static_assert(q[{Y, X}] == 1);
 
-    CHECK(q[{X, Z}] == 2);
-    CHECK(q[{Z, X}] == 2);
+    static_assert(q[{X, Z}] == 2);
+    static_assert(q[{Z, X}] == 2);
 
-    CHECK(q[{Y, Y}] == 3);
+    static_assert(q[{Y, Y}] == 3);
 
-    CHECK(q[{Y, Z}] == 4);
-    CHECK(q[{Z, Y}] == 4);
+    static_assert(q[{Y, Z}] == 4);
+    static_assert(q[{Z, Y}] == 4);
 
-    CHECK(q[{Z, Z}] == 5);
+    static_assert(q[{Z, Z}] == 5);
 }
 
 TEST_CASE("Member access to a 3x3x3 symmetric tensor", "[SymmetricTensor]") {
@@ -274,5 +274,4 @@ TEST_CASE("Symmetric tensor product with a vector", "[SymmetricTensor]") {
 
     REQUIRE(SymmetricTensor3f<2>::Identity() * glm::vec3{0, 1, 2} ==
             SymmetricTensor3f<3>{0, 0, 0, 0, 0, 0, 1, 0, 1, 2});
-    // todo
 }

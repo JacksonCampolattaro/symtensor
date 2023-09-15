@@ -7,6 +7,8 @@
 #include <functional>
 #include <cassert>
 
+#include "concepts.h"
+
 namespace symtensor {
 
     constexpr std::size_t pow(std::size_t V, std::size_t P) {
@@ -48,6 +50,13 @@ namespace symtensor {
             return copy;
         }
     }
+
+    template<typename T, std::size_t N, typename Tuple>
+    constexpr std::array<T, N> to_array(Tuple &&tuple) {
+        return std::apply([](auto &&...v) {
+            return std::array{static_cast<T>(std::forward<decltype(v)>(v)) ...};
+        }, std::forward<Tuple>(tuple));
+    };
 
 }
 

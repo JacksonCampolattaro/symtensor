@@ -6,6 +6,7 @@ project(symtensor CXX)
 
 # Options
 option(SYMTENSOR_BUILD_TESTS "Build tests" ON)
+option(SYMTENSOR_BUILD_BENCHMARKS "Build benchmarks" ON)
 
 # Dependencies
 find_package(glm QUIET) # fixme: version specification doesn't seem to work in CMake 3.24!
@@ -30,4 +31,7 @@ add_library(symtensor::symtensor ALIAS symtensor)
 # Build tests if requested
 if (SYMTENSOR_BUILD_TESTS)
     add_subdirectory(tests)
+endif ()
+if (SYMTENSOR_BUILD_BENCHMARKS)
+    add_subdirectory(benchmarks)
 endif ()
