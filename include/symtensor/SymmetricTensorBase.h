@@ -98,9 +98,8 @@ namespace symtensor {
 
         template<indexable Vector>
         friend auto operator*(const Self &tensor, const Vector &vector) {
-            // fixme: this isn't correct
             return SymmetricTensorBase<S, D, R + 1, I>::NullaryExpression([&](auto indices) {
-                return vector[static_cast<std::size_t>(indices[0])] + tensor[tail(indices)];
+                return vector[static_cast<std::size_t>(indices[0])] * tensor[tail(indices)];
             });
         }
 

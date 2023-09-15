@@ -1,5 +1,5 @@
 
-cmake_minimum_required(VERSION 3.11)
+cmake_minimum_required(VERSION 3.24)
 set(CMAKE_CXX_STANDARD 20)
 
 project(symtensor CXX)
@@ -8,11 +8,11 @@ project(symtensor CXX)
 option(SYMTENSOR_BUILD_TESTS "Build tests" ON)
 
 # Dependencies
-find_package(glm 0.9.9.8 QUIET)
+find_package(glm QUIET) # fixme: version specification doesn't seem to work in CMake 3.24!
 if (glm_FOUND)
     message(STATUS "Using a packaged version of glm")
 else ()
-    message(STATUS "glm (>0.9) could not be found, downloading instead")
+    message(STATUS "glm could not be found, downloading instead")
     include(FetchContent)
     FetchContent_Declare(
             glm

@@ -15,24 +15,24 @@ TEST_CASE("Member access to a 3x3 symmetric tensor", "[SymmetricTensor]") {
     using Quadrupole = SymmetricTensor3f<2>;
 
     // Construct a quadrupole with known values
-    Quadrupole q{0.0f, 1.0f, 2.0f, 3.0f, 4.0f, 5.0f};
+    Quadrupole q{0, 1, 2, 3, 4, 5};
     using
     enum Quadrupole::Index;
 
-    CHECK(q[{X, X}] == 0.0f);
+    CHECK(q[{X, X}] == 0);
 
-    CHECK(q[{X, Y}] == 1.0f);
-    CHECK(q[{Y, X}] == 1.0f);
+    CHECK(q[{X, Y}] == 1);
+    CHECK(q[{Y, X}] == 1);
 
-    CHECK(q[{X, Z}] == 2.0f);
-    CHECK(q[{Z, X}] == 2.0f);
+    CHECK(q[{X, Z}] == 2);
+    CHECK(q[{Z, X}] == 2);
 
-    CHECK(q[{Y, Y}] == 3.0f);
+    CHECK(q[{Y, Y}] == 3);
 
-    CHECK(q[{Y, Z}] == 4.0f);
-    CHECK(q[{Z, Y}] == 4.0f);
+    CHECK(q[{Y, Z}] == 4);
+    CHECK(q[{Z, Y}] == 4);
 
-    CHECK(q[{Z, Z}] == 5.0f);
+    CHECK(q[{Z, Z}] == 5);
 }
 
 TEST_CASE("Member access to a 3x3x3 symmetric tensor", "[SymmetricTensor]") {
@@ -40,36 +40,36 @@ TEST_CASE("Member access to a 3x3x3 symmetric tensor", "[SymmetricTensor]") {
     using Octupole = SymmetricTensor3f<3>;
 
     // Construct a quadrupole with known values
-    Octupole o{0.0f, 1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f, 7.0f, 8.0f, 9.0f};
+    Octupole o{0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
     using
     enum Octupole::Index;
 
-    CHECK(o[{X, X, X}] == 0.0f);
+    CHECK(o[{X, X, X}] == 0);
 
-    CHECK(o[{X, X, Y}] == 1.0f);
-    CHECK(o[{X, Y, X}] == 1.0f);
+    CHECK(o[{X, X, Y}] == 1);
+    CHECK(o[{X, Y, X}] == 1);
 
-    CHECK(o[{X, X, Z}] == 2.0f);
-    CHECK(o[{X, Z, X}] == 2.0f);
+    CHECK(o[{X, X, Z}] == 2);
+    CHECK(o[{X, Z, X}] == 2);
 
-    CHECK(o[{X, Y, Y}] == 3.0f);
-    CHECK(o[{Y, X, Y}] == 3.0f);
+    CHECK(o[{X, Y, Y}] == 3);
+    CHECK(o[{Y, X, Y}] == 3);
 
-    CHECK(o[{X, Y, Z}] == 4.0f);
-    CHECK(o[{X, Z, Y}] == 4.0f);
+    CHECK(o[{X, Y, Z}] == 4);
+    CHECK(o[{X, Z, Y}] == 4);
 
-    CHECK(o[{X, Z, Z}] == 5.0f);
-    CHECK(o[{Z, X, Z}] == 5.0f);
+    CHECK(o[{X, Z, Z}] == 5);
+    CHECK(o[{Z, X, Z}] == 5);
 
-    CHECK(o[{Y, Y, Y}] == 6.0f);
+    CHECK(o[{Y, Y, Y}] == 6);
 
-    CHECK(o[{Y, Y, Z}] == 7.0f);
-    CHECK(o[{Y, Z, Y}] == 7.0f);
+    CHECK(o[{Y, Y, Z}] == 7);
+    CHECK(o[{Y, Z, Y}] == 7);
 
-    CHECK(o[{Y, Z, Z}] == 8.0f);
-    CHECK(o[{Z, Y, Z}] == 8.0f);
+    CHECK(o[{Y, Z, Z}] == 8);
+    CHECK(o[{Z, Y, Z}] == 8);
 
-    CHECK(o[{Z, Z, Z}] == 9.0f);
+    CHECK(o[{Z, Z, Z}] == 9);
 
 }
 
@@ -78,49 +78,49 @@ TEST_CASE("Member access to a 3x3x3x3 symmetric tensor", "[SymmetricTensor]") {
     using Hexadecupole = SymmetricTensor3f<4>;
 
     // Construct a quadrupole with known values
-    Hexadecupole h{0.0f, 1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f, 7.0f, 8.0f, 9.0f, 10.0f, 11.0f, 12.0f, 13.0f, 14.0f};
+    Hexadecupole h{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14};
     using
     enum Hexadecupole::Index;
 
-    CHECK(h[{X, X, X, X}] == 0.0f);
+    CHECK(h[{X, X, X, X}] == 0);
 
-    CHECK(h[{X, X, X, Y}] == 1.0f);
-    CHECK(h[{X, X, Y, X}] == 1.0f);
+    CHECK(h[{X, X, X, Y}] == 1);
+    CHECK(h[{X, X, Y, X}] == 1);
 
-    CHECK(h[{X, X, X, Z}] == 2.0f);
-    CHECK(h[{X, X, Z, X}] == 2.0f);
+    CHECK(h[{X, X, X, Z}] == 2);
+    CHECK(h[{X, X, Z, X}] == 2);
 
-    CHECK(h[{X, X, Y, Y}] == 3.0f);
-    CHECK(h[{X, Y, X, Y}] == 3.0f);
+    CHECK(h[{X, X, Y, Y}] == 3);
+    CHECK(h[{X, Y, X, Y}] == 3);
 
-    CHECK(h[{X, X, Y, Z}] == 4.0f);
-    CHECK(h[{X, X, Z, Y}] == 4.0f);
+    CHECK(h[{X, X, Y, Z}] == 4);
+    CHECK(h[{X, X, Z, Y}] == 4);
 
-    CHECK(h[{X, X, Z, Z}] == 5.0f);
-    CHECK(h[{X, Z, X, Z}] == 5.0f);
+    CHECK(h[{X, X, Z, Z}] == 5);
+    CHECK(h[{X, Z, X, Z}] == 5);
 
-    CHECK(h[{X, Y, Y, Y}] == 6.0f);
+    CHECK(h[{X, Y, Y, Y}] == 6);
 
-    CHECK(h[{X, Y, Y, Z}] == 7.0f);
-    CHECK(h[{X, Y, Z, Y}] == 7.0f);
+    CHECK(h[{X, Y, Y, Z}] == 7);
+    CHECK(h[{X, Y, Z, Y}] == 7);
 
-    CHECK(h[{X, Y, Z, Z}] == 8.0f);
-    CHECK(h[{X, Z, Y, Z}] == 8.0f);
+    CHECK(h[{X, Y, Z, Z}] == 8);
+    CHECK(h[{X, Z, Y, Z}] == 8);
 
-    CHECK(h[{X, Z, Z, Z}] == 9.0f);
+    CHECK(h[{X, Z, Z, Z}] == 9);
 
-    CHECK(h[{Y, Y, Y, Y}] == 10.0f);
+    CHECK(h[{Y, Y, Y, Y}] == 10);
 
-    CHECK(h[{Y, Y, Y, Z}] == 11.0f);
-    CHECK(h[{Y, Y, Z, Y}] == 11.0f);
+    CHECK(h[{Y, Y, Y, Z}] == 11);
+    CHECK(h[{Y, Y, Z, Y}] == 11);
 
-    CHECK(h[{Y, Y, Z, Z}] == 12.0f);
-    CHECK(h[{Y, Z, Y, Z}] == 12.0f);
+    CHECK(h[{Y, Y, Z, Z}] == 12);
+    CHECK(h[{Y, Z, Y, Z}] == 12);
 
-    CHECK(h[{Y, Z, Z, Z}] == 13.0f);
-    CHECK(h[{Z, Y, Z, Z}] == 13.0f);
+    CHECK(h[{Y, Z, Z, Z}] == 13);
+    CHECK(h[{Z, Y, Z, Z}] == 13);
 
-    CHECK(h[{Z, Z, Z, Z}] == 14.0f);
+    CHECK(h[{Z, Z, Z, Z}] == 14);
 
 }
 
@@ -139,17 +139,17 @@ TEST_CASE("Symmetric tensor constructors", "[SymmetricTensor]") {
 
 TEST_CASE("Symmetric tensor comparison", "[SymmetricTensor]") {
 
-    SymmetricTensor3f<1> s1a{0.0f, 1.0f, 2.0f};
+    SymmetricTensor3f<1> s1a{0, 1, 2};
     SymmetricTensor3f<1> s1b{};
     CHECK(s1a == s1a);
     CHECK(s1a != s1b);
 
-    SymmetricTensor3f<2> s2a{0.0f, 1.0f, 2.0f, 3.0f, 4.0f, 5.0f};
+    SymmetricTensor3f<2> s2a{0, 1, 2, 3, 4, 5};
     SymmetricTensor3f<2> s2b{};
     CHECK(s2a == s2a);
     CHECK(s2a != s2b);
 
-    SymmetricTensor3f<3> s3a{0.0f, 1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f, 7.0f, 8.0f, 9.0f};
+    SymmetricTensor3f<3> s3a{0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
     SymmetricTensor3f<3> s3b{};
     CHECK(s3a == s3a);
     CHECK(s3a != s3b);
@@ -161,12 +161,12 @@ TEST_CASE("Symmetric tensor arithmetic", "[SymmetricTensor]") {
     using
     enum SymmetricTensor3f<3>::Index;
 
-    SymmetricTensor3f<3> s3a{0.0f, 1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f, 7.0f, 8.0f, 9.0f};
+    SymmetricTensor3f<3> s3a{0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
     SymmetricTensor3f<3> s3b = s3a + s3a;
     SymmetricTensor3f<3> s3c = s3a + s3b;
 
-    CHECK(s3b[{X, X, Y}] == 2.0f);
-    CHECK(s3c[{X, X, Y}] == 3.0f);
+    CHECK(s3b[{X, X, Y}] == 2);
+    CHECK(s3c[{X, X, Y}] == 3);
 
     s3c -= s3b;
     CHECK(s3c == s3a);
@@ -182,7 +182,7 @@ TEST_CASE("Symmetric tensor arithmetic", "[SymmetricTensor]") {
             SymmetricTensor3f < 2 > ::Identity()
     };
     auto identity5 = std::reduce(identities.begin(), identities.end());
-    CHECK(identity5 == SymmetricTensor3f < 2 > ::Identity() * 5.0f);
+    CHECK(identity5 == SymmetricTensor3f < 2 > ::Identity() * 5);
 }
 
 
@@ -250,29 +250,29 @@ TEST_CASE("Symmetric tensor initialization with an expression", "[SymmetricTenso
     enum SymmetricTensor3f<3>::Index;
 
     auto ones = SymmetricTensor3f < 3 > ::NullaryExpression([](auto _) {
-        return 1.0f;
+        return 1;
     });
-    REQUIRE(ones == SymmetricTensor3f < 3 > {1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f});
+    REQUIRE(ones == SymmetricTensor3f < 3 > {1, 1, 1, 1, 1, 1, 1, 1, 1, 1});
 
     int i = 0;
     auto sequence = SymmetricTensor3f < 3 > ::NullaryExpression([&](auto _) {
         return i++;
     });
-    REQUIRE(sequence == SymmetricTensor3f < 3 > {0.0f, 1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f, 7.0f, 8.0f, 9.0f});
+    REQUIRE(sequence == SymmetricTensor3f < 3 > {0, 1, 2, 3, 4, 5, 6, 7, 8, 9});
 
     auto sumOfDimensions = SymmetricTensor3f < 3 > ::NullaryExpression([&](auto dimensions) {
         return (float) dimensions[0] + (float) dimensions[1] + (float) dimensions[2];
     });
-    REQUIRE(sumOfDimensions == SymmetricTensor3f < 3 > {0.0f, 1.0f, 2.0f, 2.0f, 3.0f, 4.0f, 3.0f, 4.0f, 5.0f, 6.0f});
+    REQUIRE(sumOfDimensions == SymmetricTensor3f < 3 > {0, 1, 2, 2, 3, 4, 3, 4, 5, 6});
 
 }
 
 TEST_CASE("Symmetric tensor product with a vector", "[SymmetricTensor]") {
 
     REQUIRE(SymmetricTensor2f<2>::Identity() * glm::vec2{1, 2} ==
-            SymmetricTensor2f<3>{1.0f, 0.0f, 1.0f, 2.0f});
+            SymmetricTensor2f<3>{1, 0, 1, 2});
 
     REQUIRE(SymmetricTensor3f<2>::Identity() * glm::vec3{0, 1, 2} ==
-            SymmetricTensor3f<3>{0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 2.0f});
+            SymmetricTensor3f<3>{0, 0, 0, 0, 0, 0, 1, 0, 1, 2});
     // todo
 }
