@@ -5,6 +5,7 @@
 #include <array>
 #include <algorithm>
 #include <iterator>
+#include <span>
 
 namespace symtensor {
 
@@ -64,7 +65,7 @@ namespace symtensor {
     namespace {
 
         template<typename I>
-        constexpr void recursiveDimensionalIndices(
+        inline constexpr void recursiveDimensionalIndices(
                 const std::size_t &flatIndex,
                 std::size_t D,
                 std::span<I, 1> indices,
@@ -75,7 +76,7 @@ namespace symtensor {
         }
 
         template<typename I, std::size_t R>
-        constexpr void recursiveDimensionalIndices(
+        inline constexpr void recursiveDimensionalIndices(
                 const std::size_t &flatIndex,
                 std::size_t D,
                 std::span<I, R> indices,
@@ -109,7 +110,7 @@ namespace symtensor {
     }
 
     template<std::size_t R, typename I>
-    constexpr std::array<I, R> dimensionalIndices(
+    inline constexpr std::array<I, R> dimensionalIndices(
             const std::size_t &flatIndex,
             std::size_t D,
             std::size_t lowestIndex = 0
@@ -122,7 +123,7 @@ namespace symtensor {
     }
 
     template<std::size_t R, typename I>
-    constexpr std::size_t flatIndex(
+    inline constexpr std::size_t flatIndex(
             std::array<I, R> dimensionalIndices,
             std::size_t D,
             std::size_t lowestIndex = 0

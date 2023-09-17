@@ -25,14 +25,10 @@ namespace symtensor {
 
         using Index = I;
 
-    private:
+    public:
 
         // todo: this could provided by a CRTP type
         std::array<Scalar, NumUniqueValues> _data{0};
-
-    public:
-
-        constexpr SymmetricTensorBase() = default;
 
         explicit constexpr SymmetricTensorBase(auto ...s) : _data{static_cast<S>(s)...} {}
 
@@ -51,11 +47,22 @@ namespace symtensor {
 
     public:
 
-        constexpr const Scalar &operator[](std::array<Index, R> dimensionalIndices) const {
+        inline constexpr const Scalar &operator[](const std::array<Index, R> &dimensionalIndices) const {
             return _data[flatIndex(dimensionalIndices)];
         }
 
-        constexpr const Scalar &operator[](auto flatIndex) const {
+        template<auto... Indices>
+        inline constexpr const Scalar &at() const {
+            return _data[flatIndex<Indices...>()];
+        }
+
+        template<typename Integer, Integer... Indices>
+        inline constexpr const Scalar &operator[](std::integer_sequence<Integer, Indices...>) const {
+            static_assert(std::is_integral_v<Integer>);
+            return _data[flatIndex({Indices...})];
+        }
+
+        inline constexpr const Scalar &operator[](auto flatIndex) const {
             static_assert(std::is_integral_v<decltype(flatIndex)>);
             return _data[static_cast<std::size_t>(flatIndex)];
         }
@@ -104,11 +111,22 @@ namespace symtensor {
 
     public:
 
-        static constexpr std::size_t flatIndex(std::array<I, R> dimensionalIndices) {
-            return symtensor::flatIndex(dimensionalIndices, D);
+        template<auto... Indices>
+        static inline consteval std::size_t flatIndex() {
+            return flatIndex({static_cast<Index>(Indices)...});
         }
 
-        static constexpr std::array<I, R> dimensionalIndices(std::size_t flatIndex) {
+        static inline constexpr std::size_t flatIndex(std::array<I, R> indices) {
+            //return symtensor::flatIndex(indices, D);
+            return [&]<std::size_t... i>(auto) {
+                return as_lookup_table<
+                        decltype([](std::array<I, R> ind) consteval { return symtensor::flatIndex(ind, D); }),
+                        dimensionalIndices(i)...
+                >(indices);
+            }(std::make_index_sequence<NumUniqueValues>());
+        }
+
+        static inline constexpr std::array<I, R> dimensionalIndices(std::size_t flatIndex) {
             return symtensor::dimensionalIndices<R, I>(flatIndex, D);
         }
 

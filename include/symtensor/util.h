@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <functional>
 #include <cassert>
+#include <type_traits>
 
 #include "concepts.h"
 
@@ -56,7 +57,18 @@ namespace symtensor {
         return std::apply([](auto &&...v) {
             return std::array{static_cast<T>(std::forward<decltype(v)>(v)) ...};
         }, std::forward<Tuple>(tuple));
-    };
+    }
+
+    template<typename Function, typename Arg, Arg ...PossibleArgs>
+    constexpr auto as_lookup_table(Arg arg, Function function = {}) {
+        using Result = std::invoke_result_t<Function, Arg>;
+        Result result{};
+        ([&](){
+            if (arg == PossibleArgs)
+                result = function(PossibleArgs);
+        }(), ...);
+        return result;
+    }
 
 }
 
