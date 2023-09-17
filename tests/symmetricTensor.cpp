@@ -19,20 +19,20 @@ TEST_CASE("Member access to a 3x3 symmetric tensor", "[SymmetricTensor]") {
     using
     enum Quadrupole::Index;
 
-    static_assert(q[{X, X}] == 0);
+    CHECK(q[{X, X}] == 0);
 
-    static_assert(q[{X, Y}] == 1);
-    static_assert(q[{Y, X}] == 1);
+    CHECK(q[{X, Y}] == 1);
+    CHECK(q[{Y, X}] == 1);
 
-    static_assert(q[{X, Z}] == 2);
-    static_assert(q[{Z, X}] == 2);
+    CHECK(q[{X, Z}] == 2);
+    CHECK(q[{Z, X}] == 2);
 
-    static_assert(q[{Y, Y}] == 3);
+    CHECK(q[{Y, Y}] == 3);
 
-    static_assert(q[{Y, Z}] == 4);
-    static_assert(q[{Z, Y}] == 4);
+    CHECK(q[{Y, Z}] == 4);
+    CHECK(q[{Z, Y}] == 4);
 
-    static_assert(q[{Z, Z}] == 5);
+    CHECK(q[{Z, Z}] == 5);
 }
 
 TEST_CASE("Member access to a 3x3x3 symmetric tensor", "[SymmetricTensor]") {

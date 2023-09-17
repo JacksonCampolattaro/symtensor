@@ -83,3 +83,51 @@ TEST_CASE("benchmark: Member access", "[SymmetricTensor]") {
                     { return st3x3x3x3x3[0] + st3x3x3x3x3[4] + st3x3x3x3x3[4]; };
     }
 }
+
+
+TEST_CASE("benchmark: Tensor-vector multiplication", "[SymmetricTensor]") {
+
+//    {
+//
+//        auto multiply = [](const SymmetricTensor2f<1> &a, const SymmetricTensor2f<1> &b) {
+//            SymmetricTensor2f<2> result;
+//            for (int i = 0; i < 2; ++i) {
+//                for (int j = 0; j <= i; ++j) {
+//                    result[{SymmetricTensor2f<2>::Index(i), SymmetricTensor2f<2>::Index(j)}] = a[i] * b[j];
+//                }
+//            }
+//            return result;
+//        };
+//        SymmetricTensor2f<1> a{1, 2};
+//        SymmetricTensor2f<1> b{3, 4};
+//        BENCHMARK("st2x2 = v2 * v2") { return (a * b); };
+//        BENCHMARK("st2x2 = multiply(v2, v2)") { return multiply(a, b)[0]; };
+//    }
+
+
+    {
+
+        auto multiply = [](const SymmetricTensor3f<3> &a, const SymmetricTensor3f<1> &b) {
+            SymmetricTensor3f<4> result;
+            using Index = SymmetricTensor3f<4>::Index;
+            for (int i = 0; i < 3; ++i) {
+                for (int j = 0; j < 3; ++j) {
+                    for (int k = 0; k < 3; ++k) {
+                        for (int l = 0; l < 3; ++l) {
+                            result[{Index(i), Index(j), Index(k), Index(l)}] =
+                                    (a[{Index(i), Index(j), Index(k)}] * b[l]);
+                        }
+
+                    }
+                }
+            }
+            return result;
+        };
+        SymmetricTensor3f<3> a{0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+        SymmetricTensor3f<1> b{3, 4, 5};
+        SymmetricTensor3f<4> result;
+        REQUIRE(a * b == multiply(a, b));
+        BENCHMARK("st3x3x3x3 = vt3x3x3 * v3") { return result = (a * b); };
+        BENCHMARK("st3x3x3x3 = multiply(vt3x3x3, v3)") { return result = multiply(a, b); };
+    }
+}

@@ -112,8 +112,7 @@ namespace symtensor {
     template<std::size_t R, typename I>
     inline constexpr std::array<I, R> dimensionalIndices(
             const std::size_t &flatIndex,
-            std::size_t D,
-            std::size_t lowestIndex = 0
+            std::size_t D
     ) {
         assert(flatIndex < numUniqueValuesInSymmetricTensor(D, R));
 
@@ -149,6 +148,40 @@ namespace symtensor {
         }
     }
 
+    namespace {
+
+        template<typename I>
+        inline constexpr void recursiveLexicographicalIndices(
+                const std::size_t &linearIndex,
+                std::size_t D,
+                std::span<I, 1> indices
+        ) {
+            // Base case: a vector's flat index is the same as its lexicographical index
+            indices[0] = static_cast<I>(linearIndex);
+        }
+
+        template<typename I, std::size_t R>
+        inline constexpr void recursiveLexicographicalIndices(
+                const std::size_t &linearIndex,
+                std::size_t D,
+                std::span<I, R> indices
+        ) {
+
+            std::size_t topIndex = linearIndex % D;
+            std::size_t lowerLinearIndex = (linearIndex - topIndex) / D;
+
+            indices.back() = I(topIndex);
+            recursiveLexicographicalIndices(lowerLinearIndex, D, std::span<I, R-1>{indices.begin(), indices.end() - 1});
+        }
+    }
+
+    template<std::size_t R, typename I>
+    static inline constexpr std::array<I, R> lexicographicalIndices(std::size_t linearIndex, std::size_t D) {
+        //static_assert(LinearIndex < NumValues, "Lexicographical index is out of bounds");
+        std::array<I, R> indices{};
+        recursiveLexicographicalIndices(linearIndex, D, std::span<I, R>{indices.begin(), indices.end()});
+        return indices;
+    }
 
 }
 

@@ -37,8 +37,11 @@ namespace symtensor {
         }
 
         template<typename F>
-        static constexpr Self NullaryExpression(const F &function) {
+        static constexpr Self NullaryExpression(F function = {}) {
             Self result{};
+            //            [&]<std::size_t... i>(std::index_sequence<i...>) {
+            //                ((result._data[i] = function(dimensionalIndices(i))), ...);
+            //            }(std::make_index_sequence<NumUniqueValues>());
             for (int i = 0; i < NumUniqueValues; ++i) {
                 result._data[i] = function(dimensionalIndices(i));
             }
@@ -47,12 +50,21 @@ namespace symtensor {
 
     public:
 
-        inline constexpr const Scalar &operator[](const std::array<Index, R> &dimensionalIndices) const {
-            return _data[flatIndex(dimensionalIndices)];
+        inline constexpr const Scalar &operator[](const std::array<Index, R> &indices) const {
+            return _data[flatIndex(indices)];
+        }
+
+        inline constexpr Scalar &operator[](const std::array<Index, R> &indices) {
+            return _data[flatIndex(indices)];
         }
 
         template<auto... Indices>
         inline constexpr const Scalar &at() const {
+            return _data[flatIndex<Indices...>()];
+        }
+
+        template<auto... Indices>
+        inline constexpr Scalar &at() {
             return _data[flatIndex<Indices...>()];
         }
 
@@ -98,10 +110,27 @@ namespace symtensor {
     public: // tensor-vector operations
 
         template<indexable Vector>
-        friend auto operator*(const Self &tensor, const Vector &vector) {
-            return SymmetricTensorBase<S, D, R + 1, I>::NullaryExpression([&](auto indices) {
-                return vector[static_cast<std::size_t>(indices[0])] * tensor[tail(indices)];
-            });
+        [[clang::always_inline]] friend inline constexpr auto operator*(const Self &tensor, const Vector &vector) {
+            using Result = SymmetricTensorBase<S, D, R + 1, I>;
+            Result result{};
+            //            [&]<std::size_t... i>(std::index_sequence<i...>) {
+            //                ((result._data[i] = vector[static_cast<std::size_t>(Result::dimensionalIndices(i)[0])] *
+            //                                    tensor[tail(Result::dimensionalIndices(i))]), ...);
+            //            }(std::make_index_sequence<NumUniqueValues>());
+            //            [&]<std::size_t... i>(std::index_sequence<i...>) {
+            //                ((result._data[i] = vector[static_cast<std::size_t>(Result::lexicographicalIndices(i)[0])] *
+            //                                    tensor[tail(Result::lexicographicalIndices(i))]), ...);
+            //            }(std::make_index_sequence<NumValues>());
+            for (int i = 0; i < Result::NumValues; ++i) {
+                auto lex = Result::lexicographicalIndices(i);
+                result._data[i] = vector[static_cast<std::size_t>(lex[0])] * tensor[tail(lex)];
+            }
+
+            return result;
+
+//            return SymmetricTensorBase<S, D, R + 1, I>::NullaryExpression([&](auto indices) constexpr {
+//                return vector[static_cast<std::size_t>(indices[0])] * tensor[tail(indices)];
+//            });
         }
 
 
@@ -117,17 +146,23 @@ namespace symtensor {
         }
 
         static inline constexpr std::size_t flatIndex(std::array<I, R> indices) {
-            //return symtensor::flatIndex(indices, D);
-            return [&]<std::size_t... i>(auto) {
-                return as_lookup_table<
-                        decltype([](std::array<I, R> ind) consteval { return symtensor::flatIndex(ind, D); }),
-                        dimensionalIndices(i)...
-                >(indices);
-            }(std::make_index_sequence<NumUniqueValues>());
+            return symtensor::flatIndex(indices, D);
+//            static_assert(NumValues > 0);
+//            return [&]<std::size_t... i>(auto) {
+//                return as_lookup_table<
+//                        decltype([](std::array<I, R> ind) consteval { return symtensor::flatIndex(ind, D); }),
+//                        std::array<I, R>,
+//                        lexicographicalIndices(i)...
+//                >(indices);
+//            }(std::make_index_sequence<NumValues>());
         }
 
         static inline constexpr std::array<I, R> dimensionalIndices(std::size_t flatIndex) {
             return symtensor::dimensionalIndices<R, I>(flatIndex, D);
+        }
+
+        static inline constexpr std::array<I, R> lexicographicalIndices(std::size_t flatIndex) {
+            return symtensor::lexicographicalIndices<R, I>(flatIndex, D);
         }
 
     public:

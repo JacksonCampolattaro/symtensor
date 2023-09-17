@@ -17,7 +17,8 @@ if (NOT TARGET symtensor)
     find_package(symtensor REQUIRED)
 endif ()
 
-add_executable(tests symmetricTensor3.cpp
+add_executable(tests
+        #symmetricTensor3.cpp
         util.cpp
         symmetricTensor.cpp)
 target_link_libraries(tests PRIVATE

@@ -7,6 +7,7 @@
 #include <functional>
 #include <cassert>
 #include <type_traits>
+#include <iostream>
 
 #include "concepts.h"
 
@@ -61,12 +62,15 @@ namespace symtensor {
 
     template<typename Function, typename Arg, Arg ...PossibleArgs>
     constexpr auto as_lookup_table(Arg arg, Function function = {}) {
+        static_assert(sizeof...(PossibleArgs) > 0);
         using Result = std::invoke_result_t<Function, Arg>;
         Result result{};
-        ([&](){
+        ([&] {
+            std::cout << PossibleArgs << ", ";
             if (arg == PossibleArgs)
                 result = function(PossibleArgs);
         }(), ...);
+        std::cout << sizeof...(PossibleArgs) << std::endl;
         return result;
     }
 
