@@ -53,12 +53,14 @@ namespace symtensor {
         return out << static_cast<std::size_t>(index);
     }
 
-    template<std::size_t D, std::size_t R>
-    static std::ostream &operator<<(std::ostream &out, const std::array<Index<D>, R> &indices) {
-        // todo: this should be replaced with something cleaner
+    template<typename I, std::size_t R>
+    static std::ostream &operator<<(std::ostream &out, const std::array<I, R> &indices) {
+        // todo: this is not ideal
         out << "(";
-        std::copy(indices.begin(), indices.end() - 1, std::ostream_iterator<Index<D>>(out, ", "));
-        out << indices.back() << ")";
+        out << static_cast<std::size_t>(indices[0]);
+        for (int i = 1; i < R; ++i)
+            out << ", " << static_cast<std::size_t>(indices[i]);
+        out << ")";
         return out;
     }
 
@@ -171,7 +173,8 @@ namespace symtensor {
             std::size_t lowerLinearIndex = (linearIndex - topIndex) / D;
 
             indices.back() = I(topIndex);
-            recursiveLexicographicalIndices(lowerLinearIndex, D, std::span<I, R-1>{indices.begin(), indices.end() - 1});
+            recursiveLexicographicalIndices(lowerLinearIndex, D,
+                                            std::span<I, R - 1>{indices.begin(), indices.end() - 1});
         }
     }
 
@@ -183,6 +186,15 @@ namespace symtensor {
         return indices;
     }
 
+}
+
+template<typename I, std::size_t R>
+static std::ostream &operator<<(std::ostream &out, const std::array<I, R> &indices) {
+    // todo: this should be replaced with something cleaner
+    out << "(";
+    std::copy(indices.begin(), indices.end() - 1, std::ostream_iterator<I>(out, ", "));
+    out << indices.back() << ")";
+    return out;
 }
 
 #endif //SYMTENSOR_INDEX_H

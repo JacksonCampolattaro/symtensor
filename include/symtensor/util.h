@@ -42,6 +42,18 @@ namespace symtensor {
     }
 
     template<typename T, std::size_t N>
+    static constexpr auto head(std::array<T, N> array) {
+        if constexpr (N == 0)
+            // Never try to get the head of an empty array! This makes the compiler very angry.
+            return array;
+        else {
+            std::array<T, N - 1> copy{};
+            std::copy(array.begin(), array.end() - 1, copy.begin());
+            return copy;
+        }
+    }
+
+    template<typename T, std::size_t N>
     static constexpr auto tail(std::array<T, N> array) {
         if constexpr (N == 0)
             // Never try to get the tail of an empty array! This makes the compiler very angry.
@@ -66,11 +78,9 @@ namespace symtensor {
         using Result = std::invoke_result_t<Function, Arg>;
         Result result{};
         ([&] {
-            std::cout << PossibleArgs << ", ";
             if (arg == PossibleArgs)
                 result = function(PossibleArgs);
         }(), ...);
-        std::cout << sizeof...(PossibleArgs) << std::endl;
         return result;
     }
 

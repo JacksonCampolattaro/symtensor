@@ -2,9 +2,10 @@
 #include <catch2/benchmark/catch_benchmark_all.hpp>
 
 #include <iostream>
-
 #include <numeric>
-#include <glm/vec2.hpp>
+
+#include <glm/vec3.hpp>
+#include <glm/matrix.hpp>
 
 #include <symtensor/SymmetricTensorBase.h>
 
@@ -87,23 +88,68 @@ TEST_CASE("benchmark: Member access", "[SymmetricTensor]") {
 
 TEST_CASE("benchmark: Tensor-vector multiplication", "[SymmetricTensor]") {
 
-//    {
-//
-//        auto multiply = [](const SymmetricTensor2f<1> &a, const SymmetricTensor2f<1> &b) {
-//            SymmetricTensor2f<2> result;
-//            for (int i = 0; i < 2; ++i) {
-//                for (int j = 0; j <= i; ++j) {
-//                    result[{SymmetricTensor2f<2>::Index(i), SymmetricTensor2f<2>::Index(j)}] = a[i] * b[j];
-//                }
-//            }
-//            return result;
-//        };
-//        SymmetricTensor2f<1> a{1, 2};
-//        SymmetricTensor2f<1> b{3, 4};
-//        BENCHMARK("st2x2 = v2 * v2") { return (a * b); };
-//        BENCHMARK("st2x2 = multiply(v2, v2)") { return multiply(a, b)[0]; };
-//    }
+    //    {
+    //
+    //        auto multiply = [](const SymmetricTensor2f<1> &a, const SymmetricTensor2f<1> &b) {
+    //            SymmetricTensor2f<2> result;
+    //            for (int i = 0; i < 2; ++i) {
+    //                for (int j = 0; j <= i; ++j) {
+    //                    result[{SymmetricTensor2f<2>::Index(i), SymmetricTensor2f<2>::Index(j)}] = a[i] * b[j];
+    //                }
+    //            }
+    //            return result;
+    //        };
+    //        SymmetricTensor2f<1> a{1, 2};
+    //        SymmetricTensor2f<1> b{3, 4};
+    //        BENCHMARK("st2x2 = v2 * v2") { return (a * b); };
+    //        BENCHMARK("st2x2 = multiply(v2, v2)") { return multiply(a, b)[0]; };
+    //    }
 
+    {
+
+        SymmetricTensor3f<1> a{0, 1, 2};
+        SymmetricTensor3f<1> b{3, 4, 5};
+        BENCHMARK("st3x3 = v3 * v3") { return (a * b); };
+        BENCHMARK("st3x3 = v3 * v3 (handwritten)") {
+                                                       return SymmetricTensor3f<2>{
+                                                            a[0] * a[0], a[0] * a[1], a[0] * a[2],
+                                                            a[1] * a[1], a[1] * a[2],
+                                                            a[2] * a[2]
+                                                       };
+                                                   };
+
+        glm::vec3 glm_a{0, 1, 2};
+        glm::vec3 glm_b{3, 4, 5};
+        BENCHMARK("m3x3 = v3 * v3 (glm)") { return (glm_a * glm_b); };
+    }
+
+    {
+
+        SymmetricTensor3f<1> a{0, 1, 2};
+        SymmetricTensor3f<2> b = a * a;
+        BENCHMARK("st3x3x3 = st3x3 * v3") { return (b * a); };
+
+        using glm_mat3x3x3 = std::array<glm::mat3x3, 3>;
+        glm::vec3 glm_a{0, 1, 2};
+        glm::mat3x3 glm_b = glm::outerProduct(glm_a, glm_a);
+        BENCHMARK("m3x3x3 = m3x3 * v3 (glm)") {
+                                                return glm_mat3x3x3{
+                                                        glm_b * glm_a[0],
+                                                        glm_b * glm_a[1],
+                                                        glm_b * glm_a[2]
+                                                };
+                                            };
+
+        BENCHMARK("st3x3x3 = v3 * v3 * v3") { return (a * a * a); };
+        BENCHMARK("st3x3x3 = v3 * v3 * v3 (glm)") {
+                                                      glm::mat3x3 glm_b = glm::outerProduct(glm_a, glm_a);
+                                                      return glm_mat3x3x3{
+                                                              glm_b * glm_a[0],
+                                                              glm_b * glm_a[1],
+                                                              glm_b * glm_a[2]
+                                                      };
+                                                  };
+    }
 
     {
 

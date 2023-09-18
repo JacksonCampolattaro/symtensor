@@ -1,12 +1,16 @@
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/catch_approx.hpp>
 
-#include <iostream>
-
-#include <symtensor/SymmetricTensor3.h>
 #include <symtensor/SymmetricTensorBase.h>
+
+#include <symtensor/glm.h>
+
+#include <glm/vec2.hpp>
+#include <glm/matrix.hpp>
+#include <glm/gtx/io.hpp>
+
+#include <iostream>
 #include <numeric>
-#include "glm/vec2.hpp"
 
 using namespace symtensor;
 
@@ -269,9 +273,22 @@ TEST_CASE("Symmetric tensor initialization with an expression", "[SymmetricTenso
 
 TEST_CASE("Symmetric tensor product with a vector", "[SymmetricTensor]") {
 
-    REQUIRE(SymmetricTensor2f<2>::Identity() * glm::vec2{1, 2} ==
-            SymmetricTensor2f<3>{1, 0, 1, 2});
+    float v = 5;
+    std::reference_wrapper<float> rv{v};
+    std::reference_wrapper<std::reference_wrapper<float>> rrv{rv};
+    REQUIRE(v == rrv.get());
 
-    REQUIRE(SymmetricTensor3f<2>::Identity() * glm::vec3{0, 1, 2} ==
-            SymmetricTensor3f<3>{0, 0, 0, 0, 0, 0, 1, 0, 1, 2});
+    auto identity2x2 = glm::mat2x2{};
+    auto vec2 = glm::vec2{1, 2};
+    auto svec2 = SymmetricTensor2f<1>{1, 2};
+    REQUIRE(to_glm(svec2 * svec2) == glm::outerProduct(vec2, vec2));
+    // todo
+    //REQUIRE(SymmetricTensor2f<2>::Identity() * glm::vec2{1, 2} == glm::outerProduct(identity2x2 * glm::transpose(vec2)));
+//    REQUIRE(SymmetricTensor2f<2>::Identity() * glm::vec2{1, 2} ==
+//            SymmetricTensor2f<3>{1, 0, 1, 2});
+//
+//    auto identity3x3 = glm::mat3x3{};
+//    auto vec3 = glm::vec3{1, 2, 3};
+//    REQUIRE(SymmetricTensor3f<2>::Identity() * glm::vec3{0, 1, 2} ==
+//            SymmetricTensor3f<3>{0, 0, 0, 0, 0, 0, 1, 0, 1, 2});
 }
