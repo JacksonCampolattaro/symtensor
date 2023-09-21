@@ -281,14 +281,14 @@ TEST_CASE("Symmetric tensor product with a vector", "[SymmetricTensor]") {
     auto identity2x2 = glm::mat2x2{};
     auto vec2 = glm::vec2{1, 2};
     auto svec2 = SymmetricTensor2f<1>{1, 2};
-    REQUIRE(to_glm(svec2 * svec2) == glm::outerProduct(vec2, vec2));
+    REQUIRE(to_glm(SymmetricTensor2f<2>::CartesianPower(svec2)) == glm::outerProduct(vec2, vec2));
     // todo
     //REQUIRE(SymmetricTensor2f<2>::Identity() * glm::vec2{1, 2} == glm::outerProduct(identity2x2 * glm::transpose(vec2)));
-//    REQUIRE(SymmetricTensor2f<2>::Identity() * glm::vec2{1, 2} ==
-//            SymmetricTensor2f<3>{1, 0, 1, 2});
-//
-//    auto identity3x3 = glm::mat3x3{};
-//    auto vec3 = glm::vec3{1, 2, 3};
-//    REQUIRE(SymmetricTensor3f<2>::Identity() * glm::vec3{0, 1, 2} ==
-//            SymmetricTensor3f<3>{0, 0, 0, 0, 0, 0, 1, 0, 1, 2});
+    //    REQUIRE(SymmetricTensor2f<2>::Identity() * glm::vec2{1, 2} ==
+    //            SymmetricTensor2f<3>{1, 0, 1, 2});
+    //
+    //    auto identity3x3 = glm::mat3x3{};
+    //    auto vec3 = glm::vec3{1, 2, 3};
+    //    REQUIRE(SymmetricTensor3f<2>::Identity() * glm::vec3{0, 1, 2} ==
+    //            SymmetricTensor3f<3>{0, 0, 0, 0, 0, 0, 1, 0, 1, 2});
 }

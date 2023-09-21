@@ -32,12 +32,12 @@ namespace symtensor {
 
         explicit constexpr SymmetricTensorBase(auto ...s) : _data{static_cast<S>(s)...} {}
 
-        static consteval Self Identity() {
+        inline static consteval Self Identity() {
             return NullaryExpression([](auto indices) { return kroneckerDelta(indices); });
         }
 
         template<typename F>
-        static constexpr Self NullaryExpression(F function = {}) {
+        inline static constexpr Self NullaryExpression(F function = {}) {
             if constexpr (requires { function.template operator()<dimensionalIndices(0)>(); }) {
                 // If a function provides a template parameter for compile-time indexing, prefer that
                 return [&]<std::size_t... i>(std::index_sequence<i...>) constexpr {
@@ -49,6 +49,15 @@ namespace symtensor {
                     return Self{function(dimensionalIndices(i))...};
                 }(std::make_index_sequence<NumUniqueValues>());
             }
+        }
+
+        [[clang::always_inline, gnu::always_inline]]
+        inline static constexpr Self CartesianPower(const SymmetricTensorBase<S, D, 1, I> &vector) {
+            return NullaryExpression([&]<std::array<I, Rank> index>() constexpr {
+                return [&]<std::size_t... r>(std::index_sequence<r...>) constexpr {
+                    return (vector.template at<std::array<I, 1>{index[r]}>() * ...);
+                }(std::make_index_sequence<Rank>());
+            });
         }
 
     public:
@@ -124,17 +133,6 @@ namespace symtensor {
         Self operator+(const Self &other) const { return Self{*this} += other; }
 
         Self operator-(const Self &other) const { return Self{*this} -= other; }
-
-    public: // tensor-vector operations
-
-        [[clang::always_inline]] friend inline constexpr auto
-        operator*(const Self &tensor, const SymmetricTensorBase<S, D, 1, I> &vector) {
-            using Result = SymmetricTensorBase<S, D, R + 1, I>;
-            return Result::template NullaryExpression([&]<std::array<I, Result::Rank> index>() constexpr {
-                return vector.template at<std::array<I, 1>{index[0]}>() *
-                       tensor.template at<tail(index)>();
-            });
-        }
 
     public:
 
