@@ -41,6 +41,13 @@ namespace symtensor {
         );
     }
 
+    template<std::size_t N, typename T>
+    static constexpr auto repeat(const T &value) {
+        std::array<T, N> array;
+        std::fill(array.begin(), array.end(), value);
+        return array;
+    }
+
     template<typename T, std::size_t N>
     static constexpr auto head(std::array<T, N> array) {
         if constexpr (N == 0)

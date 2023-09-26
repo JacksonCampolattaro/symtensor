@@ -86,6 +86,27 @@ TEST_CASE("benchmark: Member access", "[SymmetricTensor]") {
 }
 
 
+TEST_CASE("benchmark: Tensor properties", "[SymmetricTensor]") {
+
+    {
+        SymmetricTensor3f<1> a{1, 2, 3};
+        BENCHMARK("trace(v3)") { return a.trace(); };
+        BENCHMARK("trace(v3) (handwritten)") { return a[0] + a[1] + a[2]; };
+    }
+
+    {
+        SymmetricTensor3f<2> a{1, 2, 3, 4, 5};
+        BENCHMARK("trace(st3x3)") { return a.trace(); };
+        BENCHMARK("trace(st3x3) (handwritten)") { return a[0] + a[3] + a[5]; };
+    }
+
+    {
+        SymmetricTensor3f<3> a{1, 2, 3, 4, 5, 6, 7, 8};
+        BENCHMARK("trace(st3x3x3)") { return a.trace(); };
+        BENCHMARK("trace(st3x3x3) (handwritten)") { return a[0] + a[6] + a[9]; };
+    }
+}
+
 TEST_CASE("benchmark: Tensor-vector multiplication", "[SymmetricTensor]") {
 
     {

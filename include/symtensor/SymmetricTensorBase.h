@@ -51,6 +51,26 @@ namespace symtensor {
             }
         }
 
+        template<typename F>
+        inline static constexpr Self LexicographicalNullaryExpression(F function = {}) {
+            // todo: There may be cases where this provides a performance benefit
+            Self tensor;
+            if constexpr (requires { function.template operator()<dimensionalIndices(0)>(); }) {
+                // If a function provides a template parameter for compile-time indexing, prefer that
+                [&]<std::size_t... i>(std::index_sequence<i...>) constexpr {
+                    ((tensor.at<lexicographicalIndices(i)>()
+                              = function.template operator()<lexicographicalIndices(i)>()), ...);
+                }(std::make_index_sequence<NumValues>());
+            } else {
+                // Otherwise, the function must take the indices as its only argument
+                [&]<std::size_t... i>(std::index_sequence<i...>) constexpr {
+                    ((tensor.at<lexicographicalIndices(i)>()
+                              = function(lexicographicalIndices(i))), ...);
+                }(std::make_index_sequence<NumValues>());
+            }
+            return tensor;
+        }
+
         [[clang::always_inline, gnu::always_inline]]
         inline static constexpr Self CartesianPower(const SymmetricTensorBase<S, D, 1, I> &vector) {
             return NullaryExpression([&]<std::array<I, Rank> index>() constexpr {
@@ -60,7 +80,7 @@ namespace symtensor {
             });
         }
 
-    public:
+    public: // Member Access
 
         inline constexpr const Scalar &operator[](const std::array<Index, R> &indices) const {
             return _data[flatIndex(indices)];
@@ -104,6 +124,14 @@ namespace symtensor {
         inline constexpr Scalar &operator[](auto flatIndex) {
             static_assert(std::is_integral_v<decltype(flatIndex)>);
             return _data[static_cast<std::size_t>(flatIndex)];
+        }
+
+    public: // tensor properties
+
+        inline constexpr Scalar trace() const {
+            return [&]<std::size_t... d>(std::index_sequence<d...>) constexpr {
+                return (at<repeat<R>(static_cast<I>(d))>() + ...);
+            }(std::make_index_sequence<Dimensions>());
         }
 
     public: // tensor-scalar operators
