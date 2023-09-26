@@ -36,6 +36,10 @@ namespace symtensor {
             return NullaryExpression([](auto indices) { return kroneckerDelta(indices); });
         }
 
+        inline static consteval Implementation Ones() {
+            return NullaryExpression([](auto indices) { return Scalar{1}; });
+        }
+
         template<typename F>
         inline static constexpr Implementation NullaryExpression(F function = {}) {
             if constexpr (requires { function.template operator()<dimensionalIndices(0)>(); }) {
@@ -71,14 +75,25 @@ namespace symtensor {
             return static_cast<Implementation>(tensor);
         }
 
-        template<typename V>
-        inline static constexpr Implementation CartesianPower(const V &vector) {
+        template<typename Vector>
+        inline static constexpr Implementation CartesianPower(const Vector &vector) {
             return NullaryExpression([&]<std::array<I, Rank> index>() constexpr {
                 return [&]<std::size_t... r>(std::index_sequence<r...>) constexpr {
                     return (vector[static_cast<std::size_t>(index[r])] * ...);
                 }(std::make_index_sequence<Rank>());
             });
         }
+
+        template<typename Vector>
+        inline static constexpr Implementation Diagonal(const Vector &vector) {
+            // todo: add a unit test for this
+            Implementation tensor;
+            [&]<std::size_t... d>(std::index_sequence<d...>) constexpr {
+                ((tensor.template at<repeat<R>(static_cast<I>(d))>() = vector[d]), ...);
+            }(std::make_index_sequence<Dimensions>());
+            return tensor;
+        }
+
 
     public: // Member Access
 
@@ -136,13 +151,37 @@ namespace symtensor {
 
     public: // tensor-scalar operators
 
+        inline constexpr Implementation &operator+=(const Scalar &scalar) {
+            for (int i = 0; i < NumUniqueValues; ++i)
+                _data[i] += scalar;
+            return *static_cast<Implementation *>(this);
+        }
+
+        inline constexpr Implementation &operator-=(const Scalar &scalar) {
+            for (int i = 0; i < NumUniqueValues; ++i)
+                _data[i] -= scalar;
+            return *static_cast<Implementation *>(this);
+        }
+
         inline constexpr Implementation &operator*=(const Scalar &scalar) {
             for (int i = 0; i < NumUniqueValues; ++i)
                 _data[i] *= scalar;
             return *static_cast<Implementation *>(this);
         }
 
+        inline constexpr Implementation &operator/=(const Scalar &scalar) {
+            for (int i = 0; i < NumUniqueValues; ++i)
+                _data[i] /= scalar;
+            return *static_cast<Implementation *>(this);
+        }
+
+        inline constexpr Implementation operator+(const Scalar &scalar) const { return Self{*this} += scalar; }
+
+        inline constexpr Implementation operator-(const Scalar &scalar) const { return Self{*this} -= scalar; }
+
         inline constexpr Implementation operator*(const Scalar &scalar) const { return Self{*this} *= scalar; }
+
+        inline constexpr Implementation operator/(const Scalar &scalar) const { return Self{*this} /= scalar; }
 
     public: // tensor-tensor element-wise operations
 

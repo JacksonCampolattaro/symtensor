@@ -139,6 +139,13 @@ TEST_CASE("Symmetric tensor constructors", "[SymmetricTensor]") {
     CHECK(SymmetricTensor3f<3>::Identity() == SymmetricTensor3f<3>{1, 0, 0, 0, 0, 0, 1, 0, 0, 1});
     CHECK(SymmetricTensor3f<4>::Identity() == SymmetricTensor3f<4>{1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1});
 
+    CHECK(SymmetricTensor2f<2>::Ones() == SymmetricTensor2f<2>{1, 1, 1});
+    CHECK(SymmetricTensor3f<2>::Ones() == SymmetricTensor3f<2>{1, 1, 1, 1, 1, 1});
+    CHECK(SymmetricTensor3f<3>::Ones() == SymmetricTensor3f<3>{1, 1, 1, 1, 1, 1, 1, 1, 1, 1});
+    CHECK(SymmetricTensor3f<4>::Ones() == SymmetricTensor3f<4>{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1});
+
+    CHECK(SymmetricTensor2f<2>::Diagonal(glm::vec2{1, 2}) == SymmetricTensor2f<2>{1, 0, 2});
+    CHECK(SymmetricTensor3f<2>::Diagonal(glm::vec3{1, 2, 3}) == SymmetricTensor3f<2>{1, 0, 0, 2, 0, 3});
 }
 
 TEST_CASE("Symmetric tensor comparison", "[SymmetricTensor]") {
