@@ -7,7 +7,7 @@
 #include <glm/vec3.hpp>
 #include <glm/matrix.hpp>
 
-#include <symtensor/SymmetricTensorBase.h>
+#include <symtensor/SymmetricTensor.h>
 
 using namespace symtensor;
 

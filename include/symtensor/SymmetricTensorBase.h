@@ -10,11 +10,11 @@
 
 namespace symtensor {
 
-    template<typename S, std::size_t D, std::size_t R, typename I = Index<D>>
+    template<class Implementation, typename S, std::size_t D, std::size_t R, typename I = Index<D>>
     class SymmetricTensorBase {
     public:
 
-        using Self = SymmetricTensorBase<S, D, R, I>;
+        using Self = SymmetricTensorBase<Implementation, S, D, R, I>;
 
         using Scalar = S;
         static constexpr std::size_t Dimensions = D;
@@ -32,27 +32,27 @@ namespace symtensor {
 
         explicit constexpr SymmetricTensorBase(auto ...s) : _data{static_cast<S>(s)...} {}
 
-        inline static consteval Self Identity() {
+        inline static consteval Implementation Identity() {
             return NullaryExpression([](auto indices) { return kroneckerDelta(indices); });
         }
 
         template<typename F>
-        inline static constexpr Self NullaryExpression(F function = {}) {
+        inline static constexpr Implementation NullaryExpression(F function = {}) {
             if constexpr (requires { function.template operator()<dimensionalIndices(0)>(); }) {
                 // If a function provides a template parameter for compile-time indexing, prefer that
                 return [&]<std::size_t... i>(std::index_sequence<i...>) constexpr {
-                    return Self{function.template operator()<dimensionalIndices(i)>()...};
+                    return Implementation{function.template operator()<dimensionalIndices(i)>()...};
                 }(std::make_index_sequence<NumUniqueValues>());
             } else {
                 // Otherwise, the function must take the indices as its only argument
                 return [&]<std::size_t... i>(std::index_sequence<i...>) constexpr {
-                    return Self{function(dimensionalIndices(i))...};
+                    return Implementation{function(dimensionalIndices(i))...};
                 }(std::make_index_sequence<NumUniqueValues>());
             }
         }
 
         template<typename F>
-        inline static constexpr Self LexicographicalNullaryExpression(F function = {}) {
+        inline static constexpr Implementation LexicographicalNullaryExpression(F function = {}) {
             // todo: There may be cases where this provides a performance benefit
             Self tensor;
             if constexpr (requires { function.template operator()<dimensionalIndices(0)>(); }) {
@@ -68,14 +68,14 @@ namespace symtensor {
                               = function(lexicographicalIndices(i))), ...);
                 }(std::make_index_sequence<NumValues>());
             }
-            return tensor;
+            return static_cast<Implementation>(tensor);
         }
 
-        [[clang::always_inline, gnu::always_inline]]
-        inline static constexpr Self CartesianPower(const SymmetricTensorBase<S, D, 1, I> &vector) {
+        template<typename V>
+        inline static constexpr Implementation CartesianPower(const V &vector) {
             return NullaryExpression([&]<std::array<I, Rank> index>() constexpr {
                 return [&]<std::size_t... r>(std::index_sequence<r...>) constexpr {
-                    return (vector.template at<std::array<I, 1>{index[r]}>() * ...);
+                    return (vector[static_cast<std::size_t>(index[r])] * ...);
                 }(std::make_index_sequence<Rank>());
             });
         }
@@ -102,12 +102,12 @@ namespace symtensor {
 
         template<Index... Indices>
         inline constexpr const Scalar &at() const {
-            return _data[flatIndex({static_cast<Index>(Indices)...})];
+            return _data[flatIndex<std::array<I, R>{static_cast<Index>(Indices)...}>()];
         }
 
         template<Index... Indices>
         inline constexpr Scalar &at() {
-            return _data[flatIndex({static_cast<Index>(Indices)...})];
+            return _data[flatIndex<std::array<I, R>{static_cast<Index>(Indices)...}>()];
         }
 
         template<typename Integer, Integer... Indices>
@@ -136,34 +136,35 @@ namespace symtensor {
 
     public: // tensor-scalar operators
 
-        inline constexpr Self &operator*=(const Scalar &scalar) {
+        inline constexpr Implementation &operator*=(const Scalar &scalar) {
             for (int i = 0; i < NumUniqueValues; ++i)
                 _data[i] *= scalar;
-            return *this;
+            return *static_cast<Implementation *>(this);
         }
 
-        inline constexpr Self operator*(const Scalar &scalar) const { return Self{*this} *= scalar; }
+        inline constexpr Implementation operator*(const Scalar &scalar) const { return Self{*this} *= scalar; }
 
     public: // tensor-tensor element-wise operations
 
-        inline constexpr Self &operator+=(const Self &other) {
+        inline constexpr Implementation &operator+=(const Implementation &other) {
             for (int i = 0; i < NumUniqueValues; ++i)
                 _data[i] += other._data[i];
-            return *this;
+            return *static_cast<Implementation *>(this);
         }
 
-        inline constexpr Self &operator-=(const Self &other) {
+        inline constexpr Implementation &operator-=(const Implementation &other) {
             for (int i = 0; i < NumUniqueValues; ++i)
                 _data[i] -= other._data[i];
-            return *this;
+            return *static_cast<Implementation *>(this);
         }
 
-        inline constexpr Self operator+(const Self &other) const { return Self{*this} += other; }
+        inline constexpr Implementation operator+(const Implementation &other) const { return Self{*this} += other; }
 
-        inline constexpr Self operator-(const Self &other) const { return Self{*this} -= other; }
+        inline constexpr Implementation operator-(const Implementation &other) const { return Self{*this} -= other; }
 
     public:
 
+        // fixme: this might not work with CRTP
         inline constexpr bool operator==(const Self &other) const = default;
 
     public: // utility functions
@@ -174,15 +175,19 @@ namespace symtensor {
         }
 
         static inline constexpr std::size_t flatIndex(std::array<I, R> indices) {
-            //            return symtensor::flatIndex(indices, D);
             static_assert(NumValues > 0);
-            return [&]<std::size_t... i>(std::index_sequence<i...>) {
-                return as_lookup_table<
-                        decltype([](std::array<I, R> ind) consteval { return symtensor::flatIndex(ind, D); }),
-                        std::array<I, R>,
-                        lexicographicalIndices(i)...
-                >(indices);
-            }(std::make_index_sequence<NumValues>());
+
+            // Use a lookup table when the range of options is small enough
+            if constexpr (R < 3)
+                return [&]<std::size_t... i>(std::index_sequence<i...>) {
+                    return as_lookup_table<
+                            decltype([](std::array<I, R> ind) consteval { return symtensor::flatIndex(ind, D); }),
+                            std::array<I, R>,
+                            lexicographicalIndices(i)...
+                    >(indices);
+                }(std::make_index_sequence<NumValues>());
+            else
+                return symtensor::flatIndex(indices, D);
         }
 
         static inline constexpr std::array<I, R> dimensionalIndices(std::size_t flatIndex) {
@@ -206,7 +211,7 @@ namespace symtensor {
 
     public:
 
-        friend std::ostream &operator<<(std::ostream &out, const Self &self) {
+        friend std::ostream &operator<<(std::ostream &out, const Implementation &self) {
             // todo: this should be replaced with something prettier
             out << "[";
             std::copy(self._data.begin(), self._data.end() - 1, std::ostream_iterator<Scalar>(out, ", "));
@@ -216,11 +221,6 @@ namespace symtensor {
 
     };
 
-    template<std::size_t R>
-    using SymmetricTensor2f = SymmetricTensorBase<float, 2, R>;
-
-    template<std::size_t R>
-    using SymmetricTensor3f = SymmetricTensorBase<float, 3, R>;
 }
 
 #endif //SYMTENSOR_SYMMETRICTENSORBASE_H
