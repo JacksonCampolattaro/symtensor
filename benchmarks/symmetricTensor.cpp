@@ -107,7 +107,29 @@ TEST_CASE("benchmark: Tensor properties", "[SymmetricTensor]") {
     }
 }
 
-TEST_CASE("benchmark: Tensor-vector multiplication", "[SymmetricTensor]") {
+TEST_CASE("benchmark: Tensor arithmetic", "[SymmetricTensor]") {
+
+    {
+        SymmetricTensor3f<1> a{0, 1, 2};
+        glm::vec3 glm_a{0, 1, 2};
+        BENCHMARK("v3 = v3 + v3") { return a + a; };
+        BENCHMARK("v3 = v3 + v3 (glm)") { return glm_a + glm_a; };
+    }
+
+    {
+        SymmetricTensor3f<2> a{0, 1, 2, 3, 4, 5};
+        glm::mat3x3 glm_a{0, 1, 2, 3, 4, 5, 6, 7, 8};
+        BENCHMARK("st3x3 = st3x3 + st3x3") { return a + a; };
+        BENCHMARK("st3x3 = st3x3 + st3x3 (handwritten") {
+                                                            return SymmetricTensor3f<2>{a[0] + a[0], a[1] + a[1],
+                                                                                        a[2] + a[2], a[3] + a[3],
+                                                                                        a[4] + a[4], a[5] + a[5]};
+                                                        };
+        BENCHMARK("m3x3 = m3x3 + m3x3 (glm)") { return glm_a + glm_a; };
+    }
+}
+
+TEST_CASE("benchmark: Tensor products", "[SymmetricTensor]") {
 
     {
 
@@ -146,13 +168,13 @@ TEST_CASE("benchmark: Tensor-vector multiplication", "[SymmetricTensor]") {
         using glm_mat3x3x3 = std::array<glm::mat3x3, 3>;
         BENCHMARK("st3x3x3 = v3 * v3 * v3") { return SymmetricTensor3f<3>::CartesianPower(a); };
         BENCHMARK("t3x3x3 = v3 * v3 * v3 (glm)") {
-                                                      glm::mat3x3 glm_b = glm::outerProduct(glm_a, glm_a);
-                                                      return glm_mat3x3x3{
-                                                              glm_b * glm_a[0],
-                                                              glm_b * glm_a[1],
-                                                              glm_b * glm_a[2]
-                                                      };
-                                                  };
+                                                     glm::mat3x3 glm_b = glm::outerProduct(glm_a, glm_a);
+                                                     return glm_mat3x3x3{
+                                                             glm_b * glm_a[0],
+                                                             glm_b * glm_a[1],
+                                                             glm_b * glm_a[2]
+                                                     };
+                                                 };
 
         //        SymmetricTensor3f<2> b = a * a;
         //        BENCHMARK("st3x3x3 = st3x3 * v3") { return (b * a); };

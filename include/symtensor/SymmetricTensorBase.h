@@ -136,37 +136,37 @@ namespace symtensor {
 
     public: // tensor-scalar operators
 
-        Self &operator*=(const Scalar &scalar) {
+        inline constexpr Self &operator*=(const Scalar &scalar) {
             for (int i = 0; i < NumUniqueValues; ++i)
                 _data[i] *= scalar;
             return *this;
         }
 
-        Self operator*(const Scalar &scalar) const { return Self{*this} *= scalar; }
+        inline constexpr Self operator*(const Scalar &scalar) const { return Self{*this} *= scalar; }
 
     public: // tensor-tensor element-wise operations
 
-        Self &operator+=(const Self &other) {
+        inline constexpr Self &operator+=(const Self &other) {
             for (int i = 0; i < NumUniqueValues; ++i)
                 _data[i] += other._data[i];
             return *this;
         }
 
-        Self &operator-=(const Self &other) {
+        inline constexpr Self &operator-=(const Self &other) {
             for (int i = 0; i < NumUniqueValues; ++i)
                 _data[i] -= other._data[i];
             return *this;
         }
 
-        Self operator+(const Self &other) const { return Self{*this} += other; }
+        inline constexpr Self operator+(const Self &other) const { return Self{*this} += other; }
 
-        Self operator-(const Self &other) const { return Self{*this} -= other; }
-
-    public:
-
-        bool operator==(const Self &other) const = default;
+        inline constexpr Self operator-(const Self &other) const { return Self{*this} -= other; }
 
     public:
+
+        inline constexpr bool operator==(const Self &other) const = default;
+
+    public: // utility functions
 
         template<std::array<I, R> Indices>
         static inline consteval std::size_t flatIndex() {
