@@ -20,7 +20,9 @@ endif ()
 add_executable(tests
         #symmetricTensor3.cpp
         util.cpp
-        symmetricTensor.cpp)
+        symmetricTensor.cpp
+        arithmeticTuple.cpp
+        )
 target_link_libraries(tests PRIVATE
         Catch2::Catch2WithMain
         symtensor::symtensor
