@@ -1,3 +1,7 @@
+/**
+ * @file
+ * @brief Provides the base symmetric tensor template.
+ */
 #ifndef SYMTENSOR_SYMMETRICTENSORBASE_H
 #define SYMTENSOR_SYMMETRICTENSORBASE_H
 
@@ -10,6 +14,18 @@
 
 namespace symtensor {
 
+    /**
+     * @brief Symmetric tensor base-type for use with CRTP implementations.
+     *
+     * In order to create a new type which behaves like a symmetric tensor,
+     * you can subclass from this class so that operators will function correctly.
+     *
+     * @tparam Implementation CRTP subclass
+     * @tparam S scalar type
+     * @tparam D number of dimensions (2d, 3d, etc.)
+     * @tparam R rank
+     * @tparam I index type
+     */
     template<class Implementation, typename S, std::size_t D, std::size_t R, typename I = Index<D>>
     class SymmetricTensorBase {
     public:
@@ -25,21 +41,47 @@ namespace symtensor {
 
         using Index = I;
 
-    public:
+    private:
 
         // todo: this could provided by a CRTP type
-        std::array<Scalar, NumUniqueValues> _data{0};
+        std::array<S, NumUniqueValues> _data{0};
 
+    public:
+        /// @name Constructors
+        /// @{
+
+        /**
+         * @brief Constructor from a sequence of values.
+         *
+         * @param s a sequence of scalar values to initialize the tensor.
+         */
         explicit constexpr SymmetricTensorBase(auto ...s) : _data{static_cast<S>(s)...} {}
 
+        /**
+         * @brief Identity matrix constructor.
+         *
+         * @return a symmetric tensor with a value of 1 along the diagonal, 0 elsewhere.
+         */
         inline static consteval Implementation Identity() {
             return NullaryExpression([](auto indices) { return kroneckerDelta(indices); });
         }
 
+        /**
+         * @brief Unit matrix constructor.
+         *
+         * @return a symmetric tensor with a value of 1 at every index.
+         */
         inline static consteval Implementation Ones() {
             return NullaryExpression([](auto indices) { return Scalar{1}; });
         }
 
+        /**
+         * @brief Generic constructor from an expression.
+         *
+         * @param function a functor which returns a scalar type given an index
+         *
+         * @return a symmetric tensor with each value set by evaluating the function.
+         */
         template<typename F>
         inline static constexpr Implementation NullaryExpression(F function = {}) {
             if constexpr (requires { function.template operator()<dimensionalIndices(0)>(); }) {
@@ -75,6 +117,16 @@ namespace symtensor {
             return static_cast<Implementation>(tensor);
         }
 
+
+        /**
+         * @brief Constructor by repeated cartesian product.
+         *
+         * @tparam Vector vector-like type which provides a subscript operator, with size D
+         *
+         * @param vector vector which will be multiplied with itself
+         *
+         * @return a symmetric tensor produced by the repeated outer product of vector.
+         */
         template<typename Vector>
         inline static constexpr Implementation CartesianPower(const Vector &vector) {
             return NullaryExpression([&]<std::array<I, Rank> index>() constexpr {
@@ -84,6 +136,15 @@ namespace symtensor {
             });
         }
 
+        /**
+         * @brief Constructor with a set vector as the diagonal.
+         *
+         * @tparam Vector vector-like type which provides a subscript operator, with size D
+         *
+         * @param vector vector which will define the diagonal of the tensor
+         *
+         * @return a symmetric tensor with diagonal equal to vector, zero elsewhere.
+         */
         template<typename Vector>
         inline static constexpr Implementation Diagonal(const Vector &vector) {
             // todo: add a unit test for this
@@ -95,16 +156,70 @@ namespace symtensor {
         }
 
 
-    public: // Member Access
+        /// @}
+    public:
+        /// @name Member access
+        /// @{
 
+        /**
+         * @brief Indexed member access
+         *
+         * @warning This method is provided only for the sake of completeness, expect poor performance.
+         *
+         * @param indices Array of R Index values which specify an element of the tensor.
+         *  Indices may be in arbitrary order, because the tensor is symmetric.
+         *
+         * @return the scalar element at the requested index
+         */
         inline constexpr const Scalar &operator[](const std::array<Index, R> &indices) const {
             return _data[flatIndex(indices)];
         }
 
+        /**
+         * @copydoc operator[](const std::array<Index, R> &) const
+         */
         inline constexpr Scalar &operator[](const std::array<Index, R> &indices) {
             return _data[flatIndex(indices)];
         }
 
+        /**
+         * @brief Compile-time indexed member access
+         *
+         * The index sequence is converted to a flat index at compile-time,
+         * allowing for performance equivalent to hand-written member access.
+         * @code{.cpp}mytensor.at<X, X, X>()@endcode should be equivalent to
+         * @code{.cpp}mytensor.flat()[0]@endcode.
+         *
+         * @tparam Indices Sequence of R Index values which specify an element of the tensor.
+         *  Indices may be in arbitrary order, because the tensor is symmetric.
+         *
+         * @return the scalar element at the requested index
+         */
+        template<Index... Indices>
+        inline constexpr const Scalar &at() const {
+            return _data[flatIndex<std::array<I, R>{static_cast<Index>(Indices)...}>()];
+        }
+
+        /**
+         * @copydoc at() const
+         */
+        template<Index... Indices>
+        inline constexpr Scalar &at() {
+            return _data[flatIndex<std::array<I, R>{static_cast<Index>(Indices)...}>()];
+        }
+
+        /**
+         * @brief Direct access to underlying data structure
+         *
+         * @return a reference to the underlying flat storage.
+         */
+        inline constexpr const auto &flat() const { return _data; }
+
+        /**
+         * @copydoc flat() const
+         */
+        inline constexpr auto &flat() { return _data; }
+
         template<std::array<I, R> Indices>
         inline constexpr const Scalar &at() const {
             return _data[flatIndex<Indices>()];
@@ -113,22 +228,6 @@ namespace symtensor {
         template<std::array<I, R> Indices>
         inline constexpr Scalar &at() {
             return _data[flatIndex<Indices>()];
-        }
-
-        template<Index... Indices>
-        inline constexpr const Scalar &at() const {
-            return _data[flatIndex<std::array<I, R>{static_cast<Index>(Indices)...}>()];
-        }
-
-        template<Index... Indices>
-        inline constexpr Scalar &at() {
-            return _data[flatIndex<std::array<I, R>{static_cast<Index>(Indices)...}>()];
-        }
-
-        template<typename Integer, Integer... Indices>
-        inline constexpr const Scalar &operator[](std::integer_sequence<Integer, Indices...>) const {
-            static_assert(std::is_integral_v<Integer>);
-            return _data[flatIndex({Indices...})];
         }
 
         inline constexpr const Scalar &operator[](auto flatIndex) const {
@@ -141,40 +240,80 @@ namespace symtensor {
             return _data[static_cast<std::size_t>(flatIndex)];
         }
 
-    public: // tensor properties
+        /// @}
+    public:
+        /// @name Tensor properties
+        /// @{
 
+        /**
+         * @brief Computes the trace of the tensor
+         *
+         * This is equivalent to the sum of the diagonal elements.
+         *
+         * @return the sum of the scalar values at the diagonal positions of the tensor
+         */
         inline constexpr Scalar trace() const {
             return [&]<std::size_t... d>(std::index_sequence<d...>) constexpr {
                 return (at<repeat<R>(static_cast<I>(d))>() + ...);
             }(std::make_index_sequence<Dimensions>());
         }
 
-    public: // tensor-scalar operators
+        /// @}
+    public:
+        /// @name Tensor-scalar operators
+        /// @{
 
+        /**
+         * @brief Element-wise addition of a scalar
+         *
+         * @param scalar value to add to each element of the tensor
+         * @return a reference to the modified tensor
+         */
         inline constexpr Implementation &operator+=(const Scalar &scalar) {
             for (int i = 0; i < NumUniqueValues; ++i)
                 _data[i] += scalar;
             return *static_cast<Implementation *>(this);
         }
 
+        /**
+         * @brief Element-wise subtraction of a scalar
+         *
+         * @param scalar value to subtract from each element of the tensor
+         * @return a reference to the modified tensor
+         */
         inline constexpr Implementation &operator-=(const Scalar &scalar) {
             for (int i = 0; i < NumUniqueValues; ++i)
                 _data[i] -= scalar;
             return *static_cast<Implementation *>(this);
         }
 
+        /**
+         * @brief Element-wise multiplication by a scalar
+         *
+         * @param scalar value to multiply each element of the tensor by.
+         * @return a reference to the modified tensor
+         */
         inline constexpr Implementation &operator*=(const Scalar &scalar) {
             for (int i = 0; i < NumUniqueValues; ++i)
                 _data[i] *= scalar;
             return *static_cast<Implementation *>(this);
         }
 
+        /**
+         * @brief Element-wise division by a scalar
+         *
+         * @param scalar value to divide each element of the tensor by.
+         * @return a reference to the modified tensor
+         */
         inline constexpr Implementation &operator/=(const Scalar &scalar) {
             for (int i = 0; i < NumUniqueValues; ++i)
                 _data[i] /= scalar;
             return *static_cast<Implementation *>(this);
         }
 
+        /**
+         * @brief test
+         */
         inline constexpr Implementation operator+(const Scalar &scalar) const { return Self{*this} += scalar; }
 
         inline constexpr Implementation operator-(const Scalar &scalar) const { return Self{*this} -= scalar; }
@@ -183,6 +322,7 @@ namespace symtensor {
 
         inline constexpr Implementation operator/(const Scalar &scalar) const { return Self{*this} /= scalar; }
 
+        /// @}
     public: // tensor-tensor element-wise operations
 
         inline constexpr Implementation &operator+=(const Implementation &other) {

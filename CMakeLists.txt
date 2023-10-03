@@ -7,6 +7,7 @@ project(symtensor CXX)
 # Options
 option(SYMTENSOR_BUILD_TESTS "Build tests" ON)
 option(SYMTENSOR_BUILD_BENCHMARKS "Build benchmarks" ON)
+option(SYMTENSOR_BUILD_DOCUMENTATION "Build documentation" ON)
 
 # Dependencies
 find_package(glm QUIET) # fixme: version specification doesn't seem to work in CMake 3.24!
@@ -34,4 +35,7 @@ if (SYMTENSOR_BUILD_TESTS)
 endif ()
 if (SYMTENSOR_BUILD_BENCHMARKS)
     add_subdirectory(benchmarks)
+endif ()
+if (SYMTENSOR_BUILD_DOCUMENTATION)
+    add_subdirectory(doc)
 endif ()

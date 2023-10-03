@@ -5,6 +5,16 @@
 
 namespace symtensor {
 
+    /**
+     * Symmetric tensor
+     *
+     * todo: documentation
+     *
+     * @tparam S scalar type
+     * @tparam D number of dimensions (2d, 3d, etc.)
+     * @tparam R rank
+     * @tparam I index type
+     */
     template<typename S, std::size_t D, std::size_t R, typename I = Index<D>>
     class SymmetricTensor : public SymmetricTensorBase<SymmetricTensor<S, D, R, I>, S, D, R, I> {
         using Base = SymmetricTensorBase<SymmetricTensor<S, D, R, I>, S, D, R, I>;
