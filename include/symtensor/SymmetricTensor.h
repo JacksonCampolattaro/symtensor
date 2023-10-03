@@ -1,3 +1,7 @@
+/**
+ * @file
+ * @brief Provides the symmetric tensor type alongside typedefs for common uses.
+ */
 #ifndef SYMTENSOR_SYMMETRICTENSOR_H
 #define SYMTENSOR_SYMMETRICTENSOR_H
 
@@ -6,9 +10,7 @@
 namespace symtensor {
 
     /**
-     * Symmetric tensor
-     *
-     * todo: documentation
+     * @brief Generic Symmetric tensor type
      *
      * @tparam S scalar type
      * @tparam D number of dimensions (2d, 3d, etc.)
