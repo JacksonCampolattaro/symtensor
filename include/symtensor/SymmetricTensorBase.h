@@ -267,7 +267,7 @@ namespace symtensor {
          * @brief Element-wise addition of a scalar
          *
          * @param scalar value to add to each element of the tensor
-         * @return a reference to the modified tensor
+         * @return the modified tensor
          */
         inline constexpr Implementation &operator+=(const Scalar &scalar) {
             for (int i = 0; i < NumUniqueValues; ++i)
@@ -279,7 +279,7 @@ namespace symtensor {
          * @brief Element-wise subtraction of a scalar
          *
          * @param scalar value to subtract from each element of the tensor
-         * @return a reference to the modified tensor
+         * @return the modified tensor
          */
         inline constexpr Implementation &operator-=(const Scalar &scalar) {
             for (int i = 0; i < NumUniqueValues; ++i)
@@ -291,7 +291,7 @@ namespace symtensor {
          * @brief Element-wise multiplication by a scalar
          *
          * @param scalar value to multiply each element of the tensor by.
-         * @return a reference to the modified tensor
+         * @return the modified tensor
          */
         inline constexpr Implementation &operator*=(const Scalar &scalar) {
             for (int i = 0; i < NumUniqueValues; ++i)
@@ -303,7 +303,7 @@ namespace symtensor {
          * @brief Element-wise division by a scalar
          *
          * @param scalar value to divide each element of the tensor by.
-         * @return a reference to the modified tensor
+         * @return the modified tensor
          */
         inline constexpr Implementation &operator/=(const Scalar &scalar) {
             for (int i = 0; i < NumUniqueValues; ++i)
@@ -311,41 +311,67 @@ namespace symtensor {
             return *static_cast<Implementation *>(this);
         }
 
-        /**
-         * @brief test
-         */
+        /// @copydoc operator+=(const Scalar &)
         inline constexpr Implementation operator+(const Scalar &scalar) const { return Self{*this} += scalar; }
 
+        /// @copydoc operator-=(const Scalar &)
         inline constexpr Implementation operator-(const Scalar &scalar) const { return Self{*this} -= scalar; }
 
+        /// @copydoc operator*=(const Scalar &)
         inline constexpr Implementation operator*(const Scalar &scalar) const { return Self{*this} *= scalar; }
 
+        /// @copydoc operator/=(const Scalar &)
         inline constexpr Implementation operator/(const Scalar &scalar) const { return Self{*this} /= scalar; }
 
         /// @}
-    public: // tensor-tensor element-wise operations
+    public:
+        /// @name Tensor-tensor element-wise operations
+        /// @{
 
+        /**
+         * @brief Element-wise addition with another tensor
+         *
+         * @param other tensor to add with this tensor
+         * @return the modified tensor
+         */
         inline constexpr Implementation &operator+=(const Implementation &other) {
             for (int i = 0; i < NumUniqueValues; ++i)
                 _data[i] += other._data[i];
             return *static_cast<Implementation *>(this);
         }
 
+        /**
+         * @brief Element-wise subtraction by another tensor
+         *
+         * @param other tensor to subtract from this tensor
+         * @return the modified tensor
+         */
         inline constexpr Implementation &operator-=(const Implementation &other) {
             for (int i = 0; i < NumUniqueValues; ++i)
                 _data[i] -= other._data[i];
             return *static_cast<Implementation *>(this);
         }
 
+        /// @copydoc operator+=(const Implementation &)
         inline constexpr Implementation operator+(const Implementation &other) const { return Self{*this} += other; }
 
+        /// @copydoc operator-=(const Implementation &)
         inline constexpr Implementation operator-(const Implementation &other) const { return Self{*this} -= other; }
 
+        /// @}
     public:
+        /// @name Comparison operations
+        /// @{
 
-        // fixme: this might not work with CRTP
+        /**
+         * @brief Comparison with another symmetric tensor
+         *
+         * @param other symmetric tensor to compare with
+         * @return true if all elements of the tensors are equivalent, false otherwise
+         */
         inline constexpr bool operator==(const Self &other) const = default;
 
+        /// @}
     public: // utility functions
 
         template<std::array<I, R> Indices>
