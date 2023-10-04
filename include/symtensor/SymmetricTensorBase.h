@@ -426,6 +426,28 @@ namespace symtensor {
 
     };
 
+    namespace {
+
+        template<std::size_t, class>
+        struct ReplaceRankHelper {
+        };
+        template<
+                std::size_t NewRank,
+                template<typename, std::size_t, std::size_t, typename> class ST,
+                typename S, std::size_t D, std::size_t OldRank, typename I
+        >
+        struct ReplaceRankHelper<NewRank, ST<S, D, OldRank, I>> {
+            using type = ST<S, D, NewRank, I>;
+        };
+
+    }
+
+    template<class ST, std::size_t R>
+    using ReplaceRank = typename ReplaceRankHelper<R, ST>::type;
+
+    template<class ST>
+    using NextHigherRank = ReplaceRank<ST, ST::Rank + 1>;
+
 }
 
 #endif //SYMTENSOR_SYMMETRICTENSORBASE_H

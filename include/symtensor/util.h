@@ -25,14 +25,6 @@ namespace symtensor {
         else return pascal(x - 1, y) + pascal(x, y - 1);
     }
 
-    constexpr std::size_t numValuesInTensor(std::size_t D, std::size_t R) {
-        return pow(D, R);
-    }
-
-    constexpr std::size_t numUniqueValuesInSymmetricTensor(std::size_t D, std::size_t R) {
-        return pascal(D - 1, R);
-    }
-
     template<std::size_t R, typename I>
     static constexpr int kroneckerDelta(std::array<I, R> dimensionalIndices) {
         return std::all_of(
@@ -90,6 +82,12 @@ namespace symtensor {
         }(), ...);
         return result;
     }
+
+    template<std::size_t I, typename... T>
+    using type_at_index = std::remove_reference_t<decltype(std::get<I>(std::declval<std::tuple<T...>>()))>;
+
+    template<typename... T>
+    using last_type = type_at_index<sizeof...(T) - 1, T...>;
 
 }
 

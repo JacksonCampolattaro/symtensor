@@ -7,7 +7,17 @@
 #include <iterator>
 #include <span>
 
+#include <symtensor/util.h>
+
 namespace symtensor {
+
+    constexpr std::size_t numValuesInTensor(std::size_t D, std::size_t R) {
+        return pow(D, R);
+    }
+
+    constexpr std::size_t numUniqueValuesInSymmetricTensor(std::size_t D, std::size_t R) {
+        return pascal(D - 1, R);
+    }
 
     template<std::size_t D>
     struct IndexTypeForDimension;
