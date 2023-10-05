@@ -51,6 +51,13 @@ namespace symtensor {
         /// @{
 
         /**
+         * @brief Default constructor.
+         *
+         * Initializes all indices to 0.
+         */
+        explicit constexpr SymmetricTensorBase() : _data{0} {}
+
+        /**
          * @brief Constructor from a sequence of values.
          *
          * @param s a sequence of scalar values to initialize the tensor.
@@ -73,6 +80,15 @@ namespace symtensor {
          */
         inline static consteval Implementation Ones() {
             return NullaryExpression([](auto indices) { return Scalar{1}; });
+        }
+
+        /**
+         * @brief Zero matrix constructor.
+         *
+         * @return a symmetric tensor with a value of 0 at every index.
+         */
+        inline static consteval Implementation Zeros() {
+            return NullaryExpression([](auto indices) { return Scalar{0}; });
         }
 
         /**
@@ -210,6 +226,11 @@ namespace symtensor {
 
         /**
          * @brief Direct access to underlying data structure
+         *
+         * @note No guarantees are provided about the definition and layout of the flat data structure,
+         *  except for the fact that it is an iterable with a `size()`, `begin()` and `end()` method.
+         *  The elements of the symmetric tensor may be rearranged in order to
+         *  facilitate vectorized operations, for the best possible performance.
          *
          * @return a reference to the underlying flat storage.
          */
