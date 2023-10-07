@@ -5,4 +5,6 @@
 
     --header-background-color-landing: rgba(238, 238, 238, 0.75);
     --search-overlay-color: var(--header-background-color-landing);
+
+    --paragraph-indent: 0;
 }
