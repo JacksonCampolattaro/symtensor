@@ -15,7 +15,7 @@ namespace symtensor {
 
         template<std::size_t Order, typename ...PrefixTensors> requires (last_type<PrefixTensors...>::Rank < Order)
         struct TensorSequenceHelper<Order, PrefixTensors...> {
-            using type = TensorSequenceHelper<
+            using type = typename TensorSequenceHelper<
                     Order,
                     PrefixTensors...,
                     NextHigherRank<last_type<PrefixTensors...>>
