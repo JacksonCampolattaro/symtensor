@@ -13,7 +13,9 @@
 
 using namespace symtensor;
 
-#if __cpp_using_enum
+// Workaround for compiler defect DR2621 in Clang 15
+// https://reviews.llvm.org/D134283
+#if (__cpp_using_enum && !__clang__) || (__clang_major__ > 15)
 using enum SymmetricTensor3f<1>::Index;
 #else
 using Index<3>::X;
