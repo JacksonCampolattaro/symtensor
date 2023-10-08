@@ -75,7 +75,7 @@ namespace symtensor {
          * @return a symmetric tensor with a value of 1 along the diagonal, 0 elsewhere.
          */
         inline static consteval Implementation Identity() {
-            return NullaryExpression([](auto indices) consteval { return kroneckerDelta(indices); });
+            return NullaryExpression([]<auto ...indices>() consteval { return kroneckerDelta(indices...); });
         }
 
         /**
@@ -84,7 +84,7 @@ namespace symtensor {
          * @return a symmetric tensor with a value of 1 at every index.
          */
         inline static consteval Implementation Ones() {
-            return NullaryExpression([]([[maybe_unused]] auto indices) consteval { return Scalar{1}; });
+            return NullaryExpression([]<auto ...>() consteval { return Scalar{1}; });
         }
 
         /**
@@ -93,7 +93,7 @@ namespace symtensor {
          * @return a symmetric tensor with a value of 0 at every index.
          */
         inline static consteval Implementation Zeros() {
-            return NullaryExpression([]([[maybe_unused]] auto indices) { return Scalar{0}; });
+            return NullaryExpression([]<auto ...>() { return Scalar{0}; });
         }
 
         /**
