@@ -40,7 +40,6 @@ target_compile_options(
         $<$<CXX_COMPILER_ID:Clang>:-Wno-deprecated-volatile>
         $<$<CXX_COMPILER_ID:AppleClang>:-Wno-deprecated-volatile>
 )
-message(STATUS "${CMAKE_CXX_COMPILER_ID}")
 
 # Add all catch tests as CTest targets
 catch_discover_tests(tests)

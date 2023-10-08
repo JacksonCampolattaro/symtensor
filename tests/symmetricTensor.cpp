@@ -13,14 +13,21 @@
 
 using namespace symtensor;
 
+#if __cpp_using_enum
+using enum SymmetricTensor3f<1>::Index;
+#else
+using Index<3>::X;
+using Index<3>::Y;
+using Index<3>::Z;
+#endif
+
+
 TEST_CASE("Member access to a 3x3 symmetric tensor", "[SymmetricTensor]") {
 
     using Quadrupole = SymmetricTensor3f<2>;
 
     // Construct a quadrupole with known values
     constexpr Quadrupole q{0, 1, 2, 3, 4, 5};
-    using
-    enum Quadrupole::Index;
 
     CHECK(q[{X, X}] == 0);
 
@@ -44,8 +51,6 @@ TEST_CASE("Member access to a 3x3x3 symmetric tensor", "[SymmetricTensor]") {
 
     // Construct a quadrupole with known values
     Octupole o{0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
-    using
-    enum Octupole::Index;
 
     CHECK(o[{X, X, X}] == 0);
 
@@ -82,8 +87,6 @@ TEST_CASE("Member access to a 3x3x3x3 symmetric tensor", "[SymmetricTensor]") {
 
     // Construct a quadrupole with known values
     Hexadecupole h{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14};
-    using
-    enum Hexadecupole::Index;
 
     CHECK(h[{X, X, X, X}] == 0);
 
@@ -168,9 +171,6 @@ TEST_CASE("Symmetric tensor comparison", "[SymmetricTensor]") {
 
 TEST_CASE("Symmetric tensor arithmetic", "[SymmetricTensor]") {
 
-    using
-    enum SymmetricTensor3f<3>::Index;
-
     SymmetricTensor3f<3> s3a{0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
     SymmetricTensor3f<3> s3b = s3a + s3a;
     SymmetricTensor3f<3> s3c = s3a + s3b;
@@ -200,8 +200,6 @@ TEST_CASE("Symmetric tensor index format conversion", "[SymmetricTensor]") {
 
     {
         using Quadrupole = SymmetricTensor3f<2>;
-        using
-        enum Quadrupole::Index;
 
         CHECK(Quadrupole::dimensionalIndices(0) == std::array<Quadrupole::Index, 2>{X, X});
         CHECK(Quadrupole::dimensionalIndices(1) == std::array<Quadrupole::Index, 2>{X, Y});
@@ -214,8 +212,6 @@ TEST_CASE("Symmetric tensor index format conversion", "[SymmetricTensor]") {
     // 3D
     {
         using Octupole = SymmetricTensor3f<3>;
-        using
-        enum Octupole::Index;
 
         CHECK(Octupole::dimensionalIndices(0) == std::array<Octupole::Index, 3>{X, X, X});
         CHECK(Octupole::dimensionalIndices(1) == std::array<Octupole::Index, 3>{X, X, Y});
@@ -232,8 +228,6 @@ TEST_CASE("Symmetric tensor index format conversion", "[SymmetricTensor]") {
     // 4D
     {
         using Hexadecupole = SymmetricTensor3f<4>;
-        using
-        enum Hexadecupole::Index;
 
         CHECK(Hexadecupole::dimensionalIndices(0) == std::array<Hexadecupole::Index, 4>{X, X, X, X});
         CHECK(Hexadecupole::dimensionalIndices(1) == std::array<Hexadecupole::Index, 4>{X, X, X, Y});
@@ -255,9 +249,6 @@ TEST_CASE("Symmetric tensor index format conversion", "[SymmetricTensor]") {
 }
 
 TEST_CASE("Symmetric tensor initialization with an expression", "[SymmetricTensor]") {
-
-    using
-    enum SymmetricTensor3f<3>::Index;
 
     auto ones = SymmetricTensor3f < 3 > ::NullaryExpression([]([[maybe_unused]] auto _) {
         return 1;
