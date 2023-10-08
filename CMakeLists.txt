@@ -27,6 +27,7 @@ endif ()
 add_library(symtensor INTERFACE)
 target_include_directories(symtensor INTERFACE include)
 target_link_libraries(symtensor INTERFACE glm::glm)
+set_property(TARGET symtensor PROPERTY CXX_STANDARD 20)
 add_library(symtensor::symtensor ALIAS symtensor)
 
 # Build tests if requested

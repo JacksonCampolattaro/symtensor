@@ -24,18 +24,20 @@ add_executable(tests
         arithmeticTuple.cpp
         multipole.cpp
         )
+set_property(TARGET tests PROPERTY CXX_STANDARD 20)
 target_link_libraries(tests PRIVATE
         Catch2::Catch2WithMain
         symtensor::symtensor
-)
-target_compile_options(
-        tests PRIVATE
+        )
+set(
+        TEST_DEBUG_OPTIONS
         $<$<CXX_COMPILER_ID:MSVC>:/W4 /WX>
         $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Wextra -Wpedantic -Werror>
 )
+target_compile_options(tests PRIVATE $<$<CONFIG:DEBUG>:SHELL:${TEST_DEBUG_OPTIONS}>)
 
 # Add all catch tests as CTest targets
 catch_discover_tests(tests)
-foreach(test_name ${tests_TESTS})
+foreach (test_name ${tests_TESTS})
     add_test(NAME tests::${test_name} COMMAND tests ${test_name})
-endforeach()
+endforeach ()
