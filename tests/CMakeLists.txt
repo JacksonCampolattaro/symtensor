@@ -12,13 +12,13 @@ else ()
             GIT_TAG v3.4.0)
     FetchContent_MakeAvailable(Catch2)
 endif ()
+include(Catch)
 
 if (NOT TARGET symtensor)
     find_package(symtensor REQUIRED)
 endif ()
 
 add_executable(tests
-        #symmetricTensor3.cpp
         util.cpp
         symmetricTensor.cpp
         arithmeticTuple.cpp
@@ -28,3 +28,9 @@ target_link_libraries(tests PRIVATE
         Catch2::Catch2WithMain
         symtensor::symtensor
 )
+
+# Add all catch tests as CTest targets
+catch_discover_tests(tests)
+foreach(test_name ${tests_TESTS})
+    add_test(NAME tests::${test_name} COMMAND tests ${test_name})
+endforeach()

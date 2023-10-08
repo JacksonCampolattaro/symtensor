@@ -31,6 +31,7 @@ add_library(symtensor::symtensor ALIAS symtensor)
 
 # Build tests if requested
 if (SYMTENSOR_BUILD_TESTS)
+    enable_testing()
     add_subdirectory(tests)
 endif ()
 if (SYMTENSOR_BUILD_BENCHMARKS)
