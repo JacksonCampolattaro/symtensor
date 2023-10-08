@@ -34,7 +34,12 @@ set(
         $<$<CXX_COMPILER_ID:MSVC>:/W4 /WX>
         $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Wextra -Wpedantic -Werror>
 )
-target_compile_options(tests PRIVATE $<$<CONFIG:DEBUG>:SHELL:${TEST_DEBUG_OPTIONS}>)
+target_compile_options(
+        tests PRIVATE
+        $<$<CONFIG:DEBUG>:SHELL:${TEST_DEBUG_OPTIONS}>
+        $<$<CXX_COMPILER_ID:Clang>:-Wno-deprecated-volatile>
+)
+message(STATUS "${CMAKE_CXX_COMPILER_ID}")
 
 # Add all catch tests as CTest targets
 catch_discover_tests(tests)

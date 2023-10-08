@@ -1,5 +1,4 @@
 #include <catch2/catch_test_macros.hpp>
-#include <catch2/catch_approx.hpp>
 
 #include <symtensor/SymmetricTensor.h>
 
@@ -20,8 +19,8 @@ TEST_CASE("Member access to a 3x3 symmetric tensor", "[SymmetricTensor]") {
 
     // Construct a quadrupole with known values
     constexpr Quadrupole q{0, 1, 2, 3, 4, 5};
-    using
-    enum Quadrupole::Index;
+    using Quadrupole::Index::X;
+    using Quadrupole::Index::Y;
 
     CHECK(q[{X, X}] == 0);
 

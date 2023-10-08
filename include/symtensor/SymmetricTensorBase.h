@@ -41,6 +41,11 @@ namespace symtensor {
 
         using Index = I;
 
+        enum A_enum {
+            L = 0,
+            Y
+        };
+
     private:
 
         // todo: this could provided by a CRTP type
@@ -70,7 +75,7 @@ namespace symtensor {
          * @return a symmetric tensor with a value of 1 along the diagonal, 0 elsewhere.
          */
         inline static consteval Implementation Identity() {
-            return NullaryExpression([](auto indices) { return kroneckerDelta(indices); });
+            return NullaryExpression([](auto indices) consteval { return kroneckerDelta(indices); });
         }
 
         /**
@@ -79,7 +84,7 @@ namespace symtensor {
          * @return a symmetric tensor with a value of 1 at every index.
          */
         inline static consteval Implementation Ones() {
-            return NullaryExpression([]([[maybe_unused]] auto indices) { return Scalar{1}; });
+            return NullaryExpression([]([[maybe_unused]] auto indices) consteval { return Scalar{1}; });
         }
 
         /**
