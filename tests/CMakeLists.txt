@@ -28,6 +28,11 @@ target_link_libraries(tests PRIVATE
         Catch2::Catch2WithMain
         symtensor::symtensor
 )
+target_compile_options(
+        tests PRIVATE
+        $<$<CXX_COMPILER_ID:MSVC>:/W4 /WX>
+        $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Wextra -Wpedantic -Werror>
+)
 
 # Add all catch tests as CTest targets
 catch_discover_tests(tests)

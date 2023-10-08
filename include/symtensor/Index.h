@@ -19,43 +19,47 @@ namespace symtensor {
         return pascal(D - 1, R);
     }
 
-    template<std::size_t D>
-    struct IndexTypeForDimension;
+    namespace {
 
-    template<>
-    struct IndexTypeForDimension<2> {
-        enum class type : std::size_t {
-            X = 0,
-            Y,
+        template<std::size_t D>
+        struct IndexTypeForDimension;
+
+        template<>
+        struct IndexTypeForDimension<2> {
+            enum class type : std::size_t {
+                X = 0,
+                Y,
+            };
         };
-    };
 
-    template<>
-    struct IndexTypeForDimension<3> {
-        enum class type : std::size_t {
-            X = 0,
-            Y,
-            Z
+        template<>
+        struct IndexTypeForDimension<3> {
+            enum class type : std::size_t {
+                X = 0,
+                Y,
+                Z
+            };
         };
-    };
 
-    template<>
-    struct IndexTypeForDimension<4> {
-        enum class type : std::size_t {
-            W = 0,
-            X,
-            Y,
-            Z
+        template<>
+        struct IndexTypeForDimension<4> {
+            enum class type : std::size_t {
+                W = 0,
+                X,
+                Y,
+                Z
+            };
         };
-    };
+
+        template<std::size_t D>
+        struct IndexTypeForDimension {
+            using type = std::size_t;
+        };
+
+    }
 
     template<std::size_t D>
-    struct IndexTypeForDimension {
-        using type = std::size_t;
-    };
-
-    template<std::size_t D>
-    using Index = IndexTypeForDimension<D>::type;
+    using Index = typename IndexTypeForDimension<D>::type;
 
     template<std::size_t D>
     static std::ostream &operator<<(std::ostream &out, const Index<D> &index) {
@@ -68,7 +72,7 @@ namespace symtensor {
         // todo: this is not ideal
         out << "(";
         out << static_cast<std::size_t>(indices[0]);
-        for (int i = 1; i < R; ++i)
+        for (std::size_t i = 1; i < R; ++i)
             out << ", " << static_cast<std::size_t>(indices[i]);
         out << ")";
         return out;
@@ -79,7 +83,7 @@ namespace symtensor {
         template<typename I>
         inline constexpr void recursiveDimensionalIndices(
                 const std::size_t &flatIndex,
-                std::size_t D,
+                [[maybe_unused]] std::size_t D,
                 std::span<I, 1> indices,
                 std::size_t offset = 0
         ) {
@@ -165,7 +169,7 @@ namespace symtensor {
         template<typename I>
         inline constexpr void recursiveLexicographicalIndices(
                 const std::size_t &linearIndex,
-                std::size_t D,
+                [[maybe_unused]] std::size_t D,
                 std::span<I, 1> indices
         ) {
             // Base case: a vector's flat index is the same as its lexicographical index

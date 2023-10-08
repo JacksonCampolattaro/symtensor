@@ -13,7 +13,7 @@ namespace symtensor {
 
         using SymmetricMatrix = symtensor::SymmetricTensorBase<Implementation, Scalar, D, 2, I>;
         glm::mat<D, D, Scalar> result{};
-        for (int i = 0; i < SymmetricMatrix::NumValues; ++i) {
+        for (std::size_t i = 0; i < SymmetricMatrix::NumValues; ++i) {
             auto index2d = SymmetricMatrix::lexicographicalIndices(i);
             result[static_cast<size_t>(index2d[0])][static_cast<size_t>(index2d[1])] = symmetricMatrix[index2d];
         }

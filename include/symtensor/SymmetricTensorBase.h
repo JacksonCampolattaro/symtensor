@@ -79,7 +79,7 @@ namespace symtensor {
          * @return a symmetric tensor with a value of 1 at every index.
          */
         inline static consteval Implementation Ones() {
-            return NullaryExpression([](auto indices) { return Scalar{1}; });
+            return NullaryExpression([]([[maybe_unused]] auto indices) { return Scalar{1}; });
         }
 
         /**
@@ -88,7 +88,7 @@ namespace symtensor {
          * @return a symmetric tensor with a value of 0 at every index.
          */
         inline static consteval Implementation Zeros() {
-            return NullaryExpression([](auto indices) { return Scalar{0}; });
+            return NullaryExpression([]([[maybe_unused]] auto indices) { return Scalar{0}; });
         }
 
         /**
@@ -291,7 +291,7 @@ namespace symtensor {
          * @return the modified tensor
          */
         inline constexpr Implementation &operator+=(const Scalar &scalar) {
-            for (int i = 0; i < NumUniqueValues; ++i)
+            for (std::size_t i = 0; i < NumUniqueValues; ++i)
                 _data[i] += scalar;
             return *static_cast<Implementation *>(this);
         }
@@ -303,7 +303,7 @@ namespace symtensor {
          * @return the modified tensor
          */
         inline constexpr Implementation &operator-=(const Scalar &scalar) {
-            for (int i = 0; i < NumUniqueValues; ++i)
+            for (std::size_t i = 0; i < NumUniqueValues; ++i)
                 _data[i] -= scalar;
             return *static_cast<Implementation *>(this);
         }
@@ -315,7 +315,7 @@ namespace symtensor {
          * @return the modified tensor
          */
         inline constexpr Implementation &operator*=(const Scalar &scalar) {
-            for (int i = 0; i < NumUniqueValues; ++i)
+            for (std::size_t i = 0; i < NumUniqueValues; ++i)
                 _data[i] *= scalar;
             return *static_cast<Implementation *>(this);
         }
@@ -327,7 +327,7 @@ namespace symtensor {
          * @return the modified tensor
          */
         inline constexpr Implementation &operator/=(const Scalar &scalar) {
-            for (int i = 0; i < NumUniqueValues; ++i)
+            for (std::size_t i = 0; i < NumUniqueValues; ++i)
                 _data[i] /= scalar;
             return *static_cast<Implementation *>(this);
         }
@@ -356,7 +356,7 @@ namespace symtensor {
          * @return the modified tensor
          */
         inline constexpr Implementation &operator+=(const Implementation &other) {
-            for (int i = 0; i < NumUniqueValues; ++i)
+            for (std::size_t i = 0; i < NumUniqueValues; ++i)
                 _data[i] += other._data[i];
             return *static_cast<Implementation *>(this);
         }
@@ -368,7 +368,7 @@ namespace symtensor {
          * @return the modified tensor
          */
         inline constexpr Implementation &operator-=(const Implementation &other) {
-            for (int i = 0; i < NumUniqueValues; ++i)
+            for (std::size_t i = 0; i < NumUniqueValues; ++i)
                 _data[i] -= other._data[i];
             return *static_cast<Implementation *>(this);
         }

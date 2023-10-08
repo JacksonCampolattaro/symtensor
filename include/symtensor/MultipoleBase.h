@@ -11,16 +11,24 @@ namespace symtensor {
     namespace {
 
         template<std::size_t Order, typename ...PrefixTensors>
-        consteval auto get_tensor_sequence() {
-            using HighestRankTensor = last_type<PrefixTensors...>;
-            if constexpr (HighestRankTensor::Rank < Order)
-                return get_tensor_sequence<Order, PrefixTensors..., NextHigherRank<HighestRankTensor>>();
-            else
-                return std::declval<ArithmeticTuple<PrefixTensors...>>();
-        }
+        struct TensorSequenceHelper;
+
+        template<std::size_t Order, typename ...PrefixTensors> requires (last_type<PrefixTensors...>::Rank < Order)
+        struct TensorSequenceHelper<Order, PrefixTensors...> {
+            using type = TensorSequenceHelper<
+                    Order,
+                    PrefixTensors...,
+                    NextHigherRank<last_type<PrefixTensors...>>
+            >::type;
+        };
+
+        template<std::size_t Order, typename ...PrefixTensors> requires (last_type<PrefixTensors...>::Rank == Order)
+        struct TensorSequenceHelper<Order, PrefixTensors...> {
+            using type = ArithmeticTuple<PrefixTensors...>;
+        };
 
         template<std::size_t Order, typename ...PrefixTensors>
-        using TensorSequence = decltype(get_tensor_sequence<Order, PrefixTensors...>());
+        using TensorSequence = typename TensorSequenceHelper<Order, PrefixTensors...>::type;
 
     }
 

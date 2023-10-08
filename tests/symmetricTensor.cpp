@@ -260,13 +260,13 @@ TEST_CASE("Symmetric tensor initialization with an expression", "[SymmetricTenso
     using
     enum SymmetricTensor3f<3>::Index;
 
-    auto ones = SymmetricTensor3f < 3 > ::NullaryExpression([](auto _) {
+    auto ones = SymmetricTensor3f < 3 > ::NullaryExpression([]([[maybe_unused]] auto _) {
         return 1;
     });
     REQUIRE(ones == SymmetricTensor3f < 3 > {1, 1, 1, 1, 1, 1, 1, 1, 1, 1});
 
     int i = 0;
-    auto sequence = SymmetricTensor3f < 3 > ::NullaryExpression([&](auto _) {
+    auto sequence = SymmetricTensor3f < 3 > ::NullaryExpression([&]([[maybe_unused]] auto _) {
         return i++;
     });
     REQUIRE(sequence == SymmetricTensor3f < 3 > {0, 1, 2, 3, 4, 5, 6, 7, 8, 9});
@@ -297,11 +297,11 @@ TEST_CASE("Symmetric tensor product with a vector", "[SymmetricTensor]") {
     std::reference_wrapper<std::reference_wrapper<float>> rrv{rv};
     REQUIRE(v == rrv.get());
 
-    auto identity2x2 = glm::mat2x2{};
     auto vec2 = glm::vec2{1, 2};
     auto svec2 = SymmetricTensor2f<1>{1, 2};
     REQUIRE(to_glm(SymmetricTensor2f<2>::CartesianPower(svec2)) == glm::outerProduct(vec2, vec2));
     // todo
+    //auto identity2x2 = glm::mat2x2{};
     //REQUIRE(SymmetricTensor2f<2>::Identity() * glm::vec2{1, 2} == glm::outerProduct(identity2x2 * glm::transpose(vec2)));
     //    REQUIRE(SymmetricTensor2f<2>::Identity() * glm::vec2{1, 2} ==
     //            SymmetricTensor2f<3>{1, 0, 1, 2});
