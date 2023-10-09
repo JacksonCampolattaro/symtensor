@@ -34,15 +34,14 @@ jobs:
       - name: Configure CMake
         run: >
           cmake -B ${{ steps.strings.outputs.build-output-dir }}
-          -DCMAKE_CXX_COMPILER=gcc
-          -DCMAKE_C_COMPILER=g++
+          -DCMAKE_CXX_COMPILER=g++
           -DSYMTENSOR_BUILD_DOCUMENTATION=ON
           -DSYMTENSOR_BUILD_BENCHMARKS=OFF
           -DSYMTENSOR_BUILD_TESTS=OFF
           -S ${{ github.workspace }}
 
       - name: Build
-        run: cmake --build ${{ steps.strings.outputs.build-output-dir }}
+        run: cmake --build ${{ steps.strings.outputs.build-output-dir }} --target documentation
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
