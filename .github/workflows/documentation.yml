@@ -1,0 +1,52 @@
+name: Documentation
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      # Install doxygen and other dependencies with apt
+      - uses: awalsh128/cache-apt-pkgs-action@v1.3.0
+        with:
+          packages: dia doxygen doxygen-doc graphviz mscgen texlive-base texlive-latex-extra texlive-fonts-extra texlive-fonts-recommended
+          version: 1.0
+
+      # Install mcss dependencies with pip
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+          cache: 'pip'
+      - run: pip3 install jinja2 Pygments
+
+      - name: Set reusable strings
+        id: strings
+        shell: bash
+        run: |
+          echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
+
+      - name: Configure CMake
+        run: >
+          cmake -B ${{ steps.strings.outputs.build-output-dir }}
+          -DCMAKE_CXX_COMPILER=gcc
+          -DCMAKE_C_COMPILER=g++
+          -DSYMTENSOR_BUILD_DOCUMENTATION=ON
+          -DSYMTENSOR_BUILD_BENCHMARKS=OFF
+          -DSYMTENSOR_BUILD_TESTS=OFF
+          -S ${{ github.workspace }}
+
+      - name: Build
+        run: cmake --build ${{ steps.strings.outputs.build-output-dir }}
+
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ${{ steps.strings.outputs.build-output-dir }}/doc//html
