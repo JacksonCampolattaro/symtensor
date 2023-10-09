@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>symtensor::SymmetricTensor class | symtensor</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:400,400i,700,700i|JetBrains+Mono:400,400i,600" />
+  <link rel="stylesheet" href="m-theme-light.css" />
+  <link rel="stylesheet" href="m-layout.css" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="m-grid.css" />
+  <link rel="stylesheet" href="m-components.css" />
+  <link rel="stylesheet" href="pygments-console.css" />
+  <link rel="stylesheet" href="m-documentation.css" />
+  <link rel="icon" href="symtensor-logo.svg" type="image/svg+xml" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#22272e" />
+</head>
+<body>
+<header><nav id="navigation">
+  <div class="m-container">
+    <div class="m-row">
+      <a href="index.html" id="m-navbar-brand" class="m-col-t-8 m-col-m-none m-left-m"><img src="symtensor-logo.svg" alt="" />symtensor</a>
+      <div class="m-col-t-4 m-hide-m m-text-right m-nopadr">
+        <a href="#search" class="m-doc-search-icon" title="Search" onclick="return showSearch()"><svg style="height: 0.9rem;" viewBox="0 0 16 16">
+          <path id="m-doc-search-icon-path" d="m6 0c-3.31 0-6 2.69-6 6 0 3.31 2.69 6 6 6 1.49 0 2.85-0.541 3.89-1.44-0.0164 0.338 0.147 0.759 0.5 1.15l3.22 3.79c0.552 0.614 1.45 0.665 2 0.115 0.55-0.55 0.499-1.45-0.115-2l-3.79-3.22c-0.392-0.353-0.812-0.515-1.15-0.5 0.895-1.05 1.44-2.41 1.44-3.89 0-3.31-2.69-6-6-6zm0 1.56a4.44 4.44 0 0 1 4.44 4.44 4.44 4.44 0 0 1-4.44 4.44 4.44 4.44 0 0 1-4.44-4.44 4.44 4.44 0 0 1 4.44-4.44z"/>
+        </svg></a>
+        <a id="m-navbar-show" href="#navigation" title="Show navigation"></a>
+        <a id="m-navbar-hide" href="#" title="Hide navigation"></a>
+      </div>
+      <div id="m-navbar-collapse" class="m-col-t-12 m-show-m m-col-m-none m-right-m">
+        <div class="m-row">
+          <ol class="m-col-t-6 m-col-m-none">
+            <li><a href="pages.html">Pages</a></li>
+            <li><a href="namespaces.html">Namespaces</a></li>
+          </ol>
+          <ol class="m-col-t-6 m-col-m-none" start="3">
+            <li><a href="annotated.html">Classes</a></li>
+            <li><a href="files.html">Files</a></li>
+            <li class="m-show-m"><a href="#search" class="m-doc-search-icon" title="Search" onclick="return showSearch()"><svg style="height: 0.9rem;" viewBox="0 0 16 16">
+              <use href="#m-doc-search-icon-path" />
+            </svg></a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav></header>
+<main><article>
+  <div class="m-container m-container-inflatable">
+    <div class="m-row">
+      <div class="m-col-l-10 m-push-l-1">
+        <h1>
+          <div class="m-doc-include m-code m-inverted m-right-m m-text-right"><span class="cp">#include</span> <a class="cpf" href="SymmetricTensor_8h.html">&lt;symtensor/SymmetricTensor.h&gt;</a></div>
+          <div class="m-doc-template">template&lt;typename S, std::size_t D, std::size_t R, typename I = Index&lt;D&gt;&gt;</div>
+          <span class="m-breadcrumb"><a href="namespacesymtensor.html">symtensor</a>::<wbr/></span>SymmetricTensor <span class="m-thin">class</span>
+        </h1>
+        <p>Generic symmetric tensor type.</p>
+        <table class="m-table m-fullwidth m-flat">
+          <thead>
+            <tr><th colspan="2">Template parameters</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="width: 1%">S</td>
+              <td>scalar type</td>
+            </tr>
+            <tr>
+              <td>D</td>
+              <td>number of dimensions (2d, 3d, etc.)</td>
+            </tr>
+            <tr>
+              <td>R</td>
+              <td>rank</td>
+            </tr>
+            <tr>
+              <td>I</td>
+              <td>index type</td>
+            </tr>
+          </tbody>
+        </table>
+        <nav class="m-block m-default">
+          <h3>Contents</h3>
+          <ul>
+            <li>
+              Reference
+              <ul>
+                <li><a href="#base-classes">Base classes</a></li>
+                <li><a href="#pub-types">Public types</a></li>
+                <li><a href="#pub-static-attribs">Public static variables</a></li>
+                <li><a href="#constructors">Constructors</a></li>
+                <li><a href="#member-access">Member access</a></li>
+                <li><a href="#tensor-properties">Tensor properties</a></li>
+                <li><a href="#tensor-scalar-operators">Tensor-scalar operators</a></li>
+                <li><a href="#tensor-tensor-element-wise-operations">Tensor-tensor element-wise operations</a></li>
+                <li><a href="#comparison-operations">Comparison operations</a></li>
+              </ul>
+            </li>
+          </ul>
+        </nav>
+        <section id="base-classes">
+          <h2><a href="#base-classes">Base classes</a></h2>
+          <dl class="m-doc">
+            <dt>
+              <div class="m-doc-template">template&lt;class Implementation, typename S, std::size_t D, std::size_t R, typename I = Index&lt;D&gt;&gt;</div>
+              class <a href="classsymtensor_1_1SymmetricTensorBase.html" class="m-doc">SymmetricTensorBase&lt;SymmetricTensor&lt;S, D, R, Index&lt;D&gt;&gt;, S, D, R, Index&lt;D&gt;&gt;</a>
+            </dt>
+            <dd>Symmetric tensor base-type for use with CRTP implementations.</dd>
+          </dl>
+        </section>
+        <section id="pub-types">
+          <h2><a href="#pub-types">Public types</a></h2>
+          <dl class="m-doc">
+            <dt>
+              <span class="m-doc-wrap-bumper">enum <a href="classsymtensor_1_1SymmetricTensorBase.html#a7898ca3dfe474108a8a97bde06e05b31" class="m-doc">A_enum</a> { </span><span class="m-doc-wrap"> }</span>
+            </dt>
+            <dd></dd>
+            <dt>
+              using <a href="classsymtensor_1_1SymmetricTensorBase.html#a60b2dfef6d240063970514e5dd5d74f4" class="m-doc">Self</a> = <a href="classsymtensor_1_1SymmetricTensorBase.html" class="m-doc">SymmetricTensorBase</a>&lt;<a href="classsymtensor_1_1SymmetricTensor.html" class="m-doc">SymmetricTensor</a>&lt;S, D, R, Index&lt;D&gt;&gt;, S, D, R, Index&lt;D&gt;&gt;
+            </dt>
+            <dd></dd>
+            <dt>
+              using <a href="classsymtensor_1_1SymmetricTensorBase.html#a54b15e900cf9ee14fca8860738f1198c" class="m-doc">Scalar</a> = S
+            </dt>
+            <dd></dd>
+            <dt>
+              using <a href="classsymtensor_1_1SymmetricTensorBase.html#a11382c8f563ef91e34b1eb8bc13038a8" class="m-doc">Index</a> = Index&lt;D&gt;
+            </dt>
+            <dd></dd>
+          </dl>
+        </section>
+        <section id="pub-static-attribs">
+          <h2><a href="#pub-static-attribs">Public static variables</a></h2>
+          <dl class="m-doc">
+            <dt>
+              static std::size_t <a href="classsymtensor_1_1SymmetricTensorBase.html#abe4b914e1a681ca41cf649499b6f2a0b" class="m-doc">Dimensions</a> <span class="m-label m-flat m-primary">constexpr</span>
+            </dt>
+            <dd></dd>
+            <dt>
+              static std::size_t <a href="classsymtensor_1_1SymmetricTensorBase.html#a93b55e878319fc06bb6c23b24a25213d" class="m-doc">Rank</a> <span class="m-label m-flat m-primary">constexpr</span>
+            </dt>
+            <dd></dd>
+            <dt>
+              static std::size_t <a href="classsymtensor_1_1SymmetricTensorBase.html#a842f95d2c2d256229b29581329143075" class="m-doc">NumValues</a> <span class="m-label m-flat m-primary">constexpr</span>
+            </dt>
+            <dd></dd>
+            <dt>
+              static std::size_t <a href="classsymtensor_1_1SymmetricTensorBase.html#a2bb2e35b15c1fccf0c45174f27bc9a01" class="m-doc">NumUniqueValues</a> <span class="m-label m-flat m-primary">constexpr</span>
+            </dt>
+            <dd></dd>
+          </dl>
+        </section>
+        <section id="constructors">
+          <h2><a href="#constructors">Constructors</a></h2>
+          <dl class="m-doc">
+            <dt>
+              <span class="m-doc-wrap-bumper">static auto <a href="classsymtensor_1_1SymmetricTensorBase.html#a46695791dfd6c87216d3c027209f0662" class="m-doc">Identity</a>(</span><span class="m-doc-wrap">) -&gt; <a href="classsymtensor_1_1SymmetricTensor.html" class="m-doc">SymmetricTensor</a>&lt;S, D, R, Index&lt;D&gt;&gt; <span class="m-label m-flat m-primary">consteval</span></span>
+            </dt>
+            <dd>Identity matrix constructor.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">static auto <a href="classsymtensor_1_1SymmetricTensorBase.html#aadc0d72f62fa1387ca84185a2a3ce2c1" class="m-doc">Ones</a>(</span><span class="m-doc-wrap">) -&gt; <a href="classsymtensor_1_1SymmetricTensor.html" class="m-doc">SymmetricTensor</a>&lt;S, D, R, Index&lt;D&gt;&gt; <span class="m-label m-flat m-primary">consteval</span></span>
+            </dt>
+            <dd>Unit matrix constructor.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">static auto <a href="classsymtensor_1_1SymmetricTensorBase.html#a6a00402b5378695a69086810b235f990" class="m-doc">Zeros</a>(</span><span class="m-doc-wrap">) -&gt; <a href="classsymtensor_1_1SymmetricTensor.html" class="m-doc">SymmetricTensor</a>&lt;S, D, R, Index&lt;D&gt;&gt; <span class="m-label m-flat m-primary">consteval</span></span>
+            </dt>
+            <dd>Zero matrix constructor.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">static auto <a href="classsymtensor_1_1SymmetricTensorBase.html#a7d370cbf26cc4a52abe1296335f8ce1c" class="m-doc">NullaryExpression</a>(</span><span class="m-doc-wrap">F function = {}) -&gt; <a href="classsymtensor_1_1SymmetricTensor.html" class="m-doc">SymmetricTensor</a>&lt;S, D, R, Index&lt;D&gt;&gt; <span class="m-label m-flat m-primary">constexpr</span></span>
+            </dt>
+            <dd>Generic constructor from an expression.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">static auto <a href="classsymtensor_1_1SymmetricTensorBase.html#ad9109a277503a4ddf193b86251847a9c" class="m-doc">CartesianPower</a>(</span><span class="m-doc-wrap">const Vector&amp; vector) -&gt; <a href="classsymtensor_1_1SymmetricTensor.html" class="m-doc">SymmetricTensor</a>&lt;S, D, R, Index&lt;D&gt;&gt; <span class="m-label m-flat m-primary">constexpr</span></span>
+            </dt>
+            <dd>Constructor by repeated cartesian product.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">static auto <a href="classsymtensor_1_1SymmetricTensorBase.html#a4bdb22efbddb72b1aa257884680ce910" class="m-doc">Diagonal</a>(</span><span class="m-doc-wrap">const Vector&amp; vector) -&gt; <a href="classsymtensor_1_1SymmetricTensor.html" class="m-doc">SymmetricTensor</a>&lt;S, D, R, Index&lt;D&gt;&gt; <span class="m-label m-flat m-primary">constexpr</span></span>
+            </dt>
+            <dd>Constructor with a set vector as the diagonal.</dd>
+          </dl>
+        </section>
+        <section id="member-access">
+          <h2><a href="#member-access">Member access</a></h2>
+          <dl class="m-doc">
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="classsymtensor_1_1SymmetricTensorBase.html#acc5605fa008d46015afbd54da83339cc" class="m-doc">operator[]</a>(</span><span class="m-doc-wrap">const std::array&lt;Index, R&gt;&amp; indices) const -&gt; const Scalar&amp; <span class="m-label m-flat m-primary">constexpr</span></span>
+            </dt>
+            <dd>Indexed member access.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="classsymtensor_1_1SymmetricTensorBase.html#a7f0d023121ee05be5cbb5e0162697479" class="m-doc">at</a>(</span><span class="m-doc-wrap">) const -&gt; const Scalar&amp; <span class="m-label m-flat m-primary">constexpr</span></span>
+            </dt>
+            <dd>Compile-time indexed member access.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="classsymtensor_1_1SymmetricTensorBase.html#ab3d6d2325727f379a86269c4f8180954" class="m-doc">at</a>(</span><span class="m-doc-wrap">) -&gt; Scalar&amp; <span class="m-label m-flat m-primary">constexpr</span></span>
+            </dt>
+            <dd>Compile-time indexed member access.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="classsymtensor_1_1SymmetricTensorBase.html#a0372cedb6adcb5685f0beba8f95e29b3" class="m-doc">flat</a>(</span><span class="m-doc-wrap">) const -&gt; const auto&amp; <span class="m-label m-flat m-primary">constexpr</span></span>
+            </dt>
+            <dd>Direct access to underlying data structure.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="classsymtensor_1_1SymmetricTensorBase.html#a88228afa1af6ea061594e7dbe1898943" class="m-doc">flat</a>(</span><span class="m-doc-wrap">) -&gt; auto&amp; <span class="m-label m-flat m-primary">constexpr</span></span>
+            </dt>
+            <dd>Direct access to underlying data structure.</dd>
+          </dl>
+        </section>
+        <section id="tensor-properties">
+          <h2><a href="#tensor-properties">Tensor properties</a></h2>
+          <dl class="m-doc">
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="classsymtensor_1_1SymmetricTensorBase.html#adcfa7c7604504ef013c009c7f1f863b9" class="m-doc">trace</a>(</span><span class="m-doc-wrap">) const -&gt; Scalar <span class="m-label m-flat m-primary">constexpr</span></span>
+            </dt>
+            <dd>Computes the trace of the tensor.</dd>
+          </dl>
+        </section>
+        <section id="tensor-scalar-operators">
+          <h2><a href="#tensor-scalar-operators">Tensor-scalar operators</a></h2>
+          <dl class="m-doc">
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="classsymtensor_1_1SymmetricTensorBase.html#a4475f542a6e252488d6393a4a67a9b48" class="m-doc">operator+=</a>(</span><span class="m-doc-wrap">const Scalar&amp; scalar) -&gt; <a href="classsymtensor_1_1SymmetricTensor.html" class="m-doc">SymmetricTensor</a>&lt;S, D, R, Index&lt;D&gt;&gt;&amp; <span class="m-label m-flat m-primary">constexpr</span></span>
+            </dt>
+            <dd>Element-wise addition of a scalar.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="classsymtensor_1_1SymmetricTensorBase.html#a135d9669c05e7c31d62c152d3fe0ebf4" class="m-doc">operator-=</a>(</span><span class="m-doc-wrap">const Scalar&amp; scalar) -&gt; <a href="classsymtensor_1_1SymmetricTensor.html" class="m-doc">SymmetricTensor</a>&lt;S, D, R, Index&lt;D&gt;&gt;&amp; <span class="m-label m-flat m-primary">constexpr</span></span>
+            </dt>
+            <dd>Element-wise subtraction of a scalar.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="classsymtensor_1_1SymmetricTensorBase.html#a5fabb696a1a39e8e7a542ed87d23510c" class="m-doc">operator*=</a>(</span><span class="m-doc-wrap">const Scalar&amp; scalar) -&gt; <a href="classsymtensor_1_1SymmetricTensor.html" class="m-doc">SymmetricTensor</a>&lt;S, D, R, Index&lt;D&gt;&gt;&amp; <span class="m-label m-flat m-primary">constexpr</span></span>
+            </dt>
+            <dd>Element-wise multiplication by a scalar.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="classsymtensor_1_1SymmetricTensorBase.html#a86ebf0d80743ab4eb0e4fd4c645f1ca2" class="m-doc">operator/=</a>(</span><span class="m-doc-wrap">const Scalar&amp; scalar) -&gt; <a href="classsymtensor_1_1SymmetricTensor.html" class="m-doc">SymmetricTensor</a>&lt;S, D, R, Index&lt;D&gt;&gt;&amp; <span class="m-label m-flat m-primary">constexpr</span></span>
+            </dt>
+            <dd>Element-wise division by a scalar.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="classsymtensor_1_1SymmetricTensorBase.html#acc9205a0d786c38a214f62dd21f7bb57" class="m-doc">operator+</a>(</span><span class="m-doc-wrap">const Scalar&amp; scalar) const -&gt; <a href="classsymtensor_1_1SymmetricTensor.html" class="m-doc">SymmetricTensor</a>&lt;S, D, R, Index&lt;D&gt;&gt; <span class="m-label m-flat m-primary">constexpr</span></span>
+            </dt>
+            <dd>Element-wise addition of a scalar.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="classsymtensor_1_1SymmetricTensorBase.html#a14f4b935d6dda037b199716a5fe5db79" class="m-doc">operator-</a>(</span><span class="m-doc-wrap">const Scalar&amp; scalar) const -&gt; <a href="classsymtensor_1_1SymmetricTensor.html" class="m-doc">SymmetricTensor</a>&lt;S, D, R, Index&lt;D&gt;&gt; <span class="m-label m-flat m-primary">constexpr</span></span>
+            </dt>
+            <dd>Element-wise subtraction of a scalar.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="classsymtensor_1_1SymmetricTensorBase.html#a2fccd815fd6639aa377d3c14aed91fcf" class="m-doc">operator*</a>(</span><span class="m-doc-wrap">const Scalar&amp; scalar) const -&gt; <a href="classsymtensor_1_1SymmetricTensor.html" class="m-doc">SymmetricTensor</a>&lt;S, D, R, Index&lt;D&gt;&gt; <span class="m-label m-flat m-primary">constexpr</span></span>
+            </dt>
+            <dd>Element-wise multiplication by a scalar.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="classsymtensor_1_1SymmetricTensorBase.html#a3223efee820173c6c7290a9590022445" class="m-doc">operator/</a>(</span><span class="m-doc-wrap">const Scalar&amp; scalar) const -&gt; <a href="classsymtensor_1_1SymmetricTensor.html" class="m-doc">SymmetricTensor</a>&lt;S, D, R, Index&lt;D&gt;&gt; <span class="m-label m-flat m-primary">constexpr</span></span>
+            </dt>
+            <dd>Element-wise division by a scalar.</dd>
+          </dl>
+        </section>
+        <section id="tensor-tensor-element-wise-operations">
+          <h2><a href="#tensor-tensor-element-wise-operations">Tensor-tensor element-wise operations</a></h2>
+          <dl class="m-doc">
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="classsymtensor_1_1SymmetricTensorBase.html#aba59ac0bfad9004fae8794c694f1ecb9" class="m-doc">operator+=</a>(</span><span class="m-doc-wrap">const <a href="classsymtensor_1_1SymmetricTensor.html" class="m-doc">SymmetricTensor</a>&lt;S, D, R, Index&lt;D&gt;&gt;&amp; other) -&gt; <a href="classsymtensor_1_1SymmetricTensor.html" class="m-doc">SymmetricTensor</a>&lt;S, D, R, Index&lt;D&gt;&gt;&amp; <span class="m-label m-flat m-primary">constexpr</span></span>
+            </dt>
+            <dd>Element-wise addition with another tensor.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="classsymtensor_1_1SymmetricTensorBase.html#afda7208037784e1db9ffdab0ad2bc200" class="m-doc">operator-=</a>(</span><span class="m-doc-wrap">const <a href="classsymtensor_1_1SymmetricTensor.html" class="m-doc">SymmetricTensor</a>&lt;S, D, R, Index&lt;D&gt;&gt;&amp; other) -&gt; <a href="classsymtensor_1_1SymmetricTensor.html" class="m-doc">SymmetricTensor</a>&lt;S, D, R, Index&lt;D&gt;&gt;&amp; <span class="m-label m-flat m-primary">constexpr</span></span>
+            </dt>
+            <dd>Element-wise subtraction by another tensor.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="classsymtensor_1_1SymmetricTensorBase.html#ac844a3decd5510517feb3ce5a5750ee6" class="m-doc">operator+</a>(</span><span class="m-doc-wrap">const <a href="classsymtensor_1_1SymmetricTensor.html" class="m-doc">SymmetricTensor</a>&lt;S, D, R, Index&lt;D&gt;&gt;&amp; other) const -&gt; <a href="classsymtensor_1_1SymmetricTensor.html" class="m-doc">SymmetricTensor</a>&lt;S, D, R, Index&lt;D&gt;&gt; <span class="m-label m-flat m-primary">constexpr</span></span>
+            </dt>
+            <dd>Element-wise addition with another tensor.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="classsymtensor_1_1SymmetricTensorBase.html#a82a9c1137edd863e5817a6a259b0fbf5" class="m-doc">operator-</a>(</span><span class="m-doc-wrap">const <a href="classsymtensor_1_1SymmetricTensor.html" class="m-doc">SymmetricTensor</a>&lt;S, D, R, Index&lt;D&gt;&gt;&amp; other) const -&gt; <a href="classsymtensor_1_1SymmetricTensor.html" class="m-doc">SymmetricTensor</a>&lt;S, D, R, Index&lt;D&gt;&gt; <span class="m-label m-flat m-primary">constexpr</span></span>
+            </dt>
+            <dd>Element-wise subtraction by another tensor.</dd>
+          </dl>
+        </section>
+        <section id="comparison-operations">
+          <h2><a href="#comparison-operations">Comparison operations</a></h2>
+          <dl class="m-doc">
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="classsymtensor_1_1SymmetricTensorBase.html#ac582b6b1f8901dff568eef9e821cfa49" class="m-doc">operator==</a>(</span><span class="m-doc-wrap">const <a href="classsymtensor_1_1SymmetricTensorBase.html" class="m-doc">Self</a>&amp; other) const -&gt; bool <span class="m-label m-flat m-info">defaulted</span> <span class="m-label m-flat m-primary">constexpr</span></span>
+            </dt>
+            <dd>Comparison with another symmetric tensor.</dd>
+          </dl>
+        </section>
+        <section>
+          <h2>Enum documentation</h2>
+          <section class="m-doc-details" id="a7898ca3dfe474108a8a97bde06e05b31"><div>
+            <h3>
+              <div class="m-doc-template">
+                template&lt;typename S, std::size_t D, std::size_t R, typename I&gt;
+              </div>
+              enum symtensor::<wbr />SymmetricTensor&lt;S, D, R, I&gt;::<wbr /><a href="#a7898ca3dfe474108a8a97bde06e05b31" class="m-doc-self">A_enum</a>
+              <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="SymmetricTensorBase_8h.html">&lt;symtensor/SymmetricTensorBase.h&gt;</a></div>
+            </h3>
+          </div></section>
+        </section>
+        <section>
+          <h2>Typedef documentation</h2>
+          <section class="m-doc-details" id="a60b2dfef6d240063970514e5dd5d74f4"><div>
+            <h3>
+              <div class="m-doc-include m-code m-inverted m-right-m m-text-right"><span class="cp">#include</span> <a class="cpf" href="SymmetricTensorBase_8h.html">&lt;symtensor/SymmetricTensorBase.h&gt;</a></div>
+              <div class="m-doc-template">
+                template&lt;typename S, std::size_t D, std::size_t R, typename I&gt;
+              </div>
+              using symtensor::<wbr />SymmetricTensor&lt;S, D, R, I&gt;::<wbr /><a href="#a60b2dfef6d240063970514e5dd5d74f4" class="m-doc-self">Self</a> = <a href="classsymtensor_1_1SymmetricTensorBase.html" class="m-doc">SymmetricTensorBase</a>&lt;<a href="classsymtensor_1_1SymmetricTensor.html" class="m-doc">SymmetricTensor</a>&lt;S, D, R, Index&lt;D&gt;&gt;, S, D, R, Index&lt;D&gt;&gt;
+            </h3>
+          </div></section>
+          <section class="m-doc-details" id="a54b15e900cf9ee14fca8860738f1198c"><div>
+            <h3>
+              <div class="m-doc-include m-code m-inverted m-right-m m-text-right"><span class="cp">#include</span> <a class="cpf" href="SymmetricTensorBase_8h.html">&lt;symtensor/SymmetricTensorBase.h&gt;</a></div>
+              <div class="m-doc-template">
+                template&lt;typename S, std::size_t D, std::size_t R, typename I&gt;
+              </div>
+              using symtensor::<wbr />SymmetricTensor&lt;S, D, R, I&gt;::<wbr /><a href="#a54b15e900cf9ee14fca8860738f1198c" class="m-doc-self">Scalar</a> = S
+            </h3>
+          </div></section>
+          <section class="m-doc-details" id="a11382c8f563ef91e34b1eb8bc13038a8"><div>
+            <h3>
+              <div class="m-doc-include m-code m-inverted m-right-m m-text-right"><span class="cp">#include</span> <a class="cpf" href="SymmetricTensorBase_8h.html">&lt;symtensor/SymmetricTensorBase.h&gt;</a></div>
+              <div class="m-doc-template">
+                template&lt;typename S, std::size_t D, std::size_t R, typename I&gt;
+              </div>
+              using symtensor::<wbr />SymmetricTensor&lt;S, D, R, I&gt;::<wbr /><a href="#a11382c8f563ef91e34b1eb8bc13038a8" class="m-doc-self">Index</a> = Index&lt;D&gt;
+            </h3>
+          </div></section>
+        </section>
+        <section>
+          <h2>Function documentation</h2>
+          <section class="m-doc-details" id="a46695791dfd6c87216d3c027209f0662"><div>
+            <h3>
+              <div class="m-doc-include m-code m-inverted m-right-m m-text-right"><span class="cp">#include</span> <a class="cpf" href="SymmetricTensorBase_8h.html">&lt;symtensor/SymmetricTensorBase.h&gt;</a></div>
+              <div class="m-doc-template">
+                template&lt;typename S, std::size_t D, std::size_t R, typename I&gt;
+              </div>
+              <span class="m-doc-wrap-bumper">static <a href="classsymtensor_1_1SymmetricTensor.html" class="m-doc">SymmetricTensor</a>&lt;S, D, R, Index&lt;D&gt;&gt; symtensor::<wbr />SymmetricTensor&lt;S, D, R, I&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a46695791dfd6c87216d3c027209f0662" class="m-doc-self">Identity</a>(</span><span class="m-doc-wrap">) <span class="m-label m-primary">consteval</span></span></span>
+            </h3>
+            <p>Identity matrix constructor.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <tfoot>
+                <tr>
+                  <th style="width: 1%">Returns</th>
+                  <td>a symmetric tensor with a value of 1 along the diagonal, 0 elsewhere.</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div></section>
+          <section class="m-doc-details" id="aadc0d72f62fa1387ca84185a2a3ce2c1"><div>
+            <h3>
+              <div class="m-doc-include m-code m-inverted m-right-m m-text-right"><span class="cp">#include</span> <a class="cpf" href="SymmetricTensorBase_8h.html">&lt;symtensor/SymmetricTensorBase.h&gt;</a></div>
+              <div class="m-doc-template">
+                template&lt;typename S, std::size_t D, std::size_t R, typename I&gt;
+              </div>
+              <span class="m-doc-wrap-bumper">static <a href="classsymtensor_1_1SymmetricTensor.html" class="m-doc">SymmetricTensor</a>&lt;S, D, R, Index&lt;D&gt;&gt; symtensor::<wbr />SymmetricTensor&lt;S, D, R, I&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#aadc0d72f62fa1387ca84185a2a3ce2c1" class="m-doc-self">Ones</a>(</span><span class="m-doc-wrap">) <span class="m-label m-primary">consteval</span></span></span>
+            </h3>
+            <p>Unit matrix constructor.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <tfoot>
+                <tr>
+                  <th style="width: 1%">Returns</th>
+                  <td>a symmetric tensor with a value of 1 at every index.</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div></section>
+          <section class="m-doc-details" id="a6a00402b5378695a69086810b235f990"><div>
+            <h3>
+              <div class="m-doc-include m-code m-inverted m-right-m m-text-right"><span class="cp">#include</span> <a class="cpf" href="SymmetricTensorBase_8h.html">&lt;symtensor/SymmetricTensorBase.h&gt;</a></div>
+              <div class="m-doc-template">
+                template&lt;typename S, std::size_t D, std::size_t R, typename I&gt;
+              </div>
+              <span class="m-doc-wrap-bumper">static <a href="classsymtensor_1_1SymmetricTensor.html" class="m-doc">SymmetricTensor</a>&lt;S, D, R, Index&lt;D&gt;&gt; symtensor::<wbr />SymmetricTensor&lt;S, D, R, I&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a6a00402b5378695a69086810b235f990" class="m-doc-self">Zeros</a>(</span><span class="m-doc-wrap">) <span class="m-label m-primary">consteval</span></span></span>
+            </h3>
+            <p>Zero matrix constructor.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <tfoot>
+                <tr>
+                  <th style="width: 1%">Returns</th>
+                  <td>a symmetric tensor with a value of 0 at every index.</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div></section>
+          <section class="m-doc-details" id="a7d370cbf26cc4a52abe1296335f8ce1c"><div>
+            <h3>
+              <div class="m-doc-include m-code m-inverted m-right-m m-text-right"><span class="cp">#include</span> <a class="cpf" href="SymmetricTensorBase_8h.html">&lt;symtensor/SymmetricTensorBase.h&gt;</a></div>
+              <div class="m-doc-template">
+                template&lt;typename S, std::size_t D, std::size_t R, typename I&gt;
+              </div>
+              <span class="m-doc-wrap-bumper">static <a href="classsymtensor_1_1SymmetricTensor.html" class="m-doc">SymmetricTensor</a>&lt;S, D, R, Index&lt;D&gt;&gt; symtensor::<wbr />SymmetricTensor&lt;S, D, R, I&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a7d370cbf26cc4a52abe1296335f8ce1c" class="m-doc-self">NullaryExpression</a>(</span><span class="m-doc-wrap">F function = {}) <span class="m-label m-primary">constexpr</span></span></span>
+            </h3>
+            <p>Generic constructor from an expression.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">function</td>
+                  <td>a functor which returns a scalar type given an index</td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <th>Returns</th>
+                  <td>a symmetric tensor with each value set by evaluating the function.</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div></section>
+          <section class="m-doc-details" id="ad9109a277503a4ddf193b86251847a9c"><div>
+            <h3>
+              <div class="m-doc-include m-code m-inverted m-right-m m-text-right"><span class="cp">#include</span> <a class="cpf" href="SymmetricTensorBase_8h.html">&lt;symtensor/SymmetricTensorBase.h&gt;</a></div>
+              <div class="m-doc-template">
+                template&lt;typename S, std::size_t D, std::size_t R, typename I&gt;
+              </div>
+              <span class="m-doc-wrap-bumper">static <a href="classsymtensor_1_1SymmetricTensor.html" class="m-doc">SymmetricTensor</a>&lt;S, D, R, Index&lt;D&gt;&gt; symtensor::<wbr />SymmetricTensor&lt;S, D, R, I&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#ad9109a277503a4ddf193b86251847a9c" class="m-doc-self">CartesianPower</a>(</span><span class="m-doc-wrap">const Vector&amp; vector) <span class="m-label m-primary">constexpr</span></span></span>
+            </h3>
+            <p>Constructor by repeated cartesian product.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">vector</td>
+                  <td>vector which will be multiplied with itself</td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <th>Returns</th>
+                  <td>a symmetric tensor produced by the repeated outer product of vector.</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div></section>
+          <section class="m-doc-details" id="a4bdb22efbddb72b1aa257884680ce910"><div>
+            <h3>
+              <div class="m-doc-include m-code m-inverted m-right-m m-text-right"><span class="cp">#include</span> <a class="cpf" href="SymmetricTensorBase_8h.html">&lt;symtensor/SymmetricTensorBase.h&gt;</a></div>
+              <div class="m-doc-template">
+                template&lt;typename S, std::size_t D, std::size_t R, typename I&gt;
+              </div>
+              <span class="m-doc-wrap-bumper">static <a href="classsymtensor_1_1SymmetricTensor.html" class="m-doc">SymmetricTensor</a>&lt;S, D, R, Index&lt;D&gt;&gt; symtensor::<wbr />SymmetricTensor&lt;S, D, R, I&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a4bdb22efbddb72b1aa257884680ce910" class="m-doc-self">Diagonal</a>(</span><span class="m-doc-wrap">const Vector&amp; vector) <span class="m-label m-primary">constexpr</span></span></span>
+            </h3>
+            <p>Constructor with a set vector as the diagonal.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">vector</td>
+                  <td>vector which will define the diagonal of the tensor</td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <th>Returns</th>
+                  <td>a symmetric tensor with diagonal equal to vector, zero elsewhere.</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div></section>
+          <section class="m-doc-details" id="acc5605fa008d46015afbd54da83339cc"><div>
+            <h3>
+              <div class="m-doc-include m-code m-inverted m-right-m m-text-right"><span class="cp">#include</span> <a class="cpf" href="SymmetricTensorBase_8h.html">&lt;symtensor/SymmetricTensorBase.h&gt;</a></div>
+              <div class="m-doc-template">
+                template&lt;typename S, std::size_t D, std::size_t R, typename I&gt;
+              </div>
+              <span class="m-doc-wrap-bumper">const Scalar&amp; symtensor::<wbr />SymmetricTensor&lt;S, D, R, I&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#acc5605fa008d46015afbd54da83339cc" class="m-doc-self">operator[]</a>(</span><span class="m-doc-wrap">const std::array&lt;Index, R&gt;&amp; indices) const <span class="m-label m-primary">constexpr</span></span></span>
+            </h3>
+            <p>Indexed member access.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">indices</td>
+                  <td>Array of R Index values which specify an element of the tensor. Indices may be in arbitrary order, because the tensor is symmetric.</td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <th>Returns</th>
+                  <td>the scalar element at the requested index</td>
+                </tr>
+              </tfoot>
+            </table>
+<aside class="m-note m-danger"><h4>Warning</h4><p>This method is provided only for the sake of completeness, expect poor performance.</p></aside>
+          </div></section>
+          <section class="m-doc-details" id="a7f0d023121ee05be5cbb5e0162697479"><div>
+            <h3>
+              <div class="m-doc-include m-code m-inverted m-right-m m-text-right"><span class="cp">#include</span> <a class="cpf" href="SymmetricTensorBase_8h.html">&lt;symtensor/SymmetricTensorBase.h&gt;</a></div>
+              <div class="m-doc-template">
+                template&lt;typename S, std::size_t D, std::size_t R, typename I&gt;
+              </div>
+              <span class="m-doc-wrap-bumper">const Scalar&amp; symtensor::<wbr />SymmetricTensor&lt;S, D, R, I&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a7f0d023121ee05be5cbb5e0162697479" class="m-doc-self">at</a>(</span><span class="m-doc-wrap">) const <span class="m-label m-primary">constexpr</span></span></span>
+            </h3>
+            <p>Compile-time indexed member access.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <tfoot>
+                <tr>
+                  <th style="width: 1%">Returns</th>
+                  <td>the scalar element at the requested index</td>
+                </tr>
+              </tfoot>
+            </table>
+<p>The index sequence is converted to a flat index at compile-time, allowing for performance equivalent to hand-written member access. <code class="m-code"><span class="n">mytensor</span><span class="p">.</span><span class="n">at</span><span class="o">&lt;</span><span class="n">X</span><span class="p">,</span><span class="w"> </span><span class="n">X</span><span class="p">,</span><span class="w"> </span><span class="n">X</span><span class="o">&gt;</span><span class="p">()</span></code> should be equivalent to <code class="m-code"><span class="n">mytensor</span><span class="p">.</span><span class="n">flat</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span></code>.</p>
+          </div></section>
+          <section class="m-doc-details" id="ab3d6d2325727f379a86269c4f8180954"><div>
+            <h3>
+              <div class="m-doc-include m-code m-inverted m-right-m m-text-right"><span class="cp">#include</span> <a class="cpf" href="SymmetricTensorBase_8h.html">&lt;symtensor/SymmetricTensorBase.h&gt;</a></div>
+              <div class="m-doc-template">
+                template&lt;typename S, std::size_t D, std::size_t R, typename I&gt;
+              </div>
+              <span class="m-doc-wrap-bumper">Scalar&amp; symtensor::<wbr />SymmetricTensor&lt;S, D, R, I&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#ab3d6d2325727f379a86269c4f8180954" class="m-doc-self">at</a>(</span><span class="m-doc-wrap">) <span class="m-label m-primary">constexpr</span></span></span>
+            </h3>
+            <p>Compile-time indexed member access.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <tfoot>
+                <tr>
+                  <th style="width: 1%">Returns</th>
+                  <td>the scalar element at the requested index</td>
+                </tr>
+              </tfoot>
+            </table>
+<p>The index sequence is converted to a flat index at compile-time, allowing for performance equivalent to hand-written member access. <code class="m-code"><span class="n">mytensor</span><span class="p">.</span><span class="n">at</span><span class="o">&lt;</span><span class="n">X</span><span class="p">,</span><span class="w"> </span><span class="n">X</span><span class="p">,</span><span class="w"> </span><span class="n">X</span><span class="o">&gt;</span><span class="p">()</span></code> should be equivalent to <code class="m-code"><span class="n">mytensor</span><span class="p">.</span><span class="n">flat</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span></code>.</p>
+          </div></section>
+          <section class="m-doc-details" id="a0372cedb6adcb5685f0beba8f95e29b3"><div>
+            <h3>
+              <div class="m-doc-include m-code m-inverted m-right-m m-text-right"><span class="cp">#include</span> <a class="cpf" href="SymmetricTensorBase_8h.html">&lt;symtensor/SymmetricTensorBase.h&gt;</a></div>
+              <div class="m-doc-template">
+                template&lt;typename S, std::size_t D, std::size_t R, typename I&gt;
+              </div>
+              <span class="m-doc-wrap-bumper">const auto&amp; symtensor::<wbr />SymmetricTensor&lt;S, D, R, I&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a0372cedb6adcb5685f0beba8f95e29b3" class="m-doc-self">flat</a>(</span><span class="m-doc-wrap">) const <span class="m-label m-primary">constexpr</span></span></span>
+            </h3>
+            <p>Direct access to underlying data structure.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <tfoot>
+                <tr>
+                  <th style="width: 1%">Returns</th>
+                  <td>a reference to the underlying flat storage.</td>
+                </tr>
+              </tfoot>
+            </table>
+<aside class="m-note m-info"><h4>Note</h4><p>No guarantees are provided about the definition and layout of the flat data structure, except for the fact that it is an iterable with a <code>size()</code>, <code>begin()</code> and <code>end()</code> method. The elements of the symmetric tensor may be rearranged in order to facilitate vectorized operations, for the best possible performance.</p></aside>
+          </div></section>
+          <section class="m-doc-details" id="a88228afa1af6ea061594e7dbe1898943"><div>
+            <h3>
+              <div class="m-doc-include m-code m-inverted m-right-m m-text-right"><span class="cp">#include</span> <a class="cpf" href="SymmetricTensorBase_8h.html">&lt;symtensor/SymmetricTensorBase.h&gt;</a></div>
+              <div class="m-doc-template">
+                template&lt;typename S, std::size_t D, std::size_t R, typename I&gt;
+              </div>
+              <span class="m-doc-wrap-bumper">auto&amp; symtensor::<wbr />SymmetricTensor&lt;S, D, R, I&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a88228afa1af6ea061594e7dbe1898943" class="m-doc-self">flat</a>(</span><span class="m-doc-wrap">) <span class="m-label m-primary">constexpr</span></span></span>
+            </h3>
+            <p>Direct access to underlying data structure.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <tfoot>
+                <tr>
+                  <th style="width: 1%">Returns</th>
+                  <td>a reference to the underlying flat storage.</td>
+                </tr>
+              </tfoot>
+            </table>
+<aside class="m-note m-info"><h4>Note</h4><p>No guarantees are provided about the definition and layout of the flat data structure, except for the fact that it is an iterable with a <code>size()</code>, <code>begin()</code> and <code>end()</code> method. The elements of the symmetric tensor may be rearranged in order to facilitate vectorized operations, for the best possible performance.</p></aside>
+          </div></section>
+          <section class="m-doc-details" id="adcfa7c7604504ef013c009c7f1f863b9"><div>
+            <h3>
+              <div class="m-doc-include m-code m-inverted m-right-m m-text-right"><span class="cp">#include</span> <a class="cpf" href="SymmetricTensorBase_8h.html">&lt;symtensor/SymmetricTensorBase.h&gt;</a></div>
+              <div class="m-doc-template">
+                template&lt;typename S, std::size_t D, std::size_t R, typename I&gt;
+              </div>
+              <span class="m-doc-wrap-bumper">Scalar symtensor::<wbr />SymmetricTensor&lt;S, D, R, I&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#adcfa7c7604504ef013c009c7f1f863b9" class="m-doc-self">trace</a>(</span><span class="m-doc-wrap">) const <span class="m-label m-primary">constexpr</span></span></span>
+            </h3>
+            <p>Computes the trace of the tensor.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <tfoot>
+                <tr>
+                  <th style="width: 1%">Returns</th>
+                  <td>the sum of the scalar values at the diagonal positions of the tensor</td>
+                </tr>
+              </tfoot>
+            </table>
+<p>This is equivalent to the sum of the diagonal elements.</p>
+          </div></section>
+          <section class="m-doc-details" id="a4475f542a6e252488d6393a4a67a9b48"><div>
+            <h3>
+              <div class="m-doc-include m-code m-inverted m-right-m m-text-right"><span class="cp">#include</span> <a class="cpf" href="SymmetricTensorBase_8h.html">&lt;symtensor/SymmetricTensorBase.h&gt;</a></div>
+              <div class="m-doc-template">
+                template&lt;typename S, std::size_t D, std::size_t R, typename I&gt;
+              </div>
+              <span class="m-doc-wrap-bumper"><a href="classsymtensor_1_1SymmetricTensor.html" class="m-doc">SymmetricTensor</a>&lt;S, D, R, Index&lt;D&gt;&gt;&amp; symtensor::<wbr />SymmetricTensor&lt;S, D, R, I&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a4475f542a6e252488d6393a4a67a9b48" class="m-doc-self">operator+=</a>(</span><span class="m-doc-wrap">const Scalar&amp; scalar) <span class="m-label m-primary">constexpr</span></span></span>
+            </h3>
+            <p>Element-wise addition of a scalar.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">scalar</td>
+                  <td>value to add to each element of the tensor</td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <th>Returns</th>
+                  <td>the modified tensor</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div></section>
+          <section class="m-doc-details" id="a135d9669c05e7c31d62c152d3fe0ebf4"><div>
+            <h3>
+              <div class="m-doc-include m-code m-inverted m-right-m m-text-right"><span class="cp">#include</span> <a class="cpf" href="SymmetricTensorBase_8h.html">&lt;symtensor/SymmetricTensorBase.h&gt;</a></div>
+              <div class="m-doc-template">
+                template&lt;typename S, std::size_t D, std::size_t R, typename I&gt;
+              </div>
+              <span class="m-doc-wrap-bumper"><a href="classsymtensor_1_1SymmetricTensor.html" class="m-doc">SymmetricTensor</a>&lt;S, D, R, Index&lt;D&gt;&gt;&amp; symtensor::<wbr />SymmetricTensor&lt;S, D, R, I&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a135d9669c05e7c31d62c152d3fe0ebf4" class="m-doc-self">operator-=</a>(</span><span class="m-doc-wrap">const Scalar&amp; scalar) <span class="m-label m-primary">constexpr</span></span></span>
+            </h3>
+            <p>Element-wise subtraction of a scalar.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">scalar</td>
+                  <td>value to subtract from each element of the tensor</td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <th>Returns</th>
+                  <td>the modified tensor</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div></section>
+          <section class="m-doc-details" id="a5fabb696a1a39e8e7a542ed87d23510c"><div>
+            <h3>
+              <div class="m-doc-include m-code m-inverted m-right-m m-text-right"><span class="cp">#include</span> <a class="cpf" href="SymmetricTensorBase_8h.html">&lt;symtensor/SymmetricTensorBase.h&gt;</a></div>
+              <div class="m-doc-template">
+                template&lt;typename S, std::size_t D, std::size_t R, typename I&gt;
+              </div>
+              <span class="m-doc-wrap-bumper"><a href="classsymtensor_1_1SymmetricTensor.html" class="m-doc">SymmetricTensor</a>&lt;S, D, R, Index&lt;D&gt;&gt;&amp; symtensor::<wbr />SymmetricTensor&lt;S, D, R, I&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a5fabb696a1a39e8e7a542ed87d23510c" class="m-doc-self">operator*=</a>(</span><span class="m-doc-wrap">const Scalar&amp; scalar) <span class="m-label m-primary">constexpr</span></span></span>
+            </h3>
+            <p>Element-wise multiplication by a scalar.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">scalar</td>
+                  <td>value to multiply each element of the tensor by.</td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <th>Returns</th>
+                  <td>the modified tensor</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div></section>
+          <section class="m-doc-details" id="a86ebf0d80743ab4eb0e4fd4c645f1ca2"><div>
+            <h3>
+              <div class="m-doc-include m-code m-inverted m-right-m m-text-right"><span class="cp">#include</span> <a class="cpf" href="SymmetricTensorBase_8h.html">&lt;symtensor/SymmetricTensorBase.h&gt;</a></div>
+              <div class="m-doc-template">
+                template&lt;typename S, std::size_t D, std::size_t R, typename I&gt;
+              </div>
+              <span class="m-doc-wrap-bumper"><a href="classsymtensor_1_1SymmetricTensor.html" class="m-doc">SymmetricTensor</a>&lt;S, D, R, Index&lt;D&gt;&gt;&amp; symtensor::<wbr />SymmetricTensor&lt;S, D, R, I&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a86ebf0d80743ab4eb0e4fd4c645f1ca2" class="m-doc-self">operator/=</a>(</span><span class="m-doc-wrap">const Scalar&amp; scalar) <span class="m-label m-primary">constexpr</span></span></span>
+            </h3>
+            <p>Element-wise division by a scalar.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">scalar</td>
+                  <td>value to divide each element of the tensor by.</td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <th>Returns</th>
+                  <td>the modified tensor</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div></section>
+          <section class="m-doc-details" id="acc9205a0d786c38a214f62dd21f7bb57"><div>
+            <h3>
+              <div class="m-doc-include m-code m-inverted m-right-m m-text-right"><span class="cp">#include</span> <a class="cpf" href="SymmetricTensorBase_8h.html">&lt;symtensor/SymmetricTensorBase.h&gt;</a></div>
+              <div class="m-doc-template">
+                template&lt;typename S, std::size_t D, std::size_t R, typename I&gt;
+              </div>
+              <span class="m-doc-wrap-bumper"><a href="classsymtensor_1_1SymmetricTensor.html" class="m-doc">SymmetricTensor</a>&lt;S, D, R, Index&lt;D&gt;&gt; symtensor::<wbr />SymmetricTensor&lt;S, D, R, I&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#acc9205a0d786c38a214f62dd21f7bb57" class="m-doc-self">operator+</a>(</span><span class="m-doc-wrap">const Scalar&amp; scalar) const <span class="m-label m-primary">constexpr</span></span></span>
+            </h3>
+            <p>Element-wise addition of a scalar.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">scalar</td>
+                  <td>value to add to each element of the tensor</td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <th>Returns</th>
+                  <td>the modified tensor</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div></section>
+          <section class="m-doc-details" id="a14f4b935d6dda037b199716a5fe5db79"><div>
+            <h3>
+              <div class="m-doc-include m-code m-inverted m-right-m m-text-right"><span class="cp">#include</span> <a class="cpf" href="SymmetricTensorBase_8h.html">&lt;symtensor/SymmetricTensorBase.h&gt;</a></div>
+              <div class="m-doc-template">
+                template&lt;typename S, std::size_t D, std::size_t R, typename I&gt;
+              </div>
+              <span class="m-doc-wrap-bumper"><a href="classsymtensor_1_1SymmetricTensor.html" class="m-doc">SymmetricTensor</a>&lt;S, D, R, Index&lt;D&gt;&gt; symtensor::<wbr />SymmetricTensor&lt;S, D, R, I&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a14f4b935d6dda037b199716a5fe5db79" class="m-doc-self">operator-</a>(</span><span class="m-doc-wrap">const Scalar&amp; scalar) const <span class="m-label m-primary">constexpr</span></span></span>
+            </h3>
+            <p>Element-wise subtraction of a scalar.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">scalar</td>
+                  <td>value to subtract from each element of the tensor</td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <th>Returns</th>
+                  <td>the modified tensor</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div></section>
+          <section class="m-doc-details" id="a2fccd815fd6639aa377d3c14aed91fcf"><div>
+            <h3>
+              <div class="m-doc-include m-code m-inverted m-right-m m-text-right"><span class="cp">#include</span> <a class="cpf" href="SymmetricTensorBase_8h.html">&lt;symtensor/SymmetricTensorBase.h&gt;</a></div>
+              <div class="m-doc-template">
+                template&lt;typename S, std::size_t D, std::size_t R, typename I&gt;
+              </div>
+              <span class="m-doc-wrap-bumper"><a href="classsymtensor_1_1SymmetricTensor.html" class="m-doc">SymmetricTensor</a>&lt;S, D, R, Index&lt;D&gt;&gt; symtensor::<wbr />SymmetricTensor&lt;S, D, R, I&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a2fccd815fd6639aa377d3c14aed91fcf" class="m-doc-self">operator*</a>(</span><span class="m-doc-wrap">const Scalar&amp; scalar) const <span class="m-label m-primary">constexpr</span></span></span>
+            </h3>
+            <p>Element-wise multiplication by a scalar.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">scalar</td>
+                  <td>value to multiply each element of the tensor by.</td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <th>Returns</th>
+                  <td>the modified tensor</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div></section>
+          <section class="m-doc-details" id="a3223efee820173c6c7290a9590022445"><div>
+            <h3>
+              <div class="m-doc-include m-code m-inverted m-right-m m-text-right"><span class="cp">#include</span> <a class="cpf" href="SymmetricTensorBase_8h.html">&lt;symtensor/SymmetricTensorBase.h&gt;</a></div>
+              <div class="m-doc-template">
+                template&lt;typename S, std::size_t D, std::size_t R, typename I&gt;
+              </div>
+              <span class="m-doc-wrap-bumper"><a href="classsymtensor_1_1SymmetricTensor.html" class="m-doc">SymmetricTensor</a>&lt;S, D, R, Index&lt;D&gt;&gt; symtensor::<wbr />SymmetricTensor&lt;S, D, R, I&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a3223efee820173c6c7290a9590022445" class="m-doc-self">operator/</a>(</span><span class="m-doc-wrap">const Scalar&amp; scalar) const <span class="m-label m-primary">constexpr</span></span></span>
+            </h3>
+            <p>Element-wise division by a scalar.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">scalar</td>
+                  <td>value to divide each element of the tensor by.</td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <th>Returns</th>
+                  <td>the modified tensor</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div></section>
+          <section class="m-doc-details" id="aba59ac0bfad9004fae8794c694f1ecb9"><div>
+            <h3>
+              <div class="m-doc-include m-code m-inverted m-right-m m-text-right"><span class="cp">#include</span> <a class="cpf" href="SymmetricTensorBase_8h.html">&lt;symtensor/SymmetricTensorBase.h&gt;</a></div>
+              <div class="m-doc-template">
+                template&lt;typename S, std::size_t D, std::size_t R, typename I&gt;
+              </div>
+              <span class="m-doc-wrap-bumper"><a href="classsymtensor_1_1SymmetricTensor.html" class="m-doc">SymmetricTensor</a>&lt;S, D, R, Index&lt;D&gt;&gt;&amp; symtensor::<wbr />SymmetricTensor&lt;S, D, R, I&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#aba59ac0bfad9004fae8794c694f1ecb9" class="m-doc-self">operator+=</a>(</span><span class="m-doc-wrap">const <a href="classsymtensor_1_1SymmetricTensor.html" class="m-doc">SymmetricTensor</a>&lt;S, D, R, Index&lt;D&gt;&gt;&amp; other) <span class="m-label m-primary">constexpr</span></span></span>
+            </h3>
+            <p>Element-wise addition with another tensor.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">other</td>
+                  <td>tensor to add with this tensor</td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <th>Returns</th>
+                  <td>the modified tensor</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div></section>
+          <section class="m-doc-details" id="afda7208037784e1db9ffdab0ad2bc200"><div>
+            <h3>
+              <div class="m-doc-include m-code m-inverted m-right-m m-text-right"><span class="cp">#include</span> <a class="cpf" href="SymmetricTensorBase_8h.html">&lt;symtensor/SymmetricTensorBase.h&gt;</a></div>
+              <div class="m-doc-template">
+                template&lt;typename S, std::size_t D, std::size_t R, typename I&gt;
+              </div>
+              <span class="m-doc-wrap-bumper"><a href="classsymtensor_1_1SymmetricTensor.html" class="m-doc">SymmetricTensor</a>&lt;S, D, R, Index&lt;D&gt;&gt;&amp; symtensor::<wbr />SymmetricTensor&lt;S, D, R, I&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#afda7208037784e1db9ffdab0ad2bc200" class="m-doc-self">operator-=</a>(</span><span class="m-doc-wrap">const <a href="classsymtensor_1_1SymmetricTensor.html" class="m-doc">SymmetricTensor</a>&lt;S, D, R, Index&lt;D&gt;&gt;&amp; other) <span class="m-label m-primary">constexpr</span></span></span>
+            </h3>
+            <p>Element-wise subtraction by another tensor.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">other</td>
+                  <td>tensor to subtract from this tensor</td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <th>Returns</th>
+                  <td>the modified tensor</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div></section>
+          <section class="m-doc-details" id="ac844a3decd5510517feb3ce5a5750ee6"><div>
+            <h3>
+              <div class="m-doc-include m-code m-inverted m-right-m m-text-right"><span class="cp">#include</span> <a class="cpf" href="SymmetricTensorBase_8h.html">&lt;symtensor/SymmetricTensorBase.h&gt;</a></div>
+              <div class="m-doc-template">
+                template&lt;typename S, std::size_t D, std::size_t R, typename I&gt;
+              </div>
+              <span class="m-doc-wrap-bumper"><a href="classsymtensor_1_1SymmetricTensor.html" class="m-doc">SymmetricTensor</a>&lt;S, D, R, Index&lt;D&gt;&gt; symtensor::<wbr />SymmetricTensor&lt;S, D, R, I&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#ac844a3decd5510517feb3ce5a5750ee6" class="m-doc-self">operator+</a>(</span><span class="m-doc-wrap">const <a href="classsymtensor_1_1SymmetricTensor.html" class="m-doc">SymmetricTensor</a>&lt;S, D, R, Index&lt;D&gt;&gt;&amp; other) const <span class="m-label m-primary">constexpr</span></span></span>
+            </h3>
+            <p>Element-wise addition with another tensor.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">other</td>
+                  <td>tensor to add with this tensor</td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <th>Returns</th>
+                  <td>the modified tensor</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div></section>
+          <section class="m-doc-details" id="a82a9c1137edd863e5817a6a259b0fbf5"><div>
+            <h3>
+              <div class="m-doc-include m-code m-inverted m-right-m m-text-right"><span class="cp">#include</span> <a class="cpf" href="SymmetricTensorBase_8h.html">&lt;symtensor/SymmetricTensorBase.h&gt;</a></div>
+              <div class="m-doc-template">
+                template&lt;typename S, std::size_t D, std::size_t R, typename I&gt;
+              </div>
+              <span class="m-doc-wrap-bumper"><a href="classsymtensor_1_1SymmetricTensor.html" class="m-doc">SymmetricTensor</a>&lt;S, D, R, Index&lt;D&gt;&gt; symtensor::<wbr />SymmetricTensor&lt;S, D, R, I&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a82a9c1137edd863e5817a6a259b0fbf5" class="m-doc-self">operator-</a>(</span><span class="m-doc-wrap">const <a href="classsymtensor_1_1SymmetricTensor.html" class="m-doc">SymmetricTensor</a>&lt;S, D, R, Index&lt;D&gt;&gt;&amp; other) const <span class="m-label m-primary">constexpr</span></span></span>
+            </h3>
+            <p>Element-wise subtraction by another tensor.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">other</td>
+                  <td>tensor to subtract from this tensor</td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <th>Returns</th>
+                  <td>the modified tensor</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div></section>
+          <section class="m-doc-details" id="ac582b6b1f8901dff568eef9e821cfa49"><div>
+            <h3>
+              <div class="m-doc-include m-code m-inverted m-right-m m-text-right"><span class="cp">#include</span> <a class="cpf" href="SymmetricTensorBase_8h.html">&lt;symtensor/SymmetricTensorBase.h&gt;</a></div>
+              <div class="m-doc-template">
+                template&lt;typename S, std::size_t D, std::size_t R, typename I&gt;
+              </div>
+              <span class="m-doc-wrap-bumper">bool symtensor::<wbr />SymmetricTensor&lt;S, D, R, I&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#ac582b6b1f8901dff568eef9e821cfa49" class="m-doc-self">operator==</a>(</span><span class="m-doc-wrap">const <a href="classsymtensor_1_1SymmetricTensorBase.html" class="m-doc">Self</a>&amp; other) const <span class="m-label m-info">defaulted</span> <span class="m-label m-primary">constexpr</span></span></span>
+            </h3>
+            <p>Comparison with another symmetric tensor.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">other</td>
+                  <td>symmetric tensor to compare with</td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <th>Returns</th>
+                  <td>true if all elements of the tensors are equivalent, false otherwise</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div></section>
+        </section>
+        <section>
+          <h2>Variable documentation</h2>
+          <section class="m-doc-details" id="abe4b914e1a681ca41cf649499b6f2a0b"><div>
+            <h3>
+              <div class="m-doc-include m-code m-inverted m-right-m m-text-right"><span class="cp">#include</span> <a class="cpf" href="SymmetricTensorBase_8h.html">&lt;symtensor/SymmetricTensorBase.h&gt;</a></div>
+              <div class="m-doc-template">
+                template&lt;typename S, std::size_t D, std::size_t R, typename I&gt;
+              </div>
+              static std::size_t symtensor::<wbr />SymmetricTensor&lt;S, D, R, I&gt;::<wbr /><a href="#abe4b914e1a681ca41cf649499b6f2a0b" class="m-doc-self">Dimensions</a> <span class="m-label m-primary">constexpr</span>
+            </h3>
+          </div></section>
+          <section class="m-doc-details" id="a93b55e878319fc06bb6c23b24a25213d"><div>
+            <h3>
+              <div class="m-doc-include m-code m-inverted m-right-m m-text-right"><span class="cp">#include</span> <a class="cpf" href="SymmetricTensorBase_8h.html">&lt;symtensor/SymmetricTensorBase.h&gt;</a></div>
+              <div class="m-doc-template">
+                template&lt;typename S, std::size_t D, std::size_t R, typename I&gt;
+              </div>
+              static std::size_t symtensor::<wbr />SymmetricTensor&lt;S, D, R, I&gt;::<wbr /><a href="#a93b55e878319fc06bb6c23b24a25213d" class="m-doc-self">Rank</a> <span class="m-label m-primary">constexpr</span>
+            </h3>
+          </div></section>
+          <section class="m-doc-details" id="a842f95d2c2d256229b29581329143075"><div>
+            <h3>
+              <div class="m-doc-include m-code m-inverted m-right-m m-text-right"><span class="cp">#include</span> <a class="cpf" href="SymmetricTensorBase_8h.html">&lt;symtensor/SymmetricTensorBase.h&gt;</a></div>
+              <div class="m-doc-template">
+                template&lt;typename S, std::size_t D, std::size_t R, typename I&gt;
+              </div>
+              static std::size_t symtensor::<wbr />SymmetricTensor&lt;S, D, R, I&gt;::<wbr /><a href="#a842f95d2c2d256229b29581329143075" class="m-doc-self">NumValues</a> <span class="m-label m-primary">constexpr</span>
+            </h3>
+          </div></section>
+          <section class="m-doc-details" id="a2bb2e35b15c1fccf0c45174f27bc9a01"><div>
+            <h3>
+              <div class="m-doc-include m-code m-inverted m-right-m m-text-right"><span class="cp">#include</span> <a class="cpf" href="SymmetricTensorBase_8h.html">&lt;symtensor/SymmetricTensorBase.h&gt;</a></div>
+              <div class="m-doc-template">
+                template&lt;typename S, std::size_t D, std::size_t R, typename I&gt;
+              </div>
+              static std::size_t symtensor::<wbr />SymmetricTensor&lt;S, D, R, I&gt;::<wbr /><a href="#a2bb2e35b15c1fccf0c45174f27bc9a01" class="m-doc-self">NumUniqueValues</a> <span class="m-label m-primary">constexpr</span>
+            </h3>
+          </div></section>
+        </section>
+      </div>
+    </div>
+  </div>
+</article></main>
+<div class="m-doc-search" id="search">
+  <a href="#!" onclick="return hideSearch()"></a>
+  <div class="m-container">
+    <div class="m-row">
+      <div class="m-col-m-8 m-push-m-2">
+        <div class="m-doc-search-header m-text m-small">
+          <div><span class="m-label m-default">Tab</span> / <span class="m-label m-default">T</span> to search, <span class="m-label m-default">Esc</span> to close</div>
+          <div id="search-symbolcount">&hellip;</div>
+        </div>
+        <div class="m-doc-search-content">
+          <form>
+            <input type="search" name="q" id="search-input" placeholder="Loading &hellip;" disabled="disabled" autofocus="autofocus" autocomplete="off" spellcheck="false" />
+          </form>
+          <noscript class="m-text m-danger m-text-center">Unlike everything else in the docs, the search functionality <em>requires</em> JavaScript.</noscript>
+          <div id="search-help" class="m-text m-dim m-text-center">
+            <p class="m-noindent">Search for symbols, directories, files, pages or
+            modules. You can omit any prefix from the symbol or file path; adding a
+            <code>:</code> or <code>/</code> suffix lists all members of given symbol or
+            directory.</p>
+            <p class="m-noindent">Use <span class="m-label m-dim">&darr;</span>
+            / <span class="m-label m-dim">&uarr;</span> to navigate through the list,
+            <span class="m-label m-dim">Enter</span> to go.
+            <span class="m-label m-dim">Tab</span> autocompletes common prefix, you can
+            copy a link to the result using <span class="m-label m-dim">⌘</span>
+            <span class="m-label m-dim">L</span> while <span class="m-label m-dim">⌘</span>
+            <span class="m-label m-dim">M</span> produces a Markdown link.</p>
+          </div>
+          <div id="search-notfound" class="m-text m-warning m-text-center">Sorry, nothing was found.</div>
+          <ul id="search-results"></ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="search-v2.js"></script>
+<script src="searchdata-v2.js" async="async"></script>
+<footer><nav>
+  <div class="m-container">
+    <div class="m-row">
+      <div class="m-col-l-10 m-push-l-1">
+        <p>symtensor. Created with <a href="https://doxygen.org/">Doxygen</a> 1.9.1 and <a href="https://mcss.mosra.cz/">m.css</a>.</p>
+      </div>
+    </div>
+  </div>
+</nav></footer>
+</body>
+</html>
