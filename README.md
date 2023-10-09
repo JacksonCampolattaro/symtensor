@@ -1,5 +1,10 @@
-# symtensor
+‏‏‎ ‎
+=============
+![Symtensor Logo](https://raw.githubusercontent.com/JacksonCampolattaro/symtensor/d20d2fa8c9be80935d2d8a72cf9f0c522689e1c1/doc/symtensor.svg)
+
 *A templated C++ library for working with small symmetric tensors of arbitrary rank.*
+
+![unit tests](https://github.com/JacksonCampolattaro/symtensor/actions/workflows/unit-tests-multi-platform.yml/badge.svg)
 
 Symtensor is designed for working with tensors which are...
 - **Symmetric** — only the upper triangle needs to be stored.
