@@ -30,3 +30,9 @@ add_custom_target(
         DEPENDS ${MCSS_OUT} ${DOXYGEN_OUT} ${DOXYGEN_MCSS_OUT}
         VERBATIM
 )
+
+add_custom_command(
+        TARGET documentation POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -P "${CMAKE_CURRENT_SOURCE_DIR}/remove_title_from_index_page.cmake"
+        COMMENT "Removing title from the main page"
+)

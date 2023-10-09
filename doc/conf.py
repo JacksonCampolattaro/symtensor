@@ -10,3 +10,5 @@ STYLESHEETS = [
     '../css/pygments-console.css',
     '../css/m-documentation.css',
 ]
+
+FAVICON = '@CMAKE_CURRENT_SOURCE_DIR@/../doc/symtensor-logo.svg'
