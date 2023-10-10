@@ -18,6 +18,7 @@ jobs:
         with:
           packages: dia doxygen doxygen-doc graphviz mscgen texlive-base texlive-latex-extra texlive-fonts-extra texlive-fonts-recommended libgs-dev
           version: 1.0
+      - run: sudo texhash
 
       # Install mcss dependencies with pip
       - uses: actions/setup-python@v4

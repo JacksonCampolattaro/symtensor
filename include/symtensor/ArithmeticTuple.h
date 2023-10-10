@@ -10,10 +10,15 @@ namespace symtensor {
     class ArithmeticTupleBase : public std::tuple<Types...> {
 
         using Self = ArithmeticTupleBase<Implementation, Types...>;
+        using Tuple = std::tuple<Types...>;
 
     public:
 
         using std::tuple<Types...>::tuple;
+
+        inline constexpr const std::tuple<Types...> &as_tuple() const { return *this; }
+
+        inline constexpr std::tuple<Types...> &as_tuple() { return *this; }
 
     public: // Tuple-scalar operations
 
@@ -21,7 +26,7 @@ namespace symtensor {
         inline constexpr Implementation &operator+=(const T &scalar) {
             std::apply([&](Types &... tupleElements) {
                 ((tupleElements += scalar), ...);
-            }, *this);
+            }, as_tuple());
             return *static_cast<Implementation *>(this);
         }
 
@@ -29,7 +34,7 @@ namespace symtensor {
         inline constexpr Implementation &operator-=(const T &scalar) {
             std::apply([&](Types &... tupleElements) {
                 ((tupleElements -= scalar), ...);
-            }, *this);
+            }, as_tuple());
             return *static_cast<Implementation *>(this);
         }
 
@@ -37,7 +42,7 @@ namespace symtensor {
         inline constexpr Implementation &operator*=(const T &scalar) {
             std::apply([&](Types &... tupleElements) {
                 ((tupleElements *= scalar), ...);
-            }, *this);
+            }, as_tuple());
             return *static_cast<Implementation *>(this);
         }
 
@@ -45,7 +50,7 @@ namespace symtensor {
         inline constexpr Implementation &operator/=(const T &scalar) {
             std::apply([&](Types &... tupleElements) {
                 ((tupleElements /= scalar), ...);
-            }, *this);
+            }, as_tuple());
             return *static_cast<Implementation *>(this);
         }
 
@@ -66,28 +71,28 @@ namespace symtensor {
         inline constexpr Implementation &operator+=(const Implementation &other) {
             [&]<std::size_t... i>(std::index_sequence<i...>) {
                 ((std::get<i>(*this) += std::get<i>(other)), ...);
-            }(std::make_index_sequence<std::tuple_size_v<Self>>{});
+            }(std::make_index_sequence<std::tuple_size_v<Tuple>>{});
             return *static_cast<Implementation *>(this);
         }
 
         inline constexpr Implementation &operator-=(const Implementation &other) {
             [&]<std::size_t... i>(std::index_sequence<i...>) {
                 ((std::get<i>(*this) -= std::get<i>(other)), ...);
-            }(std::make_index_sequence<std::tuple_size_v<Self>>{});
+            }(std::make_index_sequence<std::tuple_size_v<Tuple>>{});
             return *static_cast<Implementation *>(this);
         }
 
         inline constexpr Implementation &operator*=(const Implementation &other) {
             [&]<std::size_t... i>(std::index_sequence<i...>) {
                 ((std::get<i>(*this) *= std::get<i>(other)), ...);
-            }(std::make_index_sequence<std::tuple_size_v<Self>>{});
+            }(std::make_index_sequence<std::tuple_size_v<Tuple>>{});
             return *static_cast<Implementation *>(this);
         }
 
         inline constexpr Implementation &operator/=(const Implementation &other) {
             [&]<std::size_t... i>(std::index_sequence<i...>) {
                 ((std::get<i>(*this) /= std::get<i>(other)), ...);
-            }(std::make_index_sequence<std::tuple_size_v<Self>>{});
+            }(std::make_index_sequence<std::tuple_size_v<Tuple>>{});
             return *static_cast<Implementation *>(this);
         }
 
@@ -99,17 +104,12 @@ namespace symtensor {
 
         inline constexpr Implementation operator/(const Implementation &other) const { return Self{*this} /= other; }
 
-
-    public: // Comparators
-
-        auto operator<=>(const Self &other) const = default;
-
     public: // Friend functions
 
         friend std::ostream &operator<<(std::ostream &out, const Implementation &self) {
             std::apply([&](const Types &... tupleElements) {
                 ((out << tupleElements << " "), ...);
-            }, self);
+            }, self.as_tuple());
             return out;
         }
     };
@@ -151,12 +151,16 @@ namespace symtensor {
 // Implements tuple functionality for any class which subclasses from ArithmeticTupleBase
 namespace std {
 
+    // fixme: the following is preferable, but doesn't work on gcc due to a compiler bug
+    // struct tuple_size<T> : tuple_size<symtensor::underlying_tuple<T>> {
     template<symtensor::derived_from_template<symtensor::ArithmeticTupleBase> T>
-    struct tuple_size<T> : tuple_size<symtensor::underlying_tuple<T>> {
+    struct tuple_size<T> : symtensor::underlying_tuple_size<T> {
     };
 
+    // Similarly, I would prefer:
+    // tuple_element<I, symtensor::underlying_tuple<T>>
     template<size_t I, symtensor::derived_from_template<symtensor::ArithmeticTupleBase> T>
-    struct tuple_element<I, T> : tuple_element<I, typename T::tuple_type> {
+    struct tuple_element<I, T> : symtensor::underlying_tuple_element<I, T> {
     };
 }
 

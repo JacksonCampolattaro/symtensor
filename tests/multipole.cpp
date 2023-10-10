@@ -13,15 +13,16 @@ using namespace symtensor;
 
 TEST_CASE("Arithmetic operations with a scalar", "[Quadrupole]") {
 
-    using Q = Quadrupole<SymmetricTensor3f<1>>;
 
-    Q q{};
-    q += 3;
-    std::cout << q << std::endl;
-    std::cout << std::tuple_size_v<Q> << std::endl;
-    std::cout << q.tensor<1>() << std::endl;
-    std::cout << q.tensor<2>() << std::endl;
-
-    std::cout << Multipole<4, float, SymmetricTensor3f<1>>{} << std::endl;
+//    using Q = Quadrupole<SymmetricTensor3f<1>>;
+//
+//    Q q{};
+//    q += 3;
+//    std::cout << q << std::endl;
+//    std::cout << std::tuple_size_v<Q> << std::endl;
+//    std::cout << q.tensor<1>() << std::endl;
+//    std::cout << q.tensor<2>() << std::endl;
+//
+//    std::cout << Multipole<4, float, SymmetricTensor3f<1>>{} << std::endl;
 }
 

@@ -102,14 +102,26 @@ namespace symtensor {
 
     template<class T>
     concept derived_from_tuple = requires(T t) {
-        []<typename ...Types>(std::tuple<Types...> &) {}(t);
+        []<typename ...Types>(const std::tuple<Types...> &) {}(t);
     };
 
     template<derived_from_tuple T>
     using underlying_tuple = decltype(
-    []<typename ...Types>(std::tuple<Types...> &&) -> std::tuple<Types...> {
+    []<typename ...Types>(const std::tuple<Types...> &&) -> std::tuple<Types...> {
         return std::declval<std::tuple<Types...>>();
     }(std::declval<T>())
+    );
+
+    template<derived_from_tuple T>
+    using underlying_tuple_size = decltype([]<typename ...Types>
+            (const std::tuple<Types...> &&) -> std::tuple_size<std::tuple<Types...>> {}
+            (std::declval<T>())
+    );
+
+    template<std::size_t I, derived_from_tuple T>
+    using underlying_tuple_element = decltype([]<typename ...Types>
+            (const std::tuple<Types...> &&) -> std::tuple_element<I, std::tuple<Types...>> {}
+            (std::declval<T>())
     );
 
     template<class T, template<typename...> typename Template>

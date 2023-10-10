@@ -25,10 +25,11 @@ add_executable(tests
         multipole.cpp
         )
 set_property(TARGET tests PROPERTY CXX_STANDARD 20)
-target_link_libraries(tests PRIVATE
+target_link_libraries(
+        tests PRIVATE
         Catch2::Catch2WithMain
         symtensor::symtensor
-        )
+)
 set(
         TEST_DEBUG_OPTIONS
         $<$<CXX_COMPILER_ID:MSVC>:/W4 /WX>

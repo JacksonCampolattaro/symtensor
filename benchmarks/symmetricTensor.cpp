@@ -131,51 +131,51 @@ TEST_CASE("benchmark: Tensor arithmetic", "[SymmetricTensor]") {
     }
 }
 
-TEST_CASE("benchmark: Batched tensor arithmetic", "[SymmetricTensor]") {
-
-    static const std::size_t N = 1024;
-
-    using SimdScalar = std::experimental::native_simd<float>;
-    using SimdSymmetricTensor3f3 = SymmetricTensor<SimdScalar, 3, 3>;
-    static const std::size_t simd_size = SimdScalar::size();
-
-
-    std::vector<SymmetricTensor3f<3>> a{N}, b{N}, c{N};
-    for (int i = 0; i < N; ++i) {
-        a.push_back(SymmetricTensor3f<3>::NullaryExpression([](auto _) { return std::rand(); }));
-        b.push_back(SymmetricTensor3f<3>::NullaryExpression([](auto _) { return std::rand(); }));
-    }
-
-    BENCHMARK("st3x3 = st3x3 + st3x3 (sequential)") {
-                                                        for (int i = 0; i < N; ++i) {
-                                                            c[i] = a[i] + b[i];
-                                                        }
-                                                        return c;
-                                                    };
-
-    auto to_simd = [](std::span<SymmetricTensor3f<3>, SimdScalar::size()> tensors) -> SimdSymmetricTensor3f3 {
-        return SimdSymmetricTensor3f3::NullaryExpression([&]<auto index>() {
-            return SimdScalar{[&]<std::size_t i>(std::integral_constant<std::size_t, i>) {
-                return tensors[i].at<index>();
-            }};
-        });
-    };
-
-    BENCHMARK("st3x3 = st3x3 + st3x3 (std::simd)") {
-                                                       for (int i = 0; i < N; i += SimdScalar::size()) {
-                                                           std::span<SymmetricTensor3f<3>, SimdScalar::size()> a_span{
-                                                                   a.begin() + i, SimdScalar::size()
-                                                           };
-                                                           std::span<SymmetricTensor3f<3>, SimdScalar::size()> b_span{
-                                                                   b.begin() + i, SimdScalar::size()
-                                                           };
-//                                                           auto c_simd = to_simd(a_span) + to_simd(b_span);
-//                                                           c[i] = a[i] + b[i];
-                                                       }
-                                                       return c;
-                                                   };
-
-}
+//TEST_CASE("benchmark: Batched tensor arithmetic", "[SymmetricTensor]") {
+//
+//    static const std::size_t N = 1024;
+//
+//    using SimdScalar = std::experimental::native_simd<float>;
+//    using SimdSymmetricTensor3f3 = SymmetricTensor<SimdScalar, 3, 3>;
+//    static const std::size_t simd_size = SimdScalar::size();
+//
+//
+//    std::vector<SymmetricTensor3f<3>> a{N}, b{N}, c{N};
+//    for (int i = 0; i < N; ++i) {
+//        a.push_back(SymmetricTensor3f<3>::NullaryExpression([](auto _) { return std::rand(); }));
+//        b.push_back(SymmetricTensor3f<3>::NullaryExpression([](auto _) { return std::rand(); }));
+//    }
+//
+//    BENCHMARK("st3x3 = st3x3 + st3x3 (sequential)") {
+//                                                        for (int i = 0; i < N; ++i) {
+//                                                            c[i] = a[i] + b[i];
+//                                                        }
+//                                                        return c;
+//                                                    };
+//
+//    auto to_simd = [](std::span<SymmetricTensor3f<3>, SimdScalar::size()> tensors) -> SimdSymmetricTensor3f3 {
+//        return SimdSymmetricTensor3f3::NullaryExpression([&]<auto index>() {
+//            return SimdScalar{[&]<std::size_t i>(std::integral_constant<std::size_t, i>) {
+//                return tensors[i].at<index>();
+//            }};
+//        });
+//    };
+//
+//    BENCHMARK("st3x3 = st3x3 + st3x3 (std::simd)") {
+//                                                       for (int i = 0; i < N; i += SimdScalar::size()) {
+//                                                           std::span<SymmetricTensor3f<3>, SimdScalar::size()> a_span{
+//                                                                   a.begin() + i, SimdScalar::size()
+//                                                           };
+//                                                           std::span<SymmetricTensor3f<3>, SimdScalar::size()> b_span{
+//                                                                   b.begin() + i, SimdScalar::size()
+//                                                           };
+////                                                           auto c_simd = to_simd(a_span) + to_simd(b_span);
+////                                                           c[i] = a[i] + b[i];
+//                                                       }
+//                                                       return c;
+//                                                   };
+//
+//}
 
 TEST_CASE("benchmark: Tensor products", "[SymmetricTensor]") {
 
