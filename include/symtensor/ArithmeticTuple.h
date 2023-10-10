@@ -121,6 +121,33 @@ namespace symtensor {
         using Base = ArithmeticTupleBase<ArithmeticTuple<Types...>, Types...>;
         using Base::Base;
     };
+
+    namespace {
+
+        template<typename, typename>
+        struct AsArithmeticTupleBaseHelper;
+
+        template<typename Implementation, typename ...Types>
+        struct AsArithmeticTupleBaseHelper<Implementation, std::tuple<Types...>> {
+            using type = ArithmeticTupleBase<Implementation, Types...>;
+        };
+
+        template<typename>
+        struct AsArithmeticTupleHelper;
+
+        template<typename ...Types>
+        struct AsArithmeticTupleHelper<std::tuple<Types...>> {
+            using type = ArithmeticTuple<Types...>;
+        };
+
+    }
+
+    template<typename Implementation, typename Tuple>
+    using AsArithmeticTupleBase = typename AsArithmeticTupleBaseHelper<Implementation, Tuple>::type;
+
+    template<typename Tuple>
+    using AsArithmeticTuple = typename AsArithmeticTupleHelper<Tuple>::type;
+
 }
 
 #endif //SYMTENSOR_ARITHMETICTUPLE_H

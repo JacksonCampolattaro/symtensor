@@ -12,3 +12,13 @@ STYLESHEETS = [
 ]
 
 FAVICON = '@CMAKE_CURRENT_SOURCE_DIR@/../doc/symtensor-logo.svg'
+
+LINKS_NAVBAR1 = [
+    ("Pages", 'pages', []),
+    ("Namespaces", 'namespaces', [])
+]
+LINKS_NAVBAR2 = [
+    ("Classes", 'annotated', []),
+    ("Files", 'files', []),
+    ("<a href=\"https://github.com/JacksonCampolattaro/symtensor\"><img style=\"max-height:1.2em;position:relative;top:0.15em;\" src=\"@CMAKE_CURRENT_SOURCE_DIR@/../doc/github-mark.svg\"/></a>", [])
+]

@@ -19,7 +19,7 @@ namespace symtensor {
      *  until the requested Order is reached.
      */
     template<std::size_t Order, typename ...Tensors>
-    class Multipole : public MultipoleBase<Multipole<Order, Tensors...>, Order, Tensors...> {
+    class Multipole : public MultipoleBase<Multipole<Order, Tensors...>, TensorSequence<Order, Tensors...>> {
     };
 
     template<std::size_t Order>
