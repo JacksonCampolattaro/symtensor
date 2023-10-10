@@ -89,6 +89,34 @@ namespace symtensor {
     template<typename... T>
     using last_type = type_at_index<sizeof...(T) - 1, T...>;
 
+    template<typename Tuple>
+    using last_type_of_tuple = std::tuple_element_t<std::tuple_size_v<Tuple> - 1, Tuple>;
+
+    template<typename T, template<typename...> class Template>
+    struct is_specialization_of : std::false_type {
+    };
+
+    template<template<typename...> class Template, typename... Args>
+    struct is_specialization_of<Template<Args...>, Template> : std::true_type {
+    };
+
+    template<class T>
+    concept derived_from_tuple = requires(T t) {
+        []<typename ...Types>(std::tuple<Types...> &) {}(t);
+    };
+
+    template<derived_from_tuple T>
+    using underlying_tuple = decltype(
+    []<typename ...Types>(std::tuple<Types...> &&) -> std::tuple<Types...> {
+        return std::declval<std::tuple<Types...>>();
+    }(std::declval<T>())
+    );
+
+    template<class T, template<typename...> typename Template>
+    concept derived_from_template = requires(T t) {
+        []<typename ...Types>(Template<Types...> &) {}(t);
+    };
+
 }
 
 #endif //SYMTENSOR_UTIL_H

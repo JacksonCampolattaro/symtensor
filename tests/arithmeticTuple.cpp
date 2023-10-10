@@ -10,6 +10,8 @@ using namespace symtensor;
 
 TEST_CASE("Arithmetic operations with a scalar", "[ArithmeticTuple]") {
 
+    static_assert(std::is_same_v<std::tuple<int, float>, underlying_tuple<ArithmeticTuple<int, float>>>);
+
     ArithmeticTuple<int, float, double> numbers{1, 2.0f, 3.0};
     REQUIRE(numbers + 2 == ArithmeticTuple<int, float, double>{3, 4.0f, 5.0});
     REQUIRE(numbers - 2 == ArithmeticTuple<int, float, double>{-1, 0.0f, 1.0});

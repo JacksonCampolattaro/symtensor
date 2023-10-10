@@ -47,15 +47,28 @@ namespace symtensor {
     class MultipoleBase : public AsArithmeticTupleBase<Implementation, TensorTuple> {
     public:
 
-        static constexpr std::size_t Order = last_type<TensorTuple>::Rank;
+        using Self = Implementation;
+
+        static constexpr std::size_t Order = last_type_of_tuple<TensorTuple>::Rank;
 
         MultipoleBase() = default;
 
-//        template<std::size_t R>
-//        auto &tensor() {
-//            return std::get<Order - 1>(*this);
-//        }
+        template<std::size_t R>
+        auto &tensor() {
+            return get<indexForRank<R>()>(*this);
+        }
 
+        template<std::size_t R>
+        const auto &tensor() const {
+            return get<indexForRank<R>()>(*this);
+        }
+
+    private:
+
+        template<std::size_t R>
+        static consteval std::size_t indexForRank() {
+            return (std::tuple_size_v<Self> - 1) - (Order - R);
+        }
     };
 
 }
