@@ -13,13 +13,9 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      # Install doxygen and other dependencies with apt
-      - uses: awalsh128/cache-apt-pkgs-action@v1.3.0
-        with:
-          packages: dia doxygen doxygen-doc graphviz mscgen texlive-base texlive-latex-extra texlive-font-utils texlive-fonts-extra texlive-fonts-recommended libgs-dev
-          version: 1.0
-      - run: sudo fmtutil-sys --all
-      - run: sudo texhash
+      # Install doxygen and other native dependencies
+      - name: Install dependencies
+        run: sudo apt update && sudo apt install -y dia doxygen doxygen-doc graphviz mscgen texlive-base texlive-latex-extra texlive-font-utils texlive-fonts-extra texlive-fonts-recommended libgs-dev
 
       # Install mcss dependencies with pip
       - uses: actions/setup-python@v4
