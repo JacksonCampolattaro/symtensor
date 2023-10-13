@@ -29,5 +29,3 @@ LINKS_NAVBAR2 = [
         </a>
     """, [])
 ]
-
-FILE_INDEX_EXPAND_LEVELS = 10

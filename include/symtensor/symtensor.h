@@ -1,8 +1,15 @@
+/**
+ * @file symtensor.h
+ * @brief Blanket include for the symtensor library.
+ */
 #ifndef SYMTENSOR_SYMTENSOR_H
 #define SYMTENSOR_SYMTENSOR_H
 
+#include <symtensor/Multipole.h>
+#include <symtensor/SymmetricTensor.h>
+
 /**
- * @dir /Users/jackcamp/Documents/symtensor/include/symtensor
+ * @dir symtensor
  * @brief namespace @ref symtensor
  */
 
