@@ -134,20 +134,24 @@ TEST_CASE("Member access to a 3x3x3x3 symmetric tensor", "[SymmetricTensor]") {
 
 TEST_CASE("Symmetric tensor constructors", "[SymmetricTensor]") {
 
+    CHECK(SymmetricTensor2f<1>::Identity() == SymmetricTensor2f<1>{1, 1});
     CHECK(SymmetricTensor2f<2>::Identity() == SymmetricTensor2f<2>{1, 0, 1});
     CHECK(SymmetricTensor2f<3>::Identity() == SymmetricTensor2f<3>{1, 0, 0, 1});
     CHECK(SymmetricTensor2f<4>::Identity() == SymmetricTensor2f<4>{1, 0, 0, 0, 1});
     CHECK(SymmetricTensor2f<5>::Identity() == SymmetricTensor2f<5>{1, 0, 0, 0, 0, 1});
 
+    CHECK(SymmetricTensor3f<1>::Identity() == SymmetricTensor3f<1>{1, 1, 1});
     CHECK(SymmetricTensor3f<2>::Identity() == SymmetricTensor3f<2>{1, 0, 0, 1, 0, 1});
     CHECK(SymmetricTensor3f<3>::Identity() == SymmetricTensor3f<3>{1, 0, 0, 0, 0, 0, 1, 0, 0, 1});
     CHECK(SymmetricTensor3f<4>::Identity() == SymmetricTensor3f<4>{1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1});
 
+    CHECK(SymmetricTensor2f<1>::Ones() == SymmetricTensor2f<1>{1, 1});
     CHECK(SymmetricTensor2f<2>::Ones() == SymmetricTensor2f<2>{1, 1, 1});
     CHECK(SymmetricTensor3f<2>::Ones() == SymmetricTensor3f<2>{1, 1, 1, 1, 1, 1});
     CHECK(SymmetricTensor3f<3>::Ones() == SymmetricTensor3f<3>{1, 1, 1, 1, 1, 1, 1, 1, 1, 1});
     CHECK(SymmetricTensor3f<4>::Ones() == SymmetricTensor3f<4>{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1});
 
+    CHECK(SymmetricTensor2f<1>::Diagonal(glm::vec2{1, 2}) == SymmetricTensor2f<1>{1, 2});
     CHECK(SymmetricTensor2f<2>::Diagonal(glm::vec2{1, 2}) == SymmetricTensor2f<2>{1, 0, 2});
     CHECK(SymmetricTensor3f<2>::Diagonal(glm::vec3{1, 2, 3}) == SymmetricTensor3f<2>{1, 0, 0, 2, 0, 3});
 }

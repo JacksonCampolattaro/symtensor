@@ -20,6 +20,9 @@ namespace symtensor {
      */
     template<std::size_t Order, typename ...Tensors>
     class Multipole : public MultipoleBase<Multipole<Order, Tensors...>, TensorSequence<Order, Tensors...>> {
+        using Base = MultipoleBase<Multipole<Order, Tensors...>, TensorSequence<Order, Tensors...>>;
+    public:
+        using Base::Base;
     };
 
     template<std::size_t Order>
@@ -30,10 +33,15 @@ namespace symtensor {
 
     template<typename ...Tensors>
     class Quadrupole : public Multipole<2, Tensors...> {
+        using Base = Multipole<2, Tensors...>;
+    public:
+        using Base::Base;
     };
 
     using Quadrupole2f = Multipole2f<2>;
     using Quadrupole3f = Multipole3f<2>;
+    using Octupole2f = Multipole2f<3>;
+    using Octupole3f = Multipole3f<3>;
 
 }
 

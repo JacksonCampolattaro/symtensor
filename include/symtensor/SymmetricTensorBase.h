@@ -46,7 +46,7 @@ namespace symtensor {
             Y
         };
 
-    private:
+    public:
 
         // todo: this could provided by a CRTP type
         std::array<S, NumUniqueValues> _data{0};
@@ -68,6 +68,12 @@ namespace symtensor {
          * @param s a sequence of scalar values to initialize the tensor.
          */
         explicit constexpr SymmetricTensorBase(auto ...s) : _data{static_cast<S>(s)...} {}
+
+        template<typename T>
+        constexpr SymmetricTensorBase(std::initializer_list<T> s) {
+            assert(s.size() == NumUniqueValues);
+            std::copy(s.begin(), s.end(), _data.begin());
+        }
 
         /**
          * @brief Identity matrix constructor.
@@ -468,9 +474,40 @@ namespace symtensor {
 
     }
 
+    /**
+     * @brief Produces a type which modifies the rank of a symmetric tensor
+     *
+     * All properties of the symmetric tensor ST are preserved aside from the rank.
+     * The type of
+     * @code{.cpp}
+     * ReplaceRank<SymmetricTensor3f<3>, 5>
+     * @endcode
+     * is equivalent to
+     * @code{.cpp}
+     * SymmetricTensor3f<5>
+     * @endcode.
+     *
+     * @tparam ST symmetric tensor type to replace the rank of
+     * @tparam R the new rank
+     */
     template<class ST, std::size_t R>
     using ReplaceRank = typename ReplaceRankHelper<R, ST>::type;
 
+    /**
+     * @brief Given a symmetric tensor type, finds the symmetric tensor of the next higher rank
+     *
+     * All properties of the symmetric tensor ST are preserved aside from the rank.
+     * The type of
+     * @code{.cpp}
+     * NextHigherRank<SymmetricTensor3f<3>>
+     * @endcode
+     * is equivalent to
+     * @code{.cpp}
+     * SymmetricTensor3f<4>
+     * @endcode.
+     *
+     * @tparam ST a symmetric tensor
+     */
     template<class ST>
     using NextHigherRank = ReplaceRank<ST, ST::Rank + 1>;
 
