@@ -7,14 +7,11 @@
     --search-overlay-color: var(--header-background-color-landing);
 
     --paragraph-indent: 0;
+    --paragraph-align: left;
 
 }
 
-.m-text-center img {
-    display: inline-block;
-    margin: 0.5em;
-}
-.m-text-center img:last-child {
+.m-text-center img, .m-text-center img:last-child {
     display: inline-block;
     margin: 0.5em;
 }
