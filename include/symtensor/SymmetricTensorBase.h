@@ -18,7 +18,7 @@ namespace symtensor {
      * @brief Symmetric tensor base-type for use with CRTP implementations.
      *
      * In order to create a new type which behaves like a symmetric tensor,
-     * you can subclass from this class so that operators will function correctly.
+     * you can derive from this class so that operators will function correctly.
      *
      * @tparam Implementation CRTP subclass
      * @tparam S scalar type
@@ -41,11 +41,6 @@ namespace symtensor {
 
         using Index = I;
 
-        enum A_enum {
-            L = 0,
-            Y
-        };
-
     public:
 
         // todo: this could provided by a CRTP type
@@ -67,13 +62,7 @@ namespace symtensor {
          *
          * @param s a sequence of scalar values to initialize the tensor.
          */
-        explicit constexpr SymmetricTensorBase(auto ...s) : _data{static_cast<S>(s)...} {}
-
-        template<typename T>
-        constexpr SymmetricTensorBase(std::initializer_list<T> s) {
-            assert(s.size() == NumUniqueValues);
-            std::copy(s.begin(), s.end(), _data.begin());
-        }
+        constexpr SymmetricTensorBase(auto ...s) : _data{static_cast<S>(s)...} {}
 
         /**
          * @brief Identity matrix constructor.

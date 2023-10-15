@@ -129,6 +129,20 @@ namespace symtensor {
         []<typename ...Types>(Template<Types...> &) {}(t);
     };
 
+    namespace {
+
+        template<template<typename...> class TemplateType, typename Tuple, typename ...Prefix>
+        struct expand_tuple_helper;
+
+        template<template<typename...> class TemplateType, typename ...Args, typename ...Prefix>
+        struct expand_tuple_helper<TemplateType, std::tuple<Args...>, Prefix...> {
+            using type = TemplateType<Prefix..., Args...>;
+        };
+    }
+
+    template<template<typename...> class TemplateType, typename Tuple, typename ...Prefix>
+    using expand_tuple = expand_tuple_helper<TemplateType, Tuple, Prefix...>::type;
+
 }
 
 #endif //SYMTENSOR_UTIL_H

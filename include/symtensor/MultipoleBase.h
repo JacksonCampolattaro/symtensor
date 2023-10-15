@@ -35,137 +35,183 @@ namespace symtensor {
      * @brief Multipole base-type for use with CRTP implementations.
      *
      * In order to create a new type which behaves like a multipole,
-     * you can subclass from this class so that operators will function correctly.
+     * you can derive from this class so that operators will function correctly.
      *
      * @tparam Implementation CRTP subclass
-     * @tparam TensorTuple sequence of tensors which make up the multipole.
+     * @tparam Tensors sequence of tensors which make up the multipole.
      *   The order of the multipole is equivalent to the rank of the last tensor.
      *   The tensors should be provided in ascending order and without gaps.
      */
-    template<class Implementation, typename TensorTuple>
-    class MultipoleBase;
-
     template<class Implementation, typename ...Tensors>
-    class MultipoleBase<Implementation, std::tuple<Tensors...>> {
+    class MultipoleBase {
+    public:
 
-        using Self = MultipoleBase<Implementation, std::tuple<Tensors...>>;
         using TensorTuple = std::tuple<Tensors...>;
+
+        static constexpr std::size_t Order = last_type_of_tuple<TensorTuple>::Rank;
+        static constexpr std::size_t NumTensors = std::tuple_size_v<TensorTuple>;
+
+    private:
 
         TensorTuple _tuple;
 
-        const Implementation &implementation() const { return *static_cast<const Implementation *>(this); }
-
-        Implementation &implementation() { return *static_cast<Implementation *>(this); }
+        using Self = MultipoleBase<Implementation, Tensors...>;
 
     public:
+        /// @name Constructors
+        /// @{
 
-        static constexpr std::size_t Order = last_type_of_tuple<TensorTuple>::Rank;
-
+        /**
+         * @brief Default constructor.
+         *
+         * Invokes the default constructor for all contained tensors.
+         */
         inline constexpr MultipoleBase() = default;
 
-        inline constexpr MultipoleBase(const Implementation &other) : _tuple(other._tuple) {};
-
+        /**
+         * @brief Constructor from a sequence of tensors
+         *
+         * @param types The values for each tensor contained in the multipole.
+         *   So long as each tensor type has an implicit constructor, initializer-list syntax works.
+         */
         inline constexpr MultipoleBase(Tensors &&...types) : _tuple(std::forward<Tensors>(types)...) {}
 
-        inline constexpr Implementation &operator=(Implementation rhs) {
-            std::swap(*this, rhs);
-            return *this;
-        }
+        /// @}
+    public:
+        /// @name Member access
+        /// @{
 
-        inline constexpr const TensorTuple &underlying_tuple() const { return _tuple; }
-
-        inline constexpr TensorTuple &underlying_tuple() { return _tuple; }
-
+        /**
+         * @brief Tensor access by rank
+         *
+         * @tparam R Rank of the tensor to retrieve
+         * @return reference to the tensor with the requested rank
+         */
         template<std::size_t R>
-        auto &tensor() {
-            return std::get<indexForRank<R>()>(this->underlying_tuple());
+        inline constexpr const auto &tensor() const {
+            return std::get<indexForRank(R)>(_tuple);
         }
 
+        /// @copydoc tensor() const
         template<std::size_t R>
-        const auto &tensor() const {
-            return std::get<indexForRank<R>()>(this->underlying_tuple());
+        inline constexpr auto &tensor() {
+            return std::get<indexForRank(R)>(_tuple);
         }
 
-    public: // Multipole-scalar operations
+        /// @}
+    public:
+        /// @name Multipole-scalar operations
+        /// @{
 
+        /**
+         * @brief Element-wise addition of a scalar
+         *
+         * @param scalar value to add to each tensor of the multipole
+         * @return the modified multipole
+         */
         template<typename T>
         inline constexpr Implementation &operator+=(const T &scalar) {
             std::apply([&](Tensors &... tupleElements) {
                 ((tupleElements += scalar), ...);
-            }, underlying_tuple());
+            }, _tuple);
             return *static_cast<Implementation *>(this);
         }
 
+        /**
+         * @brief Element-wise subtraction of a scalar
+         *
+         * @param scalar value to subtract from each tensor of the multipole
+         * @return the modified multipole
+         */
         template<typename T>
         inline constexpr Implementation &operator-=(const T &scalar) {
             std::apply([&](Tensors &... tupleElements) {
                 ((tupleElements -= scalar), ...);
-            }, underlying_tuple());
+            }, _tuple);
             return *static_cast<Implementation *>(this);
         }
 
+        /**
+         * @brief Element-wise multiplication by a scalar
+         *
+         * @param scalar value to multiply each tensor of the multipole by.
+         * @return the modified multipole
+         */
         template<typename T>
         inline constexpr Implementation &operator*=(const T &scalar) {
             std::apply([&](Tensors &... tupleElements) {
                 ((tupleElements *= scalar), ...);
-            }, underlying_tuple());
+            }, _tuple);
             return *static_cast<Implementation *>(this);
         }
 
+        /**
+         * @brief Element-wise division by a scalar
+         *
+         * @param scalar value to divide each element of the multipole by.
+         * @return the modified multipole
+         */
         template<typename T>
         inline constexpr Implementation &operator/=(const T &scalar) {
             std::apply([&](Tensors &... tupleElements) {
                 ((tupleElements /= scalar), ...);
-            }, underlying_tuple());
+            }, _tuple);
             return *static_cast<Implementation *>(this);
         }
 
+        /// @copydoc operator+=(const T &)
         template<typename T>
         inline constexpr Implementation operator+(const T &scalar) const {
             return Implementation{implementation()} += scalar;
         }
 
+        /// @copydoc operator-=(const T &)
         template<typename T>
         inline constexpr Implementation operator-(const T &scalar) const {
             return Implementation{implementation()} -= scalar;
         }
 
+        /// @copydoc operator*=(const T &)
         template<typename T>
         inline constexpr Implementation operator*(const T &scalar) const {
             return Implementation{implementation()} *= scalar;
         }
 
+        /// @copydoc operator/=(const T &)
         template<typename T>
         inline constexpr Implementation operator/(const T &scalar) const {
             return Implementation{implementation()} /= scalar;
         }
 
-    public: // Tuple-tuple operations
+        /// @}
+    public:
+        /// @name Tuple-tuple operations
+        /// @{
 
         inline constexpr Implementation &operator+=(const Implementation &other) {
             [&]<std::size_t... i>(std::index_sequence<i...>) {
-                ((std::get<i>(underlying_tuple()) += std::get<i>(other.underlying_tuple())), ...);
+                ((std::get<i>(_tuple) += std::get<i>(other._tuple)), ...);
             }(std::make_index_sequence<std::tuple_size_v<TensorTuple>>{});
             return *static_cast<Implementation *>(this);
         }
 
         inline constexpr Implementation &operator-=(const Implementation &other) {
             [&]<std::size_t... i>(std::index_sequence<i...>) {
-                ((std::get<i>(underlying_tuple()) -= std::get<i>(other.underlying_tuple())), ...);
+                ((std::get<i>(_tuple) -= std::get<i>(other._tuple)), ...);
             }(std::make_index_sequence<std::tuple_size_v<TensorTuple>>{});
             return *static_cast<Implementation *>(this);
         }
 
         inline constexpr Implementation &operator*=(const Implementation &other) {
             [&]<std::size_t... i>(std::index_sequence<i...>) {
-                ((std::get<i>(underlying_tuple()) *= std::get<i>(other.underlying_tuple())), ...);
+                ((std::get<i>(_tuple) *= std::get<i>(other._tuple)), ...);
             }(std::make_index_sequence<std::tuple_size_v<TensorTuple>>{});
             return *static_cast<Implementation *>(this);
         }
 
         inline constexpr Implementation &operator/=(const Implementation &other) {
             [&]<std::size_t... i>(std::index_sequence<i...>) {
-                ((std::get<i>(underlying_tuple()) /= std::get<i>(other.underlying_tuple())), ...);
+                ((std::get<i>(_tuple) /= std::get<i>(other._tuple)), ...);
             }(std::make_index_sequence<std::tuple_size_v<TensorTuple>>{});
             return *static_cast<Implementation *>(this);
         }
@@ -186,29 +232,59 @@ namespace symtensor {
             return Implementation{implementation()} /= other;
         }
 
+        /// @}
     public:
 
-        friend constexpr auto operator<=>(const Self &, const Self &) = default;
-
-        friend constexpr auto operator<=>(const Implementation &a, const Implementation &b) {
-            return operator<=>(static_cast<const Self &>(a), static_cast<const Self &>(b));
-        };
+        friend constexpr auto operator<=>(const Self &a, const Self &b) = default;
 
         friend std::ostream &operator<<(std::ostream &out, const Self &self) {
             std::apply([&](const Tensors &... tupleElements) {
                 ((out << tupleElements << " "), ...);
-            }, self.underlying_tuple());
+            }, self._tuple);
             return out;
         }
 
+    public:
+
+        inline constexpr const TensorTuple &underlying_tuple() const { return _tuple; }
+
+        inline constexpr TensorTuple &underlying_tuple() { return _tuple; }
+
+        template<std::size_t I>
+        inline constexpr auto &get() &{ return std::get<I>(_tuple); }
+
+        template<std::size_t I>
+        inline constexpr const auto &get() const &{ return std::get<I>(_tuple); }
+
+        template<std::size_t I>
+        inline constexpr auto &&get() &&{ return std::get<I>(_tuple); }
+
+
     private:
 
-        template<std::size_t R>
-        static consteval std::size_t indexForRank() {
-            return (underlying_tuple_size<TensorTuple>() - 1) - (Order - R);
+        static consteval std::size_t indexForRank(std::size_t R) {
+            return (NumTensors - 1) - (Order - R);
         }
+
+        const Implementation &implementation() const { return *static_cast<const Implementation *>(this); }
+
+        Implementation &implementation() { return *static_cast<Implementation *>(this); }
+
     };
 
+    template<typename Implementation, typename Tuple>
+    using MultipoleBaseFromTuple = expand_tuple<MultipoleBase, Tuple, Implementation>;
+}
+
+namespace std {
+
+    template<symtensor::derived_from_template<symtensor::MultipoleBase> T>
+    struct tuple_size<T> : tuple_size<typename T::TensorTuple> {
+    };
+
+    template<std::size_t I, symtensor::derived_from_template<symtensor::MultipoleBase> T>
+    struct tuple_element<I, T> : tuple_element<I, typename T::TensorTuple> {
+    };
 }
 
 #endif //SYMTENSOR_MULTIPOLEBASE_H

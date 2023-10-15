@@ -7,7 +7,7 @@
 
 using namespace symtensor;
 
-TEST_CASE("Member access", "[Multipole]") {
+TEST_CASE("Access to tensors", "[Multipole]") {
 
     Octupole3f a{
             {1, 2, 3},
@@ -15,12 +15,16 @@ TEST_CASE("Member access", "[Multipole]") {
             {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
     };
 
+    // Access indexed by rank
     REQUIRE(a.tensor<1>() == SymmetricTensor3f<1>{1, 2, 3});
     REQUIRE(a.tensor<2>() == SymmetricTensor3f<2>{1, 2, 3, 4, 5, 6});
     REQUIRE(a.tensor<3>() == SymmetricTensor3f<3>{1, 2, 3, 4, 5, 6, 7, 8, 9, 10});
 
-    // todo: implement structured bindings
-    //auto &[a1, a2, a3] = a;
+    // Access using structured bindings
+    const auto &[a1, a2, a3] = a;
+    REQUIRE(a1 == SymmetricTensor3f<1>{1, 2, 3});
+    REQUIRE(a2 == SymmetricTensor3f<2>{1, 2, 3, 4, 5, 6});
+    REQUIRE(a3 == SymmetricTensor3f<3>{1, 2, 3, 4, 5, 6, 7, 8, 9, 10});
 
 }
 
