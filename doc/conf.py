@@ -15,7 +15,7 @@ FAVICON = '@CMAKE_CURRENT_SOURCE_DIR@/images/symtensor-logo.svg'
 
 LINKS_NAVBAR1 = [
     ("Pages", 'pages', []),
-    #("Namespaces", 'namespaces', [])
+    ("Namespaces", 'namespaces', []),
     ("Classes", 'annotated', []),
 ]
 LINKS_NAVBAR2 = [

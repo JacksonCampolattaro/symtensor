@@ -1,3 +1,7 @@
+/**
+ * @file
+ * @brief Index types and convenience functions for working with indices.
+ */
 #ifndef SYMTENSOR_INDEX_H
 #define SYMTENSOR_INDEX_H
 
@@ -11,10 +15,29 @@
 
 namespace symtensor {
 
+    /**
+     * @brief Determines the number of indices in a square tensor of rank R and size D
+     *
+     * Equivalent to \f$ D^R \f$.
+     *
+     * @param D size of the tensor along all axes
+     * @param R rank of the tensor
+     * @return the number of values the the tensor
+     */
     constexpr std::size_t numValuesInTensor(std::size_t D, std::size_t R) {
         return pow(D, R);
     }
 
+    /**
+     * @brief Determines the number of _unique_ values in a symmetric tensor of rank R and size D
+     *
+     * Equivalent to Pascal's triangle evaluated at D-1, R.
+     *
+     * @param D size of the symmetric tensor along all axes
+     * @param R rank of the symmetric tensor
+     * @return the number of unique values in the symmetric tensor
+     *  (indices xxy, xyx, and yxx are not counted separately).
+     */
     constexpr std::size_t numUniqueValuesInSymmetricTensor(std::size_t D, std::size_t R) {
         return pascal(D - 1, R);
     }
@@ -58,6 +81,13 @@ namespace symtensor {
 
     }
 
+    /**
+     * @brief Enum-class index type for a given dimension
+     *
+     * For 2d, this contains elements @code{.cpp} X, Y @endcode,
+     * for 3d @code{.cpp} X, Y, Z @endcode,
+     * for 4d @code{.cpp} W, X, Y, Z @endcode.
+     */
     template<std::size_t D>
     using Index = typename IndexTypeForDimension<D>::type;
 
@@ -125,6 +155,33 @@ namespace symtensor {
         }
     }
 
+    /**
+     * @brief converts a flat index to an equivalent multi-dimensional index.
+     *
+     * The index is in "canonical" form.
+     * For a \f$ 3 \times 3 \times 3 \f$ symmetric tensor, this means the following mapping:
+     *
+     * @m_div{m-text-center}
+     * 0 --> X, X, X \n
+     * 1 --> X, X, Y \n
+     * 2 --> X, X, Z \n
+     * 3 --> X, Y, Y \n
+     * 4 --> X, Y, Z \n
+     * 5 --> X, Z, Z \n
+     * 6 --> Y, Y, Y \n
+     * 7 --> Y, Y, Z \n
+     * 8 --> Y, Z, Z \n
+     * 9 --> Z, Z, Z \n
+     * @m_enddiv
+     *
+     * @tparam R Rank of the tensor
+     * @tparam I Index type
+     *
+     * @param flatIndex 1-dimensional index, in the range [0, N)\n
+     *  where N can be found using @ref numUniqueValuesInSymmetricTensor
+     * @param D size of the tensor
+     * @return std::array of indices, with type I and size R
+     */
     template<std::size_t R, typename I>
     inline constexpr std::array<I, R> dimensionalIndices(
             const std::size_t &flatIndex,
@@ -137,6 +194,39 @@ namespace symtensor {
         return array;
     }
 
+    /**
+     * @brief Converts a multi-dimensional index in a symmetric tensor into a flat index
+     *
+     * First puts the index in "canonical" form, where indices are sorted as follows:
+     *
+     * @m_div{m-text-center}
+     * {X, X, Y} or {X, Y, X} or {Y, X, X} --> {X, X, Y}
+     * @m_enddiv
+     *
+     * Next, converts the indices to a flat index using the reverse process of @ref dimensionalIndices()
+     *
+     * @m_div{m-text-center}
+     * X, X, X --> 0 \n
+     * X, X, Y --> 1 \n
+     * X, X, Z --> 2 \n
+     * X, Y, Y --> 3 \n
+     * X, Y, Z --> 4 \n
+     * X, Z, Z --> 5 \n
+     * Y, Y, Y --> 6 \n
+     * Y, Y, Z --> 7 \n
+     * Y, Z, Z --> 8 \n
+     * Z, Z, Z --> 9 \n
+     * @m_enddiv
+     *
+     * @tparam R Rank of the tensor
+     * @tparam I Index type
+     *
+     * @param dimensionalIndices array of R Index types which specifies a value in the tensor
+     * @param D size of the tensor
+     * @param lowestIndex (implementation detail)
+     *
+     * @return the corresponding index in a flat array with no redundant values
+     */
     template<std::size_t R, typename I>
     inline constexpr std::size_t flatIndex(
             std::array<I, R> dimensionalIndices,

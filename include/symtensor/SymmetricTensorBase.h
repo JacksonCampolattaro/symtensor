@@ -24,7 +24,7 @@ namespace symtensor {
      * @tparam S scalar type
      * @tparam D number of dimensions (2d, 3d, etc.)
      * @tparam R rank
-     * @tparam I index type
+     * @tparam I index type, defaults to the appropriate @ref Index
      */
     template<class Implementation, typename S, std::size_t D, std::size_t R, typename I = Index<D>>
     class SymmetricTensorBase {

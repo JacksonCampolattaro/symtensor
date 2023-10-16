@@ -141,7 +141,7 @@ namespace symtensor {
     }
 
     template<template<typename...> class TemplateType, typename Tuple, typename ...Prefix>
-    using expand_tuple = expand_tuple_helper<TemplateType, Tuple, Prefix...>::type;
+    using expand_tuple = typename expand_tuple_helper<TemplateType, Tuple, Prefix...>::type;
 
 }
 

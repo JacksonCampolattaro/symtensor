@@ -47,9 +47,16 @@ namespace symtensor {
         using Base::Base;
     };
 
+    /// 2d quadrupole with floating point elements
     using Quadrupole2f = Multipole2f<2>;
+
+    /// 3d quadrupole with floating point elements
     using Quadrupole3f = Multipole3f<2>;
+
+    /// 2d octupole with floating point elements
     using Octupole2f = Multipole2f<3>;
+
+    /// 3d octupole with floating point elements
     using Octupole3f = Multipole3f<3>;
 
 }

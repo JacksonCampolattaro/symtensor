@@ -1,3 +1,7 @@
+/**
+ * @file
+ * @brief Provides the base multipole template.
+ */
 #ifndef SYMTENSOR_MULTIPOLEBASE_H
 #define SYMTENSOR_MULTIPOLEBASE_H
 
@@ -28,6 +32,40 @@ namespace symtensor {
 
     }
 
+    /**
+     * @brief Produces an std::tuple of tensors based on a "prefix" and a desired order.
+     *
+     * The prefix determines the types of the tensors which make up the sequence.
+     * For example, the following
+     * @code{.cpp} TensorSequence<3, SymmetricTensor3f<1>> @endcode
+     * produces the type:
+     * @code{.cpp}
+     * std::tuple<
+     *  SymmetricTensor3f<1>,
+     *  SymmetricTensor3f<2>,
+     *  SymmetricTensor3f<3>
+     * >
+     * @endcode
+     *
+     * The prefix may also contain types which are not symmetric tensors,
+     * so long as the final type of the prefix implements @ref SymmetricTensorBase.
+     * For example,
+     * @code{.cpp} TensorSequence<3, float, glm::vec3, SymmetricTensor3f<2>> @endcode
+     * uses a `float` scalar component and a vector from GLM, this produces the type:
+     * @code{.cpp}
+     * std::tuple<
+     *  float,
+     *  glm::vec3,
+     *  SymmetricTensor3f<2>,
+     *  SymmetricTensor3f<3>
+     * >
+     * @endcode
+     *
+     * @tparam Order rank of the highest tensor of the sequence, which appears last in the std::tuple
+     * @tparam PrefixTensors at least one low-order tensor which will be used to define higher order tensors.
+     *   The last tensor of PrefixTensors is used to produce higher order tensors
+     *   through repeated use of @ref NextHigherRank.
+     */
     template<std::size_t Order, typename ...PrefixTensors>
     using TensorSequence = typename TensorSequenceHelper<Order, PrefixTensors...>::type;
 
@@ -185,9 +223,15 @@ namespace symtensor {
 
         /// @}
     public:
-        /// @name Tuple-tuple operations
+        /// @name Multipole-multipole operations
         /// @{
 
+        /**
+         * @brief Element-wise addition with another multipole
+         *
+         * @param other multipole to add with this multipole
+         * @return the modified multipole
+         */
         inline constexpr Implementation &operator+=(const Implementation &other) {
             [&]<std::size_t... i>(std::index_sequence<i...>) {
                 ((std::get<i>(_tuple) += std::get<i>(other._tuple)), ...);
@@ -195,6 +239,12 @@ namespace symtensor {
             return *static_cast<Implementation *>(this);
         }
 
+        /**
+         * @brief Element-wise subtraction by another multipole
+         *
+         * @param other multipole to subtract from this multipole
+         * @return the modified multipole
+         */
         inline constexpr Implementation &operator-=(const Implementation &other) {
             [&]<std::size_t... i>(std::index_sequence<i...>) {
                 ((std::get<i>(_tuple) -= std::get<i>(other._tuple)), ...);
@@ -202,6 +252,12 @@ namespace symtensor {
             return *static_cast<Implementation *>(this);
         }
 
+        /**
+         * @brief Element-wise multiplication by another multipole
+         *
+         * @param other multipole to multiply with this multipole
+         * @return the modified multipole
+         */
         inline constexpr Implementation &operator*=(const Implementation &other) {
             [&]<std::size_t... i>(std::index_sequence<i...>) {
                 ((std::get<i>(_tuple) *= std::get<i>(other._tuple)), ...);
@@ -209,6 +265,12 @@ namespace symtensor {
             return *static_cast<Implementation *>(this);
         }
 
+        /**
+         * @brief Element-wise division by another multipole
+         *
+         * @param other multipole to divide this multipole by
+         * @return the modified multipole
+         */
         inline constexpr Implementation &operator/=(const Implementation &other) {
             [&]<std::size_t... i>(std::index_sequence<i...>) {
                 ((std::get<i>(_tuple) /= std::get<i>(other._tuple)), ...);
@@ -216,26 +278,41 @@ namespace symtensor {
             return *static_cast<Implementation *>(this);
         }
 
+        /// @copydoc operator+=(const Implementation &)
         inline constexpr Implementation operator+(const Implementation &other) const {
             return Implementation{implementation()} += other;
         }
 
+        /// @copydoc operator-=(const Implementation &)
         inline constexpr Implementation operator-(const Implementation &other) const {
             return Implementation{implementation()} -= other;
         }
 
+        /// @copydoc operator*=(const Implementation &)
         inline constexpr Implementation operator*(const Implementation &other) const {
             return Implementation{implementation()} *= other;
         }
 
+        /// @copydoc operator/=(const Implementation &)
         inline constexpr Implementation operator/(const Implementation &other) const {
             return Implementation{implementation()} /= other;
         }
 
         /// @}
     public:
+        /// @name Comparison operators
+        /// @{
 
-        friend constexpr auto operator<=>(const Self &a, const Self &b) = default;
+        /**
+         * @brief Comparison with another multipole
+         *
+         * @param other multipole to compare with
+         * @return true if all elements of the multipoles are equivalent, false otherwise
+         */
+        inline constexpr bool operator==(const Self &other) const = default;
+
+        /// @}
+    public:
 
         friend std::ostream &operator<<(std::ostream &out, const Self &self) {
             std::apply([&](const Tensors &... tupleElements) {
@@ -245,19 +322,36 @@ namespace symtensor {
         }
 
     public:
+        /// @name std::tuple compatibility
+        /// @{
 
+        /**
+         * @brief direct access to the tuple of tensors which comprises the multipole
+         * @return reference to the std::tuple of tensors.
+         */
         inline constexpr const TensorTuple &underlying_tuple() const { return _tuple; }
 
+        /// @copydoc underlying_tuple()
         inline constexpr TensorTuple &underlying_tuple() { return _tuple; }
 
+        /**
+         * @brief element access for use with structured bindings
+         *
+         * @tparam I index of the element to retrieve (not necessarily the same as Rank)
+         * @return reference to the tensor
+         */
         template<std::size_t I>
         inline constexpr auto &get() &{ return std::get<I>(_tuple); }
 
+        /// @copydoc get()
         template<std::size_t I>
         inline constexpr const auto &get() const &{ return std::get<I>(_tuple); }
 
+        /// @copydoc get()
         template<std::size_t I>
         inline constexpr auto &&get() &&{ return std::get<I>(_tuple); }
+
+        /// @}
 
 
     private:
@@ -272,16 +366,48 @@ namespace symtensor {
 
     };
 
+    //    template<typename Implementation, typename Tuple>
+    //    using MultipoleBaseFromTuple = expand_tuple<MultipoleBase, Tuple, Implementation>;
+
+    /**
+     * @brief Helper class for defining a multipole based on an std::tuple of tensors.
+     *
+     * @tparam Implementation CRTP subclass
+     * @tparam Tuple the std::tuple of tensors.
+     *   This is typically produced using @ref TensorSequence
+     */
     template<typename Implementation, typename Tuple>
-    using MultipoleBaseFromTuple = expand_tuple<MultipoleBase, Tuple, Implementation>;
+    class MultipoleBaseFromTuple : public MultipoleBase<Implementation, Tuple> {
+    };
+
+    template<typename Implementation, typename... Tensors>
+    class MultipoleBaseFromTuple<Implementation, std::tuple<Tensors...>>
+            : public MultipoleBase<Implementation, Tensors...> {
+    public:
+        using MultipoleBase<Implementation, Tensors...>::MultipoleBase;
+    };
+
 }
 
 namespace std {
 
+    /**
+     * @brief tuple-size specialization to enable the use of structured bindings with multipoles
+     *
+     * @tparam T multipole type.
+     *  must be derived from a specialization of @ref MultipoleBase, enforced by a concept
+     */
     template<symtensor::derived_from_template<symtensor::MultipoleBase> T>
     struct tuple_size<T> : tuple_size<typename T::TensorTuple> {
     };
 
+    /**
+     * @brief tuple-element specialization to enable the use of structured bindings with multipoles
+     *
+     * @tparam I index of the element to retrieve the type of
+     * @tparam T multipole type.
+     *  must be derived from a specialization of @ref MultipoleBase, enforced by a concept
+     */
     template<std::size_t I, symtensor::derived_from_template<symtensor::MultipoleBase> T>
     struct tuple_element<I, T> : tuple_element<I, typename T::TensorTuple> {
     };
