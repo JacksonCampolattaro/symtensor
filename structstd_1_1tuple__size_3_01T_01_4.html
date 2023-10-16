@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>symtensor</title>
+  <title>std::tuple_size&lt;T&gt; struct | symtensor</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:400,400i,700,700i|JetBrains+Mono:400,400i,600" />
   <link rel="stylesheet" href="m-theme-light.css" />
   <link rel="stylesheet" href="m-layout.css" />
@@ -35,7 +35,7 @@
             <li><a href="annotated.html">Classes</a></li>
           </ol>
           <ol class="m-col-t-6 m-col-m-none" start="4">
-            <li><a href="files.html" id="m-navbar-current">Files</a></li>
+            <li><a href="files.html">Files</a></li>
             <li>
         <a href="https://github.com/JacksonCampolattaro/symtensor">
             <img 
@@ -57,36 +57,23 @@
   <div class="m-container m-container-inflatable">
     <div class="m-row">
       <div class="m-col-l-10 m-push-l-1">
-        <h1>Files</h1>
-        <ul class="m-doc">
-          <li class="m-doc-collapsible">
-            <a href="#" onclick="return toggle(this)">dir</a> <a href="dir_ac8328523b41d8ce239fc77edbe15305.html" class="m-doc">symtensor</a> <span class="m-doc">namespace <a href="namespacesymtensor.html" class="m-doc">symtensor</a></span>
-            <ul class="m-doc">
-              <li>file <a href="Index_8h.html" class="m-doc">Index.h</a> <span class="m-doc">Index types and convenience functions for working with indices.</span></li>
-              <li>file <a href="Multipole_8h.html" class="m-doc">Multipole.h</a> <span class="m-doc">Provides the generic multipole type alongside typedefs for common uses.</span></li>
-              <li>file <a href="MultipoleBase_8h.html" class="m-doc">MultipoleBase.h</a> <span class="m-doc">Provides the base multipole template.</span></li>
-              <li>file <a href="SymmetricTensor_8h.html" class="m-doc">SymmetricTensor.h</a> <span class="m-doc">Provides the generic symmetric tensor type alongside typedefs for common uses.</span></li>
-              <li>file <a href="SymmetricTensorBase_8h.html" class="m-doc">SymmetricTensorBase.h</a> <span class="m-doc">Provides the base symmetric tensor template.</span></li>
-              <li>file <a href="symtensor_8h.html" class="m-doc">symtensor.h</a> <span class="m-doc">Blanket include for the symtensor library.</span></li>
-            </ul>
-          </li>
-        </ul>
-        <script>
-        function toggle(e) {
-            e.parentElement.className = e.parentElement.className == 'm-doc-collapsible' ?
-                'm-doc-expansible' : 'm-doc-collapsible';
-            return false;
-        }
-        /* Collapse all nodes marked as such. Doing it via JS instead of
-           directly in markup so disabling it doesn't harm usability. The list
-           is somehow regenerated on every iteration and shrinks as I change
-           the classes. It's not documented anywhere and I'm not sure if this
-           is the same across browsers, so I am going backwards in that list to
-           be sure. */
-        var collapsed = document.getElementsByClassName("collapsed");
-        for(var i = collapsed.length - 1; i >= 0; --i)
-            collapsed[i].className = 'm-doc-expansible';
-        </script>
+        <h1>
+          <div class="m-doc-include m-code m-inverted m-right-m m-text-right"><span class="cp">#include</span> <a class="cpf" href="MultipoleBase_8h.html">&lt;symtensor/MultipoleBase.h&gt;</a></div>
+          <div class="m-doc-template">template&lt;symtensor::derived_from_template&lt;<a href="classsymtensor_1_1MultipoleBase.html" class="m-doc">symtensor::<wbr />MultipoleBase</a>&gt; T&gt;</div>
+          <span class="m-breadcrumb"><a href="namespacestd.html">std</a>::<wbr/></span>tuple_size&lt;T&gt; <span class="m-thin">struct</span>
+        </h1>
+        <p>tuple-size specialization to enable the use of structured bindings with multipoles</p>
+        <table class="m-table m-fullwidth m-flat">
+          <thead>
+            <tr><th colspan="2">Template parameters</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="width: 1%">T</td>
+              <td>multipole type. must be derived from a specialization of MultipoleBase, enforced by a concept</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>

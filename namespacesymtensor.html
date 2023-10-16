@@ -31,9 +31,10 @@
         <div class="m-row">
           <ol class="m-col-t-6 m-col-m-none">
             <li><a href="pages.html">Pages</a></li>
+            <li><a href="namespaces.html">Namespaces</a></li>
             <li><a href="annotated.html">Classes</a></li>
           </ol>
-          <ol class="m-col-t-6 m-col-m-none" start="3">
+          <ol class="m-col-t-6 m-col-m-none" start="4">
             <li><a href="files.html">Files</a></li>
             <li>
         <a href="https://github.com/JacksonCampolattaro/symtensor">
@@ -67,6 +68,7 @@
               <ul>
                 <li><a href="#nested-classes">Classes</a></li>
                 <li><a href="#typedef-members">Typedefs</a></li>
+                <li><a href="#func-members">Functions</a></li>
               </ul>
             </li>
           </ul>
@@ -86,6 +88,11 @@
             </dt>
             <dd><a href="classsymtensor_1_1Multipole.html" class="m-doc">Multipole</a> base-type for use with CRTP implementations.</dd>
             <dt>
+              <div class="m-doc-template">template&lt;typename Implementation, typename Tuple&gt;</div>
+              class <a href="classsymtensor_1_1MultipoleBaseFromTuple.html" class="m-doc">MultipoleBaseFromTuple</a>
+            </dt>
+            <dd>Helper class for defining a multipole based on an std::tuple of tensors.</dd>
+            <dt>
               <div class="m-doc-template">template&lt;typename S, std::size_t D, std::size_t R, typename I = Index&lt;D&gt;&gt;</div>
               class <a href="classsymtensor_1_1SymmetricTensor.html" class="m-doc">SymmetricTensor</a>
             </dt>
@@ -101,6 +108,32 @@
           <h2><a href="#typedef-members">Typedefs</a></h2>
           <dl class="m-doc">
             <dt>
+              <div class="m-doc-template">template&lt;std::size_t D&gt;</div>
+              using <a href="#a904cc80457f62cf9a0a6707db181a9e1" class="m-doc">Index</a> = typename IndexTypeForDimension&lt;D&gt;::type
+            </dt>
+            <dd>Enum-class index type for a given dimension.</dd>
+            <dt>
+              using <a href="#aad1c1f680b2d07e2fd151f7cff815ba3" class="m-doc">Quadrupole2f</a> = <a href="classsymtensor_1_1Multipole.html" class="m-doc">Multipole2f</a>&lt;2&gt;
+            </dt>
+            <dd>2d quadrupole with floating point elements</dd>
+            <dt>
+              using <a href="#afc00af6bc1d00d31ea6952a521cd4e1e" class="m-doc">Quadrupole3f</a> = <a href="classsymtensor_1_1Multipole.html" class="m-doc">Multipole3f</a>&lt;2&gt;
+            </dt>
+            <dd>3d quadrupole with floating point elements</dd>
+            <dt>
+              using <a href="#a220bc66ec0cd64072544ce2d3aa4a2d1" class="m-doc">Octupole2f</a> = <a href="classsymtensor_1_1Multipole.html" class="m-doc">Multipole2f</a>&lt;3&gt;
+            </dt>
+            <dd>2d octupole with floating point elements</dd>
+            <dt>
+              using <a href="#a75fe26ae0aa4003ea26405c8d0f2ad60" class="m-doc">Octupole3f</a> = <a href="classsymtensor_1_1Multipole.html" class="m-doc">Multipole3f</a>&lt;3&gt;
+            </dt>
+            <dd>3d octupole with floating point elements</dd>
+            <dt>
+              <div class="m-doc-template">template&lt;std::size_t Order, typename ... PrefixTensors&gt;</div>
+              using <a href="#a9303084ed4ed18b14e2ed87f32f33495" class="m-doc">TensorSequence</a> = typename TensorSequenceHelper&lt;Order, PrefixTensors...&gt;::type
+            </dt>
+            <dd>Produces an std::tuple of tensors based on a &quot;prefix&quot; and a desired order.</dd>
+            <dt>
               <div class="m-doc-template">template&lt;class ST, std::size_t R&gt;</div>
               using <a href="#a68e34bb9b75d60c4c11a5931046deb31" class="m-doc">ReplaceRank</a> = typename ReplaceRankHelper&lt;R, ST&gt;::type
             </dt>
@@ -112,8 +145,110 @@
             <dd>Given a symmetric tensor type, finds the symmetric tensor of the next higher rank.</dd>
           </dl>
         </section>
+        <section id="func-members">
+          <h2><a href="#func-members">Functions</a></h2>
+          <dl class="m-doc">
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#ad5ec185b2951f1647a1dab40b3aee7a8" class="m-doc">numValuesInTensor</a>(</span><span class="m-doc-wrap">std::size_t D,
+              std::size_t R) -&gt; std::size_t <span class="m-label m-flat m-primary">constexpr</span></span>
+            </dt>
+            <dd>Determines the number of indices in a square tensor of rank R and size D.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#a4be9cfcf5e1293d38436e4c3a26be795" class="m-doc">numUniqueValuesInSymmetricTensor</a>(</span><span class="m-doc-wrap">std::size_t D,
+              std::size_t R) -&gt; std::size_t <span class="m-label m-flat m-primary">constexpr</span></span>
+            </dt>
+            <dd>Determines the number of <em>unique</em> values in a symmetric tensor of rank R and size D.</dd>
+            <dt>
+              <div class="m-doc-template">template&lt;std::size_t R, typename I&gt;</div>
+              <span class="m-doc-wrap-bumper">auto <a href="#a68ad6ef618ea44aacdf5648cde9f8d62" class="m-doc">dimensionalIndices</a>(</span><span class="m-doc-wrap">const std::size_t&amp; flatIndex,
+              std::size_t D) -&gt; std::array&lt;I, R&gt; <span class="m-label m-flat m-primary">constexpr</span></span>
+            </dt>
+            <dd>converts a flat index to an equivalent multi-dimensional index.</dd>
+            <dt>
+              <div class="m-doc-template">template&lt;std::size_t R, typename I&gt;</div>
+              <span class="m-doc-wrap-bumper">auto <a href="#af98c4c8ff5f042bec79b40d940594e3c" class="m-doc">flatIndex</a>(</span><span class="m-doc-wrap">std::array&lt;I, R&gt; dimensionalIndices,
+              std::size_t D,
+              std::size_t lowestIndex = 0) -&gt; std::size_t <span class="m-label m-flat m-primary">constexpr</span></span>
+            </dt>
+            <dd>Converts a multi-dimensional index in a symmetric tensor into a flat index.</dd>
+          </dl>
+        </section>
         <section>
           <h2>Typedef documentation</h2>
+          <section class="m-doc-details" id="a904cc80457f62cf9a0a6707db181a9e1"><div>
+            <h3>
+              <div class="m-doc-include m-code m-inverted m-right-m m-text-right"><span class="cp">#include</span> <a class="cpf" href="Index_8h.html">&lt;symtensor/Index.h&gt;</a></div>
+              <div class="m-doc-template">
+                template&lt;std::size_t D&gt;
+              </div>
+              using symtensor::<wbr /><a href="#a904cc80457f62cf9a0a6707db181a9e1" class="m-doc-self">Index</a> = typename IndexTypeForDimension&lt;D&gt;::type
+            </h3>
+            <p>Enum-class index type for a given dimension.</p>
+<p>For 2d, this contains elements <code class="m-code"><span class="n">X</span><span class="p">,</span><span class="w"> </span><span class="n">Y</span></code>, for 3d <code class="m-code"><span class="n">X</span><span class="p">,</span><span class="w"> </span><span class="n">Y</span><span class="p">,</span><span class="w"> </span><span class="n">Z</span></code>, for 4d <code class="m-code"><span class="n">W</span><span class="p">,</span><span class="w"> </span><span class="n">X</span><span class="p">,</span><span class="w"> </span><span class="n">Y</span><span class="p">,</span><span class="w"> </span><span class="n">Z</span></code>.</p>
+          </div></section>
+          <section class="m-doc-details" id="aad1c1f680b2d07e2fd151f7cff815ba3"><div>
+            <h3>
+              using symtensor::<wbr /><a href="#aad1c1f680b2d07e2fd151f7cff815ba3" class="m-doc-self">Quadrupole2f</a> = <a href="classsymtensor_1_1Multipole.html" class="m-doc">Multipole2f</a>&lt;2&gt;
+              <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="Multipole_8h.html">&lt;symtensor/Multipole.h&gt;</a></div>
+            </h3>
+            <p>2d quadrupole with floating point elements</p>
+          </div></section>
+          <section class="m-doc-details" id="afc00af6bc1d00d31ea6952a521cd4e1e"><div>
+            <h3>
+              using symtensor::<wbr /><a href="#afc00af6bc1d00d31ea6952a521cd4e1e" class="m-doc-self">Quadrupole3f</a> = <a href="classsymtensor_1_1Multipole.html" class="m-doc">Multipole3f</a>&lt;2&gt;
+              <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="Multipole_8h.html">&lt;symtensor/Multipole.h&gt;</a></div>
+            </h3>
+            <p>3d quadrupole with floating point elements</p>
+          </div></section>
+          <section class="m-doc-details" id="a220bc66ec0cd64072544ce2d3aa4a2d1"><div>
+            <h3>
+              using symtensor::<wbr /><a href="#a220bc66ec0cd64072544ce2d3aa4a2d1" class="m-doc-self">Octupole2f</a> = <a href="classsymtensor_1_1Multipole.html" class="m-doc">Multipole2f</a>&lt;3&gt;
+              <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="Multipole_8h.html">&lt;symtensor/Multipole.h&gt;</a></div>
+            </h3>
+            <p>2d octupole with floating point elements</p>
+          </div></section>
+          <section class="m-doc-details" id="a75fe26ae0aa4003ea26405c8d0f2ad60"><div>
+            <h3>
+              using symtensor::<wbr /><a href="#a75fe26ae0aa4003ea26405c8d0f2ad60" class="m-doc-self">Octupole3f</a> = <a href="classsymtensor_1_1Multipole.html" class="m-doc">Multipole3f</a>&lt;3&gt;
+              <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="Multipole_8h.html">&lt;symtensor/Multipole.h&gt;</a></div>
+            </h3>
+            <p>3d octupole with floating point elements</p>
+          </div></section>
+          <section class="m-doc-details" id="a9303084ed4ed18b14e2ed87f32f33495"><div>
+            <h3>
+              <div class="m-doc-include m-code m-inverted m-right-m m-text-right"><span class="cp">#include</span> <a class="cpf" href="MultipoleBase_8h.html">&lt;symtensor/MultipoleBase.h&gt;</a></div>
+              <div class="m-doc-template">
+                template&lt;std::size_t Order, typename ... PrefixTensors&gt;
+              </div>
+              using symtensor::<wbr /><a href="#a9303084ed4ed18b14e2ed87f32f33495" class="m-doc-self">TensorSequence</a> = typename TensorSequenceHelper&lt;Order, PrefixTensors...&gt;::type
+            </h3>
+            <p>Produces an std::tuple of tensors based on a &quot;prefix&quot; and a desired order.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Template parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">Order</td>
+                  <td>rank of the highest tensor of the sequence, which appears last in the std::tuple</td>
+                </tr>
+                <tr>
+                  <td>PrefixTensors</td>
+                  <td>at least one low-order tensor which will be used to define higher order tensors. The last tensor of PrefixTensors is used to produce higher order tensors through repeated use of <a href="namespacesymtensor.html#a33bccc62448a25eabe93f15595800cb7" class="m-doc">NextHigherRank</a>.</td>
+                </tr>
+              </tbody>
+            </table>
+<p>The prefix determines the types of the tensors which make up the sequence. For example, the following <code class="m-code"><span class="n">TensorSequence</span><span class="o">&lt;</span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="n">SymmetricTensor3f</span><span class="o">&lt;</span><span class="mi">1</span><span class="o">&gt;&gt;</span></code> produces the type:</p><pre class="m-code"><span class="n">std</span><span class="o">::</span><span class="n">tuple</span><span class="o">&lt;</span>
+<span class="w"> </span><span class="n">SymmetricTensor3f</span><span class="o">&lt;</span><span class="mi">1</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w"> </span><span class="n">SymmetricTensor3f</span><span class="o">&lt;</span><span class="mi">2</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w"> </span><span class="n">SymmetricTensor3f</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span>
+<span class="o">&gt;</span></pre><p>The prefix may also contain types which are not symmetric tensors, so long as the final type of the prefix implements <a href="classsymtensor_1_1SymmetricTensorBase.html" class="m-doc">SymmetricTensorBase</a>. For example, <code class="m-code"><span class="n">TensorSequence</span><span class="o">&lt;</span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="kt">float</span><span class="p">,</span><span class="w"> </span><span class="n">glm</span><span class="o">::</span><span class="n">vec3</span><span class="p">,</span><span class="w"> </span><span class="n">SymmetricTensor3f</span><span class="o">&lt;</span><span class="mi">2</span><span class="o">&gt;&gt;</span></code> uses a <code>float</code> scalar component and a vector from GLM, this produces the type:</p><pre class="m-code"><span class="n">std</span><span class="o">::</span><span class="n">tuple</span><span class="o">&lt;</span>
+<span class="w"> </span><span class="kt">float</span><span class="p">,</span>
+<span class="w"> </span><span class="n">glm</span><span class="o">::</span><span class="n">vec3</span><span class="p">,</span>
+<span class="w"> </span><span class="n">SymmetricTensor3f</span><span class="o">&lt;</span><span class="mi">2</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w"> </span><span class="n">SymmetricTensor3f</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span>
+<span class="o">&gt;</span></pre>
+          </div></section>
           <section class="m-doc-details" id="a68e34bb9b75d60c4c11a5931046deb31"><div>
             <h3>
               <div class="m-doc-include m-code m-inverted m-right-m m-text-right"><span class="cp">#include</span> <a class="cpf" href="SymmetricTensorBase_8h.html">&lt;symtensor/SymmetricTensorBase.h&gt;</a></div>
@@ -161,6 +296,193 @@
               </tbody>
             </table>
 <p>All properties of the symmetric tensor ST are preserved aside from the rank. The type of <code class="m-code"><span class="n">NextHigherRank</span><span class="o">&lt;</span><span class="n">SymmetricTensor3f</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;&gt;</span></code> is equivalent to <code class="m-code"><span class="n">SymmetricTensor3f</span><span class="o">&lt;</span><span class="mi">4</span><span class="o">&gt;</span></code>.</p>
+          </div></section>
+        </section>
+        <section>
+          <h2>Function documentation</h2>
+          <section class="m-doc-details" id="ad5ec185b2951f1647a1dab40b3aee7a8"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">std::size_t symtensor::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#ad5ec185b2951f1647a1dab40b3aee7a8" class="m-doc-self">numValuesInTensor</a>(</span><span class="m-doc-wrap">std::size_t D,
+              std::size_t R) <span class="m-label m-primary">constexpr</span></span></span>
+              <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="Index_8h.html">&lt;symtensor/Index.h&gt;</a></div>
+            </h3>
+            <p>Determines the number of indices in a square tensor of rank R and size D.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">D</td>
+                  <td>size of the tensor along all axes</td>
+                </tr>
+                <tr>
+                  <td>R</td>
+                  <td>rank of the tensor</td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <th>Returns</th>
+                  <td>the number of values the the tensor</td>
+                </tr>
+              </tfoot>
+            </table>
+<p>Equivalent to <svg class="m-math" style="width: 1.716em; height: 1.019em; vertical-align: -0.000em;" viewBox="0 -9.784673 16.471834 9.784673">
+<title>
+$ D^R $
+</title>
+<defs>
+<path id='eq1-g0-82' d='M3.092403-4.885679C3.164134-5.156663 3.172105-5.180573 3.498879-5.180573H4.144458C4.798007-5.180573 5.411706-5.0132 5.411706-4.367621C5.411706-4.016936 5.228394-3.459029 4.861768-3.196015C4.479203-2.925031 4.024907-2.83736 3.56264-2.83736H2.582316L3.092403-4.885679ZM4.447323-2.709838C5.427646-2.956912 6.192777-3.55467 6.192777-4.23213C6.192777-4.925529 5.411706-5.443587 4.303861-5.443587H1.952677C1.809215-5.443587 1.705604-5.443587 1.705604-5.292154C1.705604-5.180573 1.809215-5.180573 1.936737-5.180573C2.199751-5.180573 2.430884-5.180573 2.430884-5.053051C2.430884-5.021171 2.422914-5.0132 2.399004-4.909589L1.331009-.629639C1.259278-.326775 1.243337-.263014 .653549-.263014C.502117-.263014 .406476-.263014 .406476-.111582C.406476-.079701 .430386 0 .533998 0C.68543 0 .868742-.01594 1.028144-.02391H1.522291C2.263512-.02391 2.494645 0 2.542466 0S2.701868 0 2.701868-.151432C2.701868-.263014 2.598257-.263014 2.462765-.263014C2.438854-.263014 2.295392-.263014 2.1599-.278954C1.992528-.294894 1.976588-.318804 1.976588-.390535C1.976588-.430386 1.992528-.478207 2.000498-.518057L2.518555-2.614197H3.55467C4.27198-2.614197 4.495143-2.231631 4.495143-1.904857C4.495143-1.793275 4.439352-1.570112 4.399502-1.40274C4.335741-1.171606 4.25604-.852802 4.25604-.70934C4.25604-.095641 4.782067 .167372 5.371856 .167372C6.065255 .167372 6.39203-.613699 6.39203-.765131C6.39203-.797011 6.36812-.876712 6.264508-.876712C6.176837-.876712 6.152927-.804981 6.144956-.773101C5.969614-.223163 5.626899-.055791 5.395766-.055791C5.100872-.055791 5.068991-.278954 5.068991-.541968S5.116812-1.155666 5.148692-1.41868C5.180573-1.657783 5.180573-1.705604 5.180573-1.785305C5.180573-2.263512 4.869738-2.542466 4.447323-2.709838Z'/>
+<path id='eq1-g1-68' d='M1.876961-.884682C1.769365-.466252 1.745455-.3467 .908593-.3467C.681445-.3467 .561893-.3467 .561893-.131507C.561893 0 .633624 0 .872727 0H4.662516C7.07746 0 9.432628-2.49863 9.432628-5.164633C9.432628-6.886177 8.404483-8.16538 6.694894-8.16538H2.857285C2.630137-8.16538 2.52254-8.16538 2.52254-7.938232C2.52254-7.81868 2.630137-7.81868 2.809465-7.81868C3.53873-7.81868 3.53873-7.723039 3.53873-7.591532C3.53873-7.567621 3.53873-7.49589 3.490909-7.316563L1.876961-.884682ZM4.399502-7.352428C4.507098-7.79477 4.554919-7.81868 5.021171-7.81868H6.336239C7.460025-7.81868 8.488169-7.208966 8.488169-5.559153C8.488169-4.961395 8.249066-2.881196 7.089415-1.566127C6.75467-1.171606 5.846077-.3467 4.471233-.3467H3.108344C2.940971-.3467 2.917061-.3467 2.84533-.358655C2.713823-.37061 2.701868-.394521 2.701868-.490162C2.701868-.573848 2.725778-.645579 2.749689-.753176L4.399502-7.352428Z'/>
+</defs>
+<g id='eq1-page1'>
+<use x='0' y='0' xlink:href='#eq1-g1-68'/>
+<use x='10.044475' y='-4.338437' xlink:href='#eq1-g0-82'/>
+</g>
+</svg>.</p>
+          </div></section>
+          <section class="m-doc-details" id="a4be9cfcf5e1293d38436e4c3a26be795"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">std::size_t symtensor::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a4be9cfcf5e1293d38436e4c3a26be795" class="m-doc-self">numUniqueValuesInSymmetricTensor</a>(</span><span class="m-doc-wrap">std::size_t D,
+              std::size_t R) <span class="m-label m-primary">constexpr</span></span></span>
+              <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="Index_8h.html">&lt;symtensor/Index.h&gt;</a></div>
+            </h3>
+            <p>Determines the number of <em>unique</em> values in a symmetric tensor of rank R and size D.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">D</td>
+                  <td>size of the symmetric tensor along all axes</td>
+                </tr>
+                <tr>
+                  <td>R</td>
+                  <td>rank of the symmetric tensor</td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <th>Returns</th>
+                  <td>the number of unique values in the symmetric tensor (indices xxy, xyx, and yxx are not counted separately).</td>
+                </tr>
+              </tfoot>
+            </table>
+<p>Equivalent to Pascal&#x27;s triangle evaluated at D-1, R.</p>
+          </div></section>
+          <section class="m-doc-details" id="a68ad6ef618ea44aacdf5648cde9f8d62"><div>
+            <h3>
+              <div class="m-doc-include m-code m-inverted m-right-m m-text-right"><span class="cp">#include</span> <a class="cpf" href="Index_8h.html">&lt;symtensor/Index.h&gt;</a></div>
+              <div class="m-doc-template">
+                template&lt;std::size_t R, typename I&gt;
+              </div>
+              <span class="m-doc-wrap-bumper">std::array&lt;I, R&gt; symtensor::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a68ad6ef618ea44aacdf5648cde9f8d62" class="m-doc-self">dimensionalIndices</a>(</span><span class="m-doc-wrap">const std::size_t&amp; flatIndex,
+              std::size_t D) <span class="m-label m-primary">constexpr</span></span></span>
+            </h3>
+            <p>converts a flat index to an equivalent multi-dimensional index.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Template parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">R</td>
+                  <td>Rank of the tensor</td>
+                </tr>
+                <tr>
+                  <td>I</td>
+                  <td>Index type</td>
+                </tr>
+              </tbody>
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>flatIndex</td>
+                  <td>1-dimensional index, in the range [0, N)<br />where N can be found using <a href="namespacesymtensor.html#a4be9cfcf5e1293d38436e4c3a26be795" class="m-doc">numUniqueValuesInSymmetricTensor</a></td>
+                </tr>
+                <tr>
+                  <td>D</td>
+                  <td>size of the tensor</td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <th>Returns</th>
+                  <td>std::array of indices, with type I and size R</td>
+                </tr>
+              </tfoot>
+            </table>
+<p>The index is in &quot;canonical&quot; form. For a <svg class="m-math" style="width: 4.873em; height: 0.906em; vertical-align: -0.104em;" viewBox="0 -7.704442 46.782619 8.700714">
+<title>
+$ 3 \times 3 \times 3 $
+</title>
+<defs>
+<path id='eq2-g0-2' d='M4.65056-3.323537L2.259527-5.702615C2.116065-5.846077 2.092154-5.869988 1.996513-5.869988C1.876961-5.869988 1.75741-5.762391 1.75741-5.630884C1.75741-5.547198 1.78132-5.523288 1.912827-5.391781L4.303861-2.988792L1.912827-.585803C1.78132-.454296 1.75741-.430386 1.75741-.3467C1.75741-.215193 1.876961-.107597 1.996513-.107597C2.092154-.107597 2.116065-.131507 2.259527-.274969L4.638605-2.654047L7.113325-.179328C7.137235-.167372 7.220922-.107597 7.292653-.107597C7.436115-.107597 7.531756-.215193 7.531756-.3467C7.531756-.37061 7.531756-.418431 7.49589-.478207C7.483935-.502117 5.583064-2.379078 4.985305-2.988792L7.173101-5.176588C7.232877-5.248319 7.412204-5.403736 7.47198-5.475467C7.483935-5.499377 7.531756-5.547198 7.531756-5.630884C7.531756-5.762391 7.436115-5.869988 7.292653-5.869988C7.197011-5.869988 7.149191-5.822167 7.017684-5.69066L4.65056-3.323537Z'/>
+<path id='eq2-g1-51' d='M2.199751-4.291905C1.996513-4.27995 1.948692-4.267995 1.948692-4.160399C1.948692-4.040847 2.008468-4.040847 2.223661-4.040847H2.773599C3.789788-4.040847 4.244085-3.203985 4.244085-2.056289C4.244085-.490162 3.431133-.071731 2.84533-.071731C2.271482-.071731 1.291158-.3467 .944458-1.135741C1.327024-1.075965 1.673724-1.291158 1.673724-1.721544C1.673724-2.068244 1.422665-2.307347 1.08792-2.307347C.800996-2.307347 .490162-2.139975 .490162-1.685679C.490162-.621669 1.554172 .251059 2.881196 .251059C4.303861 .251059 5.355915-.836862 5.355915-2.044334C5.355915-3.144209 4.471233-4.004981 3.323537-4.208219C4.363636-4.507098 5.033126-5.379826 5.033126-6.312329C5.033126-7.256787 4.052802-7.950187 2.893151-7.950187C1.697634-7.950187 .812951-7.220922 .812951-6.348194C.812951-5.869988 1.183562-5.774346 1.362889-5.774346C1.613948-5.774346 1.900872-5.953674 1.900872-6.312329C1.900872-6.694894 1.613948-6.862267 1.350934-6.862267C1.279203-6.862267 1.255293-6.862267 1.219427-6.850311C1.673724-7.663263 2.797509-7.663263 2.857285-7.663263C3.251806-7.663263 4.028892-7.483935 4.028892-6.312329C4.028892-6.085181 3.993026-5.415691 3.646326-4.901619C3.287671-4.375592 2.881196-4.339726 2.558406-4.327771L2.199751-4.291905Z'/>
+</defs>
+<g id='eq2-page1'>
+<use x='0' y='0' xlink:href='#eq2-g1-51'/>
+<use x='8.509654' y='0' xlink:href='#eq2-g0-2'/>
+<use x='20.464814' y='0' xlink:href='#eq2-g1-51'/>
+<use x='28.974468' y='0' xlink:href='#eq2-g0-2'/>
+<use x='40.929629' y='0' xlink:href='#eq2-g1-51'/>
+</g>
+</svg> symmetric tensor, this means the following mapping:</p><div class="m-text-center">0 --&gt; X, X, X<br />1 --&gt; X, X, Y<br />2 --&gt; X, X, Z<br />3 --&gt; X, Y, Y<br />4 --&gt; X, Y, Z<br />5 --&gt; X, Z, Z<br />6 --&gt; Y, Y, Y<br />7 --&gt; Y, Y, Z<br />8 --&gt; Y, Z, Z<br />9 --&gt; Z, Z, Z<br /></div>
+          </div></section>
+          <section class="m-doc-details" id="af98c4c8ff5f042bec79b40d940594e3c"><div>
+            <h3>
+              <div class="m-doc-include m-code m-inverted m-right-m m-text-right"><span class="cp">#include</span> <a class="cpf" href="Index_8h.html">&lt;symtensor/Index.h&gt;</a></div>
+              <div class="m-doc-template">
+                template&lt;std::size_t R, typename I&gt;
+              </div>
+              <span class="m-doc-wrap-bumper">std::size_t symtensor::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#af98c4c8ff5f042bec79b40d940594e3c" class="m-doc-self">flatIndex</a>(</span><span class="m-doc-wrap">std::array&lt;I, R&gt; dimensionalIndices,
+              std::size_t D,
+              std::size_t lowestIndex = 0) <span class="m-label m-primary">constexpr</span></span></span>
+            </h3>
+            <p>Converts a multi-dimensional index in a symmetric tensor into a flat index.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Template parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">R</td>
+                  <td>Rank of the tensor</td>
+                </tr>
+                <tr>
+                  <td>I</td>
+                  <td>Index type</td>
+                </tr>
+              </tbody>
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>dimensionalIndices</td>
+                  <td>array of R Index types which specifies a value in the tensor</td>
+                </tr>
+                <tr>
+                  <td>D</td>
+                  <td>size of the tensor</td>
+                </tr>
+                <tr>
+                  <td>lowestIndex</td>
+                  <td>(implementation detail)</td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <th>Returns</th>
+                  <td>the corresponding index in a flat array with no redundant values</td>
+                </tr>
+              </tfoot>
+            </table>
+<p>First puts the index in &quot;canonical&quot; form, where indices are sorted as follows:</p><div class="m-text-center">{X, X, Y} or {X, Y, X} or {Y, X, X} --&gt; {X, X, Y}</div><p>Next, converts the indices to a flat index using the reverse process of <a href="namespacesymtensor.html#a68ad6ef618ea44aacdf5648cde9f8d62" class="m-doc">dimensionalIndices()</a></p><div class="m-text-center">X, X, X --&gt; 0<br />X, X, Y --&gt; 1<br />X, X, Z --&gt; 2<br />X, Y, Y --&gt; 3<br />X, Y, Z --&gt; 4<br />X, Z, Z --&gt; 5<br />Y, Y, Y --&gt; 6<br />Y, Y, Z --&gt; 7<br />Y, Z, Z --&gt; 8<br />Z, Z, Z --&gt; 9<br /></div>
           </div></section>
         </section>
       </div>
