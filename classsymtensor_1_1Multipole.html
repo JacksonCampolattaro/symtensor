@@ -113,6 +113,10 @@
               using <a href="classsymtensor_1_1MultipoleBase.html#a7452d852acda9c0c231982c857bef1b1" class="m-doc">TensorTuple</a> = std::tuple&lt;Tensors...&gt;
             </dt>
             <dd></dd>
+            <dt>
+              using <a href="classsymtensor_1_1MultipoleBase.html#a39fed0f3de16224bf0926f20b03be9fd" class="m-doc">Index</a> = last_type_of_tuple&lt;TensorTuple&gt;::Index
+            </dt>
+            <dd></dd>
           </dl>
         </section>
         <section id="pub-static-attribs">
@@ -141,6 +145,16 @@
               <span class="m-doc-wrap-bumper">auto <a href="classsymtensor_1_1MultipoleBase.html#a8b0be5236ed2c49b419920c07308dd52" class="m-doc">tensor</a>(</span><span class="m-doc-wrap">) -&gt; auto&amp; <span class="m-label m-flat m-primary">constexpr</span></span>
             </dt>
             <dd>Tensor access by rank.</dd>
+            <dt>
+              <div class="m-doc-template">template&lt;Index... Indices&gt;</div>
+              <span class="m-doc-wrap-bumper">auto <a href="classsymtensor_1_1MultipoleBase.html#a6e6e07bd83580ba165eaf3d825a989ac" class="m-doc">at</a>(</span><span class="m-doc-wrap">) const -&gt; const auto&amp; <span class="m-label m-flat m-primary">constexpr</span></span>
+            </dt>
+            <dd>Direct access to members of tensors.</dd>
+            <dt>
+              <div class="m-doc-template">template&lt;Index... Indices&gt;</div>
+              <span class="m-doc-wrap-bumper">auto <a href="classsymtensor_1_1MultipoleBase.html#aa39b3020a1d8f7fc918882b24311f931" class="m-doc">at</a>(</span><span class="m-doc-wrap">) -&gt; auto&amp; <span class="m-label m-flat m-primary">constexpr</span></span>
+            </dt>
+            <dd>Direct access to members of tensors.</dd>
           </dl>
         </section>
         <section id="multipole-scalar-operations">
@@ -242,6 +256,10 @@
             </dt>
             <dd>direct access to the tuple of tensors which comprises the multipole</dd>
             <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="classsymtensor_1_1MultipoleBase.html#a9e6763ed433d1e2a73da9ec845702522" class="m-doc">underlying_tuple</a>(</span><span class="m-doc-wrap">) -&gt; TensorTuple&amp; <span class="m-label m-flat m-primary">constexpr</span></span>
+            </dt>
+            <dd>direct access to the tuple of tensors which comprises the multipole</dd>
+            <dt>
               <div class="m-doc-template">template&lt;std::size_t I&gt;</div>
               <span class="m-doc-wrap-bumper">auto <a href="classsymtensor_1_1MultipoleBase.html#ab6209003afcb0fa8f6c7aedd1e53f93d" class="m-doc">get</a>(</span><span class="m-doc-wrap">) &amp; -&gt; auto&amp; <span class="m-label m-flat m-primary">constexpr</span></span>
             </dt>
@@ -267,6 +285,15 @@
                 template&lt;std::size_t Order, typename ... Tensors&gt;
               </div>
               using symtensor::<wbr />Multipole&lt;Order, Tensors&gt;::<wbr /><a href="#a7452d852acda9c0c231982c857bef1b1" class="m-doc-self">TensorTuple</a> = std::tuple&lt;Tensors...&gt;
+            </h3>
+          </div></section>
+          <section class="m-doc-details" id="a39fed0f3de16224bf0926f20b03be9fd"><div>
+            <h3>
+              <div class="m-doc-include m-code m-inverted m-right-m m-text-right"><span class="cp">#include</span> <a class="cpf" href="MultipoleBase_8h.html">&lt;symtensor/MultipoleBase.h&gt;</a></div>
+              <div class="m-doc-template">
+                template&lt;std::size_t Order, typename ... Tensors&gt;
+              </div>
+              using symtensor::<wbr />Multipole&lt;Order, Tensors&gt;::<wbr /><a href="#a39fed0f3de16224bf0926f20b03be9fd" class="m-doc-self">Index</a> = last_type_of_tuple&lt;TensorTuple&gt;::Index
             </h3>
           </div></section>
         </section>
@@ -327,6 +354,64 @@
                 </tr>
               </tfoot>
             </table>
+          </div></section>
+          <section class="m-doc-details" id="a6e6e07bd83580ba165eaf3d825a989ac"><div>
+            <h3>
+              <div class="m-doc-include m-code m-inverted m-right-m m-text-right"><span class="cp">#include</span> <a class="cpf" href="MultipoleBase_8h.html">&lt;symtensor/MultipoleBase.h&gt;</a></div>
+              <div class="m-doc-template">
+                template&lt;std::size_t Order, typename ... Tensors&gt;
+                template&lt;Index... Indices&gt;
+              </div>
+              <span class="m-doc-wrap-bumper">const auto&amp; symtensor::<wbr />Multipole&lt;Order, Tensors&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a6e6e07bd83580ba165eaf3d825a989ac" class="m-doc-self">at</a>(</span><span class="m-doc-wrap">) const <span class="m-label m-primary">constexpr</span></span></span>
+            </h3>
+            <p>Direct access to members of tensors.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Template parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">Indices</td>
+                  <td>Sequence of R Index values which specify an element of a tensor. The number of indices determines which tensor is accessed. Indices may be in arbitrary order, because the tensor is symmetric.</td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <th>Returns</th>
+                  <td>the scalar element at the requested index</td>
+                </tr>
+              </tfoot>
+            </table>
+<p>Passes through to the appropriate symmetric tensor member accessor <a href="classsymtensor_1_1SymmetricTensorBase.html#a7f0d023121ee05be5cbb5e0162697479" class="m-doc">SymmetricTensorBase::<wbr />at</a>.</p>
+          </div></section>
+          <section class="m-doc-details" id="aa39b3020a1d8f7fc918882b24311f931"><div>
+            <h3>
+              <div class="m-doc-include m-code m-inverted m-right-m m-text-right"><span class="cp">#include</span> <a class="cpf" href="MultipoleBase_8h.html">&lt;symtensor/MultipoleBase.h&gt;</a></div>
+              <div class="m-doc-template">
+                template&lt;std::size_t Order, typename ... Tensors&gt;
+                template&lt;Index... Indices&gt;
+              </div>
+              <span class="m-doc-wrap-bumper">auto&amp; symtensor::<wbr />Multipole&lt;Order, Tensors&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#aa39b3020a1d8f7fc918882b24311f931" class="m-doc-self">at</a>(</span><span class="m-doc-wrap">) <span class="m-label m-primary">constexpr</span></span></span>
+            </h3>
+            <p>Direct access to members of tensors.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Template parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">Indices</td>
+                  <td>Sequence of R Index values which specify an element of a tensor. The number of indices determines which tensor is accessed. Indices may be in arbitrary order, because the tensor is symmetric.</td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <th>Returns</th>
+                  <td>the scalar element at the requested index</td>
+                </tr>
+              </tfoot>
+            </table>
+<p>Passes through to the appropriate symmetric tensor member accessor <a href="classsymtensor_1_1SymmetricTensorBase.html#a7f0d023121ee05be5cbb5e0162697479" class="m-doc">SymmetricTensorBase::<wbr />at</a>.</p>
           </div></section>
           <section class="m-doc-details" id="afab1fff4ce4420ca873c8a9a4cac737d"><div>
             <h3>
@@ -802,6 +887,24 @@
                 template&lt;std::size_t Order, typename ... Tensors&gt;
               </div>
               <span class="m-doc-wrap-bumper">const TensorTuple&amp; symtensor::<wbr />Multipole&lt;Order, Tensors&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a1b9513e30d8af6e78c07bd7282e33952" class="m-doc-self">underlying_tuple</a>(</span><span class="m-doc-wrap">) const <span class="m-label m-primary">constexpr</span></span></span>
+            </h3>
+            <p>direct access to the tuple of tensors which comprises the multipole</p>
+            <table class="m-table m-fullwidth m-flat">
+              <tfoot>
+                <tr>
+                  <th style="width: 1%">Returns</th>
+                  <td>reference to the std::tuple of tensors.</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div></section>
+          <section class="m-doc-details" id="a9e6763ed433d1e2a73da9ec845702522"><div>
+            <h3>
+              <div class="m-doc-include m-code m-inverted m-right-m m-text-right"><span class="cp">#include</span> <a class="cpf" href="MultipoleBase_8h.html">&lt;symtensor/MultipoleBase.h&gt;</a></div>
+              <div class="m-doc-template">
+                template&lt;std::size_t Order, typename ... Tensors&gt;
+              </div>
+              <span class="m-doc-wrap-bumper">TensorTuple&amp; symtensor::<wbr />Multipole&lt;Order, Tensors&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a9e6763ed433d1e2a73da9ec845702522" class="m-doc-self">underlying_tuple</a>(</span><span class="m-doc-wrap">) <span class="m-label m-primary">constexpr</span></span></span>
             </h3>
             <p>direct access to the tuple of tensors which comprises the multipole</p>
             <table class="m-table m-fullwidth m-flat">
