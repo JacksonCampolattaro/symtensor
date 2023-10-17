@@ -1,6 +1,7 @@
-#include <symtensor/util.h>
 #include <catch2/catch_test_macros.hpp>
-#include "symtensor/Index.h"
+
+#include <symtensor/util.h>
+#include <symtensor/Index.h>
 
 using namespace symtensor;
 

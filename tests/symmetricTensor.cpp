@@ -1,10 +1,8 @@
 #include <catch2/catch_test_macros.hpp>
 
 #include <symtensor/SymmetricTensor.h>
-
 #include <symtensor/glm.h>
 
-#include <glm/vec2.hpp>
 #include <glm/matrix.hpp>
 #include <glm/gtx/io.hpp>
 

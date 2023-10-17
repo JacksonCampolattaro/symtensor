@@ -1,11 +1,20 @@
 #include <catch2/catch_test_macros.hpp>
-#include <catch2/catch_approx.hpp>
 
 #include <symtensor/symtensor.h>
 
 #include <iostream>
 
 using namespace symtensor;
+
+// Workaround for compiler defect DR2621 in Clang 15
+// https://reviews.llvm.org/D134283
+#if (__cpp_using_enum && !__clang__) || (__clang_major__ > 15)
+using enum SymmetricTensor3f<1>::Index;
+#else
+using Index<3>::X;
+using Index<3>::Y;
+using Index<3>::Z;
+#endif
 
 TEST_CASE("Access to tensors", "[Multipole]") {
 
@@ -25,6 +34,12 @@ TEST_CASE("Access to tensors", "[Multipole]") {
     REQUIRE(a1 == SymmetricTensor3f<1>{1, 2, 3});
     REQUIRE(a2 == SymmetricTensor3f<2>{1, 2, 3, 4, 5, 6});
     REQUIRE(a3 == SymmetricTensor3f<3>{1, 2, 3, 4, 5, 6, 7, 8, 9, 10});
+
+    // Direct access to tensor members
+    REQUIRE(a.at<Z>() == 3);
+    REQUIRE(a.at<X, X>() == 1);
+    REQUIRE(a.at<X, Y, X>() == 2);
+    REQUIRE(a.at<Z, Z, Z>() == 10);
 
 }
 

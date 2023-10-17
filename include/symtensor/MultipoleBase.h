@@ -86,6 +86,8 @@ namespace symtensor {
 
         using TensorTuple = std::tuple<Tensors...>;
 
+        using Index = last_type_of_tuple<TensorTuple>::Index;
+
         static constexpr std::size_t Order = last_type_of_tuple<TensorTuple>::Rank;
         static constexpr std::size_t NumTensors = std::tuple_size_v<TensorTuple>;
 
@@ -104,7 +106,7 @@ namespace symtensor {
          *
          * Invokes the default constructor for all contained tensors.
          */
-        inline constexpr MultipoleBase() = default;
+        explicit inline constexpr MultipoleBase() = default;
 
         /**
          * @brief Constructor from a sequence of tensors
@@ -112,7 +114,7 @@ namespace symtensor {
          * @param types The values for each tensor contained in the multipole.
          *   So long as each tensor type has an implicit constructor, initializer-list syntax works.
          */
-        inline constexpr MultipoleBase(Tensors &&...types) : _tuple(std::forward<Tensors>(types)...) {}
+        explicit inline constexpr MultipoleBase(Tensors &&...types) : _tuple(std::forward<Tensors>(types)...) {}
 
         /// @}
     public:
@@ -134,6 +136,30 @@ namespace symtensor {
         template<std::size_t R>
         inline constexpr auto &tensor() {
             return std::get<indexForRank(R)>(_tuple);
+        }
+
+        /**
+         * @brief Direct access to members of tensors
+         *
+         * Passes through to the appropriate symmetric tensor member accessor @ref SymmetricTensorBase::at.
+         *
+         * @tparam Indices Sequence of R Index values which specify an element of a tensor.
+         *  The number of indices determines which tensor is accessed.
+         *  Indices may be in arbitrary order, because the tensor is symmetric.
+         *
+         * @return the scalar element at the requested index
+         */
+        template<Index... Indices>
+        inline constexpr const auto &at() const {
+            constexpr std::size_t Rank = sizeof...(Indices);
+            return tensor<Rank>().template at<Indices...>();
+        }
+
+        /// @copydoc at() const
+        template<Index... Indices>
+        inline constexpr auto &at() {
+            constexpr std::size_t Rank = sizeof...(Indices);
+            return tensor<Rank>().template at<Indices...>();
         }
 
         /// @}
@@ -331,7 +357,7 @@ namespace symtensor {
          */
         inline constexpr const TensorTuple &underlying_tuple() const { return _tuple; }
 
-        /// @copydoc underlying_tuple()
+        /// @copydoc underlying_tuple() const
         inline constexpr TensorTuple &underlying_tuple() { return _tuple; }
 
         /**

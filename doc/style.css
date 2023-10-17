@@ -3,7 +3,7 @@
     --font: 'Inter', sans-serif;
     --code-font: 'Jetbrains Mono', monospace;
 
-    --header-background-color-landing: rgba(238, 238, 238, 0.75);
+    --header-background-color-landing: #ddddddaa;
     --search-overlay-color: var(--header-background-color-landing);
 
     --paragraph-indent: 0;
@@ -14,4 +14,8 @@
 .m-text-center img, .m-text-center img:last-child {
     display: inline-block;
     margin: 0.5em;
+}
+
+.m-doc-search {
+    backdrop-filter: blur(7px);
 }
