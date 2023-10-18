@@ -114,9 +114,9 @@
             </dt>
             <dd></dd>
             <dt>
-              using <a href="classsymtensor_1_1MultipoleBase.html#a39fed0f3de16224bf0926f20b03be9fd" class="m-doc">Index</a> = last_type_of_tuple&lt;TensorTuple&gt;::Index
+              using <a href="classsymtensor_1_1MultipoleBase.html#a89c7efbc2811d0bdc588e8dbd1402dd1" class="m-doc">Index</a> = typename last_type_of_tuple&lt;TensorTuple&gt;::<a href="classsymtensor_1_1MultipoleBase.html#a89c7efbc2811d0bdc588e8dbd1402dd1" class="m-doc">Index</a>
             </dt>
-            <dd></dd>
+            <dd>Index type used to access tensor members Common to all contained tensors, as they should all have the same size.</dd>
           </dl>
         </section>
         <section id="pub-static-attribs">
@@ -125,11 +125,11 @@
             <dt>
               static std::size_t <a href="classsymtensor_1_1MultipoleBase.html#aed44a9da6ac0cccc4c4935708e5b84e0" class="m-doc">Order</a> <span class="m-label m-flat m-primary">constexpr</span>
             </dt>
-            <dd></dd>
+            <dd><a href="classsymtensor_1_1Multipole.html" class="m-doc">Multipole</a> order, equivalent to the rank of the highest contained tensor.</dd>
             <dt>
               static std::size_t <a href="classsymtensor_1_1MultipoleBase.html#aa395d7ff45a9da103e9bdb50b98196e4" class="m-doc">NumTensors</a> <span class="m-label m-flat m-primary">constexpr</span>
             </dt>
-            <dd></dd>
+            <dd>Number of contained elements, all assumed to be tensors. A multipole may have a scalar component; this is treated a tensor of rank 0.</dd>
           </dl>
         </section>
         <section id="member-access">
@@ -287,14 +287,15 @@
               using symtensor::<wbr />Multipole&lt;Order, Tensors&gt;::<wbr /><a href="#a7452d852acda9c0c231982c857bef1b1" class="m-doc-self">TensorTuple</a> = std::tuple&lt;Tensors...&gt;
             </h3>
           </div></section>
-          <section class="m-doc-details" id="a39fed0f3de16224bf0926f20b03be9fd"><div>
+          <section class="m-doc-details" id="a89c7efbc2811d0bdc588e8dbd1402dd1"><div>
             <h3>
               <div class="m-doc-include m-code m-inverted m-right-m m-text-right"><span class="cp">#include</span> <a class="cpf" href="MultipoleBase_8h.html">&lt;symtensor/MultipoleBase.h&gt;</a></div>
               <div class="m-doc-template">
                 template&lt;std::size_t Order, typename ... Tensors&gt;
               </div>
-              using symtensor::<wbr />Multipole&lt;Order, Tensors&gt;::<wbr /><a href="#a39fed0f3de16224bf0926f20b03be9fd" class="m-doc-self">Index</a> = last_type_of_tuple&lt;TensorTuple&gt;::Index
+              using symtensor::<wbr />Multipole&lt;Order, Tensors&gt;::<wbr /><a href="#a89c7efbc2811d0bdc588e8dbd1402dd1" class="m-doc-self">Index</a> = typename last_type_of_tuple&lt;TensorTuple&gt;::<a href="classsymtensor_1_1MultipoleBase.html#a89c7efbc2811d0bdc588e8dbd1402dd1" class="m-doc">Index</a>
             </h3>
+            <p>Index type used to access tensor members Common to all contained tensors, as they should all have the same size.</p>
           </div></section>
         </section>
         <section>
@@ -1011,6 +1012,7 @@
               </div>
               static std::size_t symtensor::<wbr />Multipole&lt;Order, Tensors&gt;::<wbr /><a href="#aed44a9da6ac0cccc4c4935708e5b84e0" class="m-doc-self">Order</a> <span class="m-label m-primary">constexpr</span>
             </h3>
+            <p><a href="classsymtensor_1_1Multipole.html" class="m-doc">Multipole</a> order, equivalent to the rank of the highest contained tensor.</p>
           </div></section>
           <section class="m-doc-details" id="aa395d7ff45a9da103e9bdb50b98196e4"><div>
             <h3>
@@ -1020,6 +1022,7 @@
               </div>
               static std::size_t symtensor::<wbr />Multipole&lt;Order, Tensors&gt;::<wbr /><a href="#aa395d7ff45a9da103e9bdb50b98196e4" class="m-doc-self">NumTensors</a> <span class="m-label m-primary">constexpr</span>
             </h3>
+            <p>Number of contained elements, all assumed to be tensors. A multipole may have a scalar component; this is treated a tensor of rank 0.</p>
           </div></section>
         </section>
       </div>

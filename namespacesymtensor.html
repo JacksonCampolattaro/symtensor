@@ -143,6 +143,11 @@
               using <a href="#a33bccc62448a25eabe93f15595800cb7" class="m-doc">NextHigherRank</a> = <a href="namespacesymtensor.html#a68e34bb9b75d60c4c11a5931046deb31" class="m-doc">ReplaceRank</a>&lt;ST, ST::Rank+1&gt;
             </dt>
             <dd>Given a symmetric tensor type, finds the symmetric tensor of the next higher rank.</dd>
+            <dt>
+              <div class="m-doc-template">template&lt;class ST&gt;</div>
+              using <a href="#a1a832fa82578a917096b65c1bdf27a3a" class="m-doc">NextLowerRank</a> = <a href="namespacesymtensor.html#a68e34bb9b75d60c4c11a5931046deb31" class="m-doc">ReplaceRank</a>&lt;ST, ST::Rank - 1&gt;
+            </dt>
+            <dd>Given a symmetric tensor type, finds the symmetric tensor of the next lower rank.</dd>
           </dl>
         </section>
         <section id="func-members">
@@ -296,6 +301,28 @@
               </tbody>
             </table>
 <p>All properties of the symmetric tensor ST are preserved aside from the rank. The type of <code class="m-code"><span class="n">NextHigherRank</span><span class="o">&lt;</span><span class="n">SymmetricTensor3f</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;&gt;</span></code> is equivalent to <code class="m-code"><span class="n">SymmetricTensor3f</span><span class="o">&lt;</span><span class="mi">4</span><span class="o">&gt;</span></code>.</p>
+          </div></section>
+          <section class="m-doc-details" id="a1a832fa82578a917096b65c1bdf27a3a"><div>
+            <h3>
+              <div class="m-doc-include m-code m-inverted m-right-m m-text-right"><span class="cp">#include</span> <a class="cpf" href="SymmetricTensorBase_8h.html">&lt;symtensor/SymmetricTensorBase.h&gt;</a></div>
+              <div class="m-doc-template">
+                template&lt;class ST&gt;
+              </div>
+              using symtensor::<wbr /><a href="#a1a832fa82578a917096b65c1bdf27a3a" class="m-doc-self">NextLowerRank</a> = <a href="namespacesymtensor.html#a68e34bb9b75d60c4c11a5931046deb31" class="m-doc">ReplaceRank</a>&lt;ST, ST::Rank - 1&gt;
+            </h3>
+            <p>Given a symmetric tensor type, finds the symmetric tensor of the next lower rank.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Template parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">ST</td>
+                  <td>a symmetric tensor</td>
+                </tr>
+              </tbody>
+            </table>
+<p>All properties of the symmetric tensor ST are preserved aside from the rank. The type of <code class="m-code"><span class="n">NextHigherRank</span><span class="o">&lt;</span><span class="n">SymmetricTensor3f</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;&gt;</span></code> is equivalent to <code class="m-code"><span class="n">SymmetricTensor3f</span><span class="o">&lt;</span><span class="mi">2</span><span class="o">&gt;</span></code>.</p>
           </div></section>
         </section>
         <section>

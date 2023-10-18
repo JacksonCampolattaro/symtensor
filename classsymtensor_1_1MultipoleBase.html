@@ -85,6 +85,8 @@
               Reference
               <ul>
                 <li><a href="#derived-classes">Derived classes</a></li>
+                <li><a href="#pub-types">Public types</a></li>
+                <li><a href="#pub-static-attribs">Public static variables</a></li>
                 <li><a href="#constructors">Constructors</a></li>
                 <li><a href="#member-access">Member access</a></li>
                 <li><a href="#multipole-scalar-operations">Multipole-scalar operations</a></li>
@@ -104,6 +106,28 @@
               class <a href="classsymtensor_1_1MultipoleBaseFromTuple.html" class="m-doc">MultipoleBaseFromTuple</a>
             </dt>
             <dd>Helper class for defining a multipole based on an std::tuple of tensors.</dd>
+          </dl>
+        </section>
+        <section id="pub-types">
+          <h2><a href="#pub-types">Public types</a></h2>
+          <dl class="m-doc">
+            <dt id="a89c7efbc2811d0bdc588e8dbd1402dd1">
+              using <a href="#a89c7efbc2811d0bdc588e8dbd1402dd1" class="m-doc-self">Index</a> = typename last_type_of_tuple&lt;TensorTuple&gt;::<a href="classsymtensor_1_1MultipoleBase.html#a89c7efbc2811d0bdc588e8dbd1402dd1" class="m-doc">Index</a>
+            </dt>
+            <dd>Index type used to access tensor members Common to all contained tensors, as they should all have the same size.</dd>
+          </dl>
+        </section>
+        <section id="pub-static-attribs">
+          <h2><a href="#pub-static-attribs">Public static variables</a></h2>
+          <dl class="m-doc">
+            <dt id="aed44a9da6ac0cccc4c4935708e5b84e0">
+              static std::size_t <a href="#aed44a9da6ac0cccc4c4935708e5b84e0" class="m-doc-self">Order</a> <span class="m-label m-flat m-primary">constexpr</span>
+            </dt>
+            <dd><a href="classsymtensor_1_1Multipole.html" class="m-doc">Multipole</a> order, equivalent to the rank of the highest contained tensor.</dd>
+            <dt id="aa395d7ff45a9da103e9bdb50b98196e4">
+              static std::size_t <a href="#aa395d7ff45a9da103e9bdb50b98196e4" class="m-doc-self">NumTensors</a> <span class="m-label m-flat m-primary">constexpr</span>
+            </dt>
+            <dd>Number of contained elements, all assumed to be tensors. A multipole may have a scalar component; this is treated a tensor of rank 0.</dd>
           </dl>
         </section>
         <section id="constructors">
