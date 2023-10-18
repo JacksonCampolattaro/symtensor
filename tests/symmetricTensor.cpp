@@ -284,6 +284,17 @@ TEST_CASE("Trace of tensors of different sizes", "[SymmetricTensor]") {
     REQUIRE(SymmetricTensor3f<3>{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}.trace() == 15);
 }
 
+TEST_CASE("Symmetric tensor promotion by cartesian product", "[SymmetricTensor]") {
+
+    auto a = SymmetricTensor2f<1>{1, 2};
+    auto aa = SymmetricTensor2f<2>::CartesianProduct(a, a);
+    auto aaa = SymmetricTensor2f<3>::CartesianProduct(aa, a);
+    auto aaaa = SymmetricTensor2f<4>::CartesianProduct(aaa, a);
+    REQUIRE(aa == SymmetricTensor2f<2>::CartesianPower(a));
+    REQUIRE(aaa == SymmetricTensor2f<3>::CartesianPower(a));
+    REQUIRE(aaaa == SymmetricTensor2f<4>::CartesianPower(a));
+}
+
 TEST_CASE("Symmetric tensor product with a vector", "[SymmetricTensor]") {
 
     float v = 5;

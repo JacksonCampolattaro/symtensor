@@ -14,6 +14,77 @@
 
 namespace symtensor {
 
+    namespace {
+
+        template<std::size_t, class>
+        struct ReplaceRankHelper {
+        };
+        template<
+                std::size_t NewRank,
+                template<typename, std::size_t, std::size_t, typename> class ST,
+                typename S, std::size_t D, std::size_t OldRank, typename I
+        >
+        struct ReplaceRankHelper<NewRank, ST<S, D, OldRank, I>> {
+            using type = ST<S, D, NewRank, I>;
+        };
+
+    }
+
+    /**
+     * @brief Produces a type which modifies the rank of a symmetric tensor
+     *
+     * All properties of the symmetric tensor ST are preserved aside from the rank.
+     * The type of
+     * @code{.cpp}
+     * ReplaceRank<SymmetricTensor3f<3>, 5>
+     * @endcode
+     * is equivalent to
+     * @code{.cpp}
+     * SymmetricTensor3f<5>
+     * @endcode.
+     *
+     * @tparam ST symmetric tensor type to replace the rank of
+     * @tparam R the new rank
+     */
+    template<class ST, std::size_t R>
+    using ReplaceRank = typename ReplaceRankHelper<R, ST>::type;
+
+    /**
+     * @brief Given a symmetric tensor type, finds the symmetric tensor of the next higher rank
+     *
+     * All properties of the symmetric tensor ST are preserved aside from the rank.
+     * The type of
+     * @code{.cpp}
+     * NextHigherRank<SymmetricTensor3f<3>>
+     * @endcode
+     * is equivalent to
+     * @code{.cpp}
+     * SymmetricTensor3f<4>
+     * @endcode.
+     *
+     * @tparam ST a symmetric tensor
+     */
+    template<class ST>
+    using NextHigherRank = ReplaceRank<ST, ST::Rank + 1>;
+
+    /**
+     * @brief Given a symmetric tensor type, finds the symmetric tensor of the next lower rank
+     *
+     * All properties of the symmetric tensor ST are preserved aside from the rank.
+     * The type of
+     * @code{.cpp}
+     * NextHigherRank<SymmetricTensor3f<3>>
+     * @endcode
+     * is equivalent to
+     * @code{.cpp}
+     * SymmetricTensor3f<2>
+     * @endcode.
+     *
+     * @tparam ST a symmetric tensor
+     */
+    template<class ST>
+    using NextLowerRank = ReplaceRank<ST, ST::Rank - 1>;
+
     /**
      * @brief Symmetric tensor base-type for use with CRTP implementations.
      *
@@ -150,6 +221,35 @@ namespace symtensor {
                     return (vector[static_cast<std::size_t>(index[r])] * ...);
                 }(std::make_index_sequence<Rank>());
             });
+        }
+
+        template<typename Tensor, typename Vector>
+        inline static constexpr Implementation CartesianProduct(
+                const Tensor &tensor,
+                const Vector &vector
+        ) {
+
+            static_assert(requires { Tensor::Rank; } && Tensor::Rank == Rank - 1 || Rank == 2,
+                          "CartesianProduct() is only defined for Tensor types with Rank one lower than this tensor");
+
+            if constexpr (requires { Tensor::Rank; } && Tensor::Rank == Rank - 1) {
+
+                // Promoting a tensor of Rank-1 to Rank by cartesian product
+                return NullaryExpression([&]<std::array<I, Rank> index>() constexpr {
+                    return vector[static_cast<std::size_t>(index[0])] *
+                           tensor[tail(index)];
+                });
+
+            } else {
+
+                // Producing a rank-2 tensor by the cartesian product of 2 vectors
+                static_assert(Rank == 2);
+                return NullaryExpression([&]<std::array<I, Rank> index>() constexpr {
+                    return tensor[static_cast<std::size_t>(index[0])] *
+                           vector[static_cast<std::size_t>(index[1])];
+                });
+
+            }
         }
 
         /**
@@ -446,59 +546,6 @@ namespace symtensor {
         }
 
     };
-
-    namespace {
-
-        template<std::size_t, class>
-        struct ReplaceRankHelper {
-        };
-        template<
-                std::size_t NewRank,
-                template<typename, std::size_t, std::size_t, typename> class ST,
-                typename S, std::size_t D, std::size_t OldRank, typename I
-        >
-        struct ReplaceRankHelper<NewRank, ST<S, D, OldRank, I>> {
-            using type = ST<S, D, NewRank, I>;
-        };
-
-    }
-
-    /**
-     * @brief Produces a type which modifies the rank of a symmetric tensor
-     *
-     * All properties of the symmetric tensor ST are preserved aside from the rank.
-     * The type of
-     * @code{.cpp}
-     * ReplaceRank<SymmetricTensor3f<3>, 5>
-     * @endcode
-     * is equivalent to
-     * @code{.cpp}
-     * SymmetricTensor3f<5>
-     * @endcode.
-     *
-     * @tparam ST symmetric tensor type to replace the rank of
-     * @tparam R the new rank
-     */
-    template<class ST, std::size_t R>
-    using ReplaceRank = typename ReplaceRankHelper<R, ST>::type;
-
-    /**
-     * @brief Given a symmetric tensor type, finds the symmetric tensor of the next higher rank
-     *
-     * All properties of the symmetric tensor ST are preserved aside from the rank.
-     * The type of
-     * @code{.cpp}
-     * NextHigherRank<SymmetricTensor3f<3>>
-     * @endcode
-     * is equivalent to
-     * @code{.cpp}
-     * SymmetricTensor3f<4>
-     * @endcode.
-     *
-     * @tparam ST a symmetric tensor
-     */
-    template<class ST>
-    using NextHigherRank = ReplaceRank<ST, ST::Rank + 1>;
 
 }
 

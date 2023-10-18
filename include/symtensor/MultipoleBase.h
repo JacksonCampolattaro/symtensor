@@ -86,9 +86,21 @@ namespace symtensor {
 
         using TensorTuple = std::tuple<Tensors...>;
 
-        using Index = last_type_of_tuple<TensorTuple>::Index;
+        /**
+         * @brief Index type used to access tensor members
+         *  Common to all contained tensors, as they should all have the same size.
+         */
+        using Index = typename last_type_of_tuple<TensorTuple>::Index;
 
+        /**
+         * @brief Multipole order, equivalent to the rank of the highest contained tensor.
+         */
         static constexpr std::size_t Order = last_type_of_tuple<TensorTuple>::Rank;
+
+        /**
+         * @brief Number of contained elements, all assumed to be tensors.
+         *  A multipole may have a scalar component; this is treated a tensor of rank 0.
+         */
         static constexpr std::size_t NumTensors = std::tuple_size_v<TensorTuple>;
 
     private:

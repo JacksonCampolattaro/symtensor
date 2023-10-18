@@ -53,7 +53,7 @@ TEST_CASE("Arithmetic operations with a scalar", "[Multipole]") {
                                   {-1, 0, 1}});
     REQUIRE(a * 2 == Quadrupole2f{{2, 4},
                                   {2, 4, 6}});
-    REQUIRE(a / 2 == Quadrupole2f{{0.5,   1.0},
+    REQUIRE(a / 2 == Quadrupole2f{{0.5, 1.0},
                                   {0.5, 1.0, 1.5}});
 }
 
