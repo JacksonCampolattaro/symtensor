@@ -59,6 +59,12 @@ namespace symtensor {
     /// 3d octupole with floating point elements
     using Octupole3f = Multipole3f<3>;
 
+    /// 2d hexadecupole with floating point elements
+    using Hexadecupole2f = Multipole2f<4>;
+
+    /// 3d hexadecupole with floating point elements
+    using Hexadecupole3f = Multipole3f<4>;
+
 }
 
 #endif //SYMTENSOR_MULTIPOLE_H

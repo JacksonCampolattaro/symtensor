@@ -141,13 +141,24 @@ namespace symtensor {
          */
         explicit inline constexpr MultipoleBase(Tensors &&...types) : _tuple(std::forward<Tensors>(types)...) {}
 
-        template<typename Vector>
+        /**
+         * @brief Constructor from a single vector
+         *
+         * Tensors are produced by repeatedly performing cartesian products with the vector.
+         *
+         * @tparam Vector vector type, must have a subscript operator and provide at least D elements
+         * @param vector base vector
+         */
+        template<indexable Vector>
         explicit inline constexpr MultipoleBase(const Vector &vector) {
             tensor<1>() = vector;
             [&]<std::size_t... i>(std::index_sequence<i...>) {
-                // todo: this is very ugly and confusing, I think a better solution must be possible
                 ((tensor<i + 2>() = TensorType<i + 2>::CartesianProduct(tensor<i + 1>(), vector)), ...);
             }(std::make_index_sequence<Order - 1>());
+            // todo: something like this might be better:
+            //            [&]<std::size_t _0, std::size_t _1, std::size_t... r>(std::index_sequence<_0, _1, r...>) {
+            //                ((tensor<r>() = TensorType<r>::CartesianProduct(tensor<r - 1>(), vector)), ...);
+            //            }(std::make_index_sequence<Order - 1>());
         }
 
         /// @}

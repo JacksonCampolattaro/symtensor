@@ -75,9 +75,41 @@ TEST_CASE("Arithmetic operations with another multipole", "[Multipole]") {
 
 TEST_CASE("Construction by repeated promotion", "[Multipole]") {
 
-    Quadrupole2f a{SymmetricTensor2f<1>{1, 2}};
-    std::cout << a << std::endl;
+    REQUIRE(
+            Quadrupole2f{SymmetricTensor2f<1>{1, 2}}
+            == Quadrupole2f{{1, 2},
+                            {1, 2, 4}}
+    );
+    REQUIRE(
+            Octupole2f{SymmetricTensor2f<1>{1, 2}}
+            == Octupole2f{{1, 2},
+                          {1, 2, 4},
+                          {1, 2, 4, 8}}
+    );
+    REQUIRE(
+            Hexadecupole2f{SymmetricTensor2f<1>{1, 2}}
+            == Hexadecupole2f{{1, 2},
+                              {1, 2, 4},
+                              {1, 2, 4, 8},
+                              {1, 2, 4, 8, 16}}
+    );
 
-    Octupole3f b{SymmetricTensor3f<1>{1, 2, 3}};
-    std::cout << b << std::endl;
+    REQUIRE(
+            Quadrupole3f{SymmetricTensor3f<1>{1, 2, 3}}
+            == Quadrupole3f{{1, 2, 3},
+                            {1, 2, 3, 4, 6, 9}}
+    );
+    REQUIRE(
+            Octupole3f{SymmetricTensor3f<1>{1, 2, 3}}
+            == Octupole3f{{1, 2, 3},
+                          {1, 2, 3, 4, 6, 9},
+                          {1, 2, 3, 4, 6, 9, 8, 12, 18, 27}}
+    );
+    REQUIRE(
+            Hexadecupole3f{SymmetricTensor3f<1>{1, 2, 3}}
+            == Hexadecupole3f{{1, 2, 3},
+                              {1, 2, 3, 4, 6, 9},
+                              {1, 2, 3, 4, 6, 9, 8, 12, 18, 27},
+                              {1, 2, 3, 4, 6, 9, 8, 12, 18, 27, 16, 24, 36, 54, 81}}
+    );
 }
