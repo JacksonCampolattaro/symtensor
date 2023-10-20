@@ -141,6 +141,11 @@
               <span class="m-doc-wrap-bumper"><a href="#a012dc14f0bbacb5eabb06a9173258d2a" class="m-doc">MultipoleBase</a>(</span><span class="m-doc-wrap">Tensors &amp;&amp; ... types) <span class="m-label m-flat m-info">explicit</span>  <span class="m-label m-flat m-primary">constexpr</span></span>
             </dt>
             <dd>Constructor from a sequence of tensors.</dd>
+            <dt>
+              <div class="m-doc-template">template&lt;indexable Vector&gt;</div>
+              <span class="m-doc-wrap-bumper"><a href="#a3cbc4ec2ec684001e7100266385f67c3" class="m-doc">MultipoleBase</a>(</span><span class="m-doc-wrap">const Vector&amp; vector) <span class="m-label m-flat m-info">explicit</span>  <span class="m-label m-flat m-primary">constexpr</span></span>
+            </dt>
+            <dd>Constructor from a single vector.</dd>
           </dl>
         </section>
         <section id="member-access">
@@ -318,6 +323,37 @@
                 </tr>
               </tbody>
             </table>
+          </div></section>
+          <section class="m-doc-details" id="a3cbc4ec2ec684001e7100266385f67c3"><div>
+            <h3>
+              <div class="m-doc-template">
+                template&lt;class Implementation, typename ... Tensors&gt;
+                template&lt;indexable Vector&gt;
+              </div>
+              <span class="m-doc-wrap-bumper"> symtensor::<wbr />MultipoleBase&lt;Implementation, Tensors&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a3cbc4ec2ec684001e7100266385f67c3" class="m-doc-self">MultipoleBase</a>(</span><span class="m-doc-wrap">const Vector&amp; vector) <span class="m-label m-info">explicit</span>  <span class="m-label m-primary">constexpr</span></span></span>
+            </h3>
+            <p>Constructor from a single vector.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Template parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">Vector</td>
+                  <td>vector type, must have a subscript operator and provide at least D elements</td>
+                </tr>
+              </tbody>
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>vector</td>
+                  <td>base vector</td>
+                </tr>
+              </tbody>
+            </table>
+<p>Tensors are produced by repeatedly performing cartesian products with the vector.</p>
           </div></section>
           <section class="m-doc-details" id="ab72fa07efce5c237db7d2ae297b12336"><div>
             <h3>
