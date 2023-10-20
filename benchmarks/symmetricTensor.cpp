@@ -49,7 +49,7 @@ TEST_CASE("benchmark: Member access", "[SymmetricTensor]") {
     }
 
     {
-        SymmetricTensor3f<3> st3x3x3{1, 2, 3, 4, 5, 6, 7, 8, 9};
+        SymmetricTensor3f<3> st3x3x3{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
         using
         enum SymmetricTensor3f<3>::Index;
 
@@ -65,7 +65,7 @@ TEST_CASE("benchmark: Member access", "[SymmetricTensor]") {
     }
 
     {
-        SymmetricTensor3f<5> st3x3x3x3x3{1, 2, 3, 4, 5, 6, 7, 8, 9};
+        SymmetricTensor3f<5> st3x3x3x3x3{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21};
         using
         enum SymmetricTensor3f<5>::Index;
 
@@ -97,13 +97,13 @@ TEST_CASE("benchmark: Tensor properties", "[SymmetricTensor]") {
     }
 
     {
-        SymmetricTensor3f<2> a{1, 2, 3, 4, 5};
+        SymmetricTensor3f<2> a{1, 2, 3, 4, 5, 6};
         BENCHMARK("trace(st3x3)") { return a.trace(); };
         BENCHMARK("trace(st3x3) (handwritten)") { return a[0] + a[3] + a[5]; };
     }
 
     {
-        SymmetricTensor3f<3> a{1, 2, 3, 4, 5, 6, 7, 8};
+        SymmetricTensor3f<3> a{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
         BENCHMARK("trace(st3x3x3)") { return a.trace(); };
         BENCHMARK("trace(st3x3x3) (handwritten)") { return a[0] + a[6] + a[9]; };
     }

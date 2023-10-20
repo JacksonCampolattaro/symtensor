@@ -17,7 +17,7 @@ if (NOT TARGET symtensor)
     find_package(symtensor REQUIRED)
 endif ()
 
-add_executable(benchmarks symmetricTensor.cpp)
+add_executable(benchmarks symmetricTensor.cpp multipole.cpp)
 target_link_libraries(benchmarks PRIVATE
         Catch2::Catch2WithMain
         symtensor::symtensor
