@@ -65,6 +65,12 @@ namespace symtensor {
     /// 3d hexadecupole with floating point elements
     using Hexadecupole3f = Multipole3f<4>;
 
+    /// 2d triacontadyupole with floating point elements
+    using Triacontadyupole2f = Multipole2f<5>;
+
+    /// 3d triacontadyupole with floating point elements
+    using Triacontadyupole3f = Multipole3f<5>;
+
 }
 
 #endif //SYMTENSOR_MULTIPOLE_H

@@ -153,9 +153,15 @@ namespace symtensor {
         explicit inline constexpr MultipoleBase(const Vector &vector) {
             tensor<1>() = vector;
             [&]<std::size_t... i>(std::index_sequence<i...>) {
-                ((tensor<i + 2>() = TensorType<i + 2>::CartesianProduct(tensor<i + 1>(), vector)), ...);
+                ((tensor<i + 2>() = TensorType<i + 2>::CartesianPower(vector)), ...);
             }(std::make_index_sequence<Order - 1>());
-            // todo: something like this might be better:
+
+            // todo: this seems to under-perform the "naive" approach
+            //            [&]<std::size_t... i>(std::index_sequence<i...>) {
+            //                ((tensor<i + 2>() = TensorType<i + 2>::CartesianProduct(tensor<i + 1>(), vector)), ...);
+            //            }(std::make_index_sequence<Order - 1>());
+
+            // todo: something like this might be more readable:
             //            [&]<std::size_t _0, std::size_t _1, std::size_t... r>(std::index_sequence<_0, _1, r...>) {
             //                ((tensor<r>() = TensorType<r>::CartesianProduct(tensor<r - 1>(), vector)), ...);
             //            }(std::make_index_sequence<Order - 1>());
