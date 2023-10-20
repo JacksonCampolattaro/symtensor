@@ -16,6 +16,20 @@ namespace symtensor {
 
     namespace {
 
+        // todo: these should be made public, so that users can specialize them for their own types
+
+        template<typename, class>
+        struct ReplaceScalarHelper {
+        };
+        template<
+                typename NewScalar,
+                template<typename, std::size_t, std::size_t, typename> class ST,
+                typename OldScalar, std::size_t D, std::size_t R, typename I
+        >
+        struct ReplaceScalarHelper<NewScalar, ST<OldScalar, D, R, I>> {
+            using type = ST<NewScalar, D, R, I>;
+        };
+
         template<std::size_t, class>
         struct ReplaceRankHelper {
         };
@@ -29,6 +43,9 @@ namespace symtensor {
         };
 
     }
+
+    template<class ST, typename S>
+    using ReplaceScalar = typename ReplaceScalarHelper<S, ST>::type;
 
     /**
      * @brief Produces a type which modifies the rank of a symmetric tensor
@@ -128,12 +145,26 @@ namespace symtensor {
          */
         explicit constexpr SymmetricTensorBase() : _data{0} {}
 
+        constexpr SymmetricTensorBase(const Self &other) = default;
+
         /**
          * @brief Constructor from a sequence of values.
          *
          * @param s a sequence of scalar values to initialize the tensor.
          */
-        constexpr SymmetricTensorBase(auto ...s) : _data{static_cast<S>(s)...} {}
+        constexpr SymmetricTensorBase(auto ...s) : _data{static_cast<S>(s)...} {
+            static_assert(sizeof...(s) == NumUniqueValues);
+        }
+
+        // todo: this might perform better in some cases
+        //        constexpr SymmetricTensorBase(std::initializer_list<Scalar> scalars) {
+        //            assert(scalars.size() == NumUniqueValues);
+        //            std::copy(scalars.begin(), scalars.end(), _data.begin());
+        //        }
+
+        constexpr Self &operator=(const Self &other) = default;
+
+        constexpr Self &operator=(Self &&other) noexcept = default;
 
         /**
          * @brief Identity matrix constructor.
@@ -174,12 +205,12 @@ namespace symtensor {
             if constexpr (requires { function.template operator()<dimensionalIndices(0)>(); }) {
                 // If a function provides a template parameter for compile-time indexing, prefer that
                 return [&]<std::size_t... i>(std::index_sequence<i...>) constexpr {
-                    return Implementation{function.template operator()<dimensionalIndices(i)>()...};
+                    return Implementation{static_cast<S>(function.template operator()<dimensionalIndices(i)>())...};
                 }(std::make_index_sequence<NumUniqueValues>());
             } else {
                 // Otherwise, the function must take the indices as its only argument
                 return [&]<std::size_t... i>(std::index_sequence<i...>) constexpr {
-                    return Implementation{function(dimensionalIndices(i))...};
+                    return Implementation{static_cast<S>(function(dimensionalIndices(i)))...};
                 }(std::make_index_sequence<NumUniqueValues>());
             }
         }

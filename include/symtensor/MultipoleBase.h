@@ -82,6 +82,16 @@ namespace symtensor {
      */
     template<class Implementation, typename ...Tensors>
     class MultipoleBase {
+    private:
+
+        static consteval std::size_t indexForRank(std::size_t R) {
+            return (NumTensors - 1) - (Order - R);
+        }
+
+        const Implementation &implementation() const { return *static_cast<const Implementation *>(this); }
+
+        Implementation &implementation() { return *static_cast<Implementation *>(this); }
+
     public:
 
         using TensorTuple = std::tuple<Tensors...>;
@@ -102,6 +112,9 @@ namespace symtensor {
          *  A multipole may have a scalar component; this is treated a tensor of rank 0.
          */
         static constexpr std::size_t NumTensors = std::tuple_size_v<TensorTuple>;
+
+        template<std::size_t R>
+        using TensorType = std::tuple_element_t<indexForRank(R), TensorTuple>;
 
     private:
 
@@ -127,6 +140,15 @@ namespace symtensor {
          *   So long as each tensor type has an implicit constructor, initializer-list syntax works.
          */
         explicit inline constexpr MultipoleBase(Tensors &&...types) : _tuple(std::forward<Tensors>(types)...) {}
+
+        template<typename Vector>
+        explicit inline constexpr MultipoleBase(const Vector &vector) {
+            tensor<1>() = vector;
+            [&]<std::size_t... i>(std::index_sequence<i...>) {
+                // todo: this is very ugly and confusing, I think a better solution must be possible
+                ((tensor<i + 2>() = TensorType<i + 2>::CartesianProduct(tensor<i + 1>(), vector)), ...);
+            }(std::make_index_sequence<Order - 1>());
+        }
 
         /// @}
     public:
@@ -391,16 +413,6 @@ namespace symtensor {
 
         /// @}
 
-
-    private:
-
-        static consteval std::size_t indexForRank(std::size_t R) {
-            return (NumTensors - 1) - (Order - R);
-        }
-
-        const Implementation &implementation() const { return *static_cast<const Implementation *>(this); }
-
-        Implementation &implementation() { return *static_cast<Implementation *>(this); }
 
     };
 

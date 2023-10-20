@@ -71,3 +71,13 @@ TEST_CASE("Arithmetic operations with another multipole", "[Multipole]") {
     REQUIRE(a - b == Quadrupole2f{{-1, 0},
                                   {-1, 0, 1}});
 }
+
+
+TEST_CASE("Construction by repeated promotion", "[Multipole]") {
+
+    Quadrupole2f a{SymmetricTensor2f<1>{1, 2}};
+    std::cout << a << std::endl;
+
+    Octupole3f b{SymmetricTensor3f<1>{1, 2, 3}};
+    std::cout << b << std::endl;
+}
