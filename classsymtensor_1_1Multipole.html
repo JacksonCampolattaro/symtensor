@@ -117,6 +117,11 @@
               using <a href="classsymtensor_1_1MultipoleBase.html#a89c7efbc2811d0bdc588e8dbd1402dd1" class="m-doc">Index</a> = typename last_type_of_tuple&lt;TensorTuple&gt;::<a href="classsymtensor_1_1MultipoleBase.html#a89c7efbc2811d0bdc588e8dbd1402dd1" class="m-doc">Index</a>
             </dt>
             <dd>Index type used to access tensor members Common to all contained tensors, as they should all have the same size.</dd>
+            <dt>
+              <div class="m-doc-template">template&lt;std::size_t R&gt;</div>
+              using <a href="classsymtensor_1_1MultipoleBase.html#a364f4b27efbcd281c2823f729b4fca61" class="m-doc">TensorType</a> = std::tuple_element_t&lt;indexForRank(R), TensorTuple&gt;
+            </dt>
+            <dd></dd>
           </dl>
         </section>
         <section id="pub-static-attribs">
@@ -296,6 +301,16 @@
               using symtensor::<wbr />Multipole&lt;Order, Tensors&gt;::<wbr /><a href="#a89c7efbc2811d0bdc588e8dbd1402dd1" class="m-doc-self">Index</a> = typename last_type_of_tuple&lt;TensorTuple&gt;::<a href="classsymtensor_1_1MultipoleBase.html#a89c7efbc2811d0bdc588e8dbd1402dd1" class="m-doc">Index</a>
             </h3>
             <p>Index type used to access tensor members Common to all contained tensors, as they should all have the same size.</p>
+          </div></section>
+          <section class="m-doc-details" id="a364f4b27efbcd281c2823f729b4fca61"><div>
+            <h3>
+              <div class="m-doc-include m-code m-inverted m-right-m m-text-right"><span class="cp">#include</span> <a class="cpf" href="MultipoleBase_8h.html">&lt;symtensor/MultipoleBase.h&gt;</a></div>
+              <div class="m-doc-template">
+                template&lt;std::size_t Order, typename ... Tensors&gt;
+                template&lt;std::size_t R&gt;
+              </div>
+              using symtensor::<wbr />Multipole&lt;Order, Tensors&gt;::<wbr /><a href="#a364f4b27efbcd281c2823f729b4fca61" class="m-doc-self">TensorType</a> = std::tuple_element_t&lt;indexForRank(R), TensorTuple&gt;
+            </h3>
           </div></section>
         </section>
         <section>
