@@ -87,6 +87,7 @@
                 <li><a href="#base-classes">Base classes</a></li>
                 <li><a href="#pub-types">Public types</a></li>
                 <li><a href="#pub-static-attribs">Public static variables</a></li>
+                <li><a href="#constructors">Constructors</a></li>
                 <li><a href="#member-access">Member access</a></li>
                 <li><a href="#multipole-scalar-operations">Multipole-scalar operations</a></li>
                 <li><a href="#multipole-multipole-operations">Multipole-multipole operations</a></li>
@@ -122,6 +123,10 @@
               using <a href="classsymtensor_1_1MultipoleBase.html#a364f4b27efbcd281c2823f729b4fca61" class="m-doc">TensorType</a> = std::tuple_element_t&lt;indexForRank(R), TensorTuple&gt;
             </dt>
             <dd></dd>
+            <dt>
+              using <a href="classsymtensor_1_1MultipoleBase.html#ade72830f3505c84db2b7ee16ca66f20f" class="m-doc">Ranks</a> = std::integer_sequence&lt;std::size_t, Tensors::Rank...&gt;
+            </dt>
+            <dd></dd>
           </dl>
         </section>
         <section id="pub-static-attribs">
@@ -135,6 +140,16 @@
               static std::size_t <a href="classsymtensor_1_1MultipoleBase.html#aa395d7ff45a9da103e9bdb50b98196e4" class="m-doc">NumTensors</a> <span class="m-label m-flat m-primary">constexpr</span>
             </dt>
             <dd>Number of contained elements, all assumed to be tensors. A multipole may have a scalar component; this is treated a tensor of rank 0.</dd>
+          </dl>
+        </section>
+        <section id="constructors">
+          <h2><a href="#constructors">Constructors</a></h2>
+          <dl class="m-doc">
+            <dt>
+              <div class="m-doc-template">template&lt;indexable Vector&gt;</div>
+              <span class="m-doc-wrap-bumper">static auto <a href="classsymtensor_1_1MultipoleBase.html#af8fe287fdb9ef5f44d046317d9eeb086" class="m-doc">FromVector</a>(</span><span class="m-doc-wrap">const Vector&amp; vector) -&gt; Implementation <span class="m-label m-flat m-primary">constexpr</span></span>
+            </dt>
+            <dd>Creator method from a single vector.</dd>
           </dl>
         </section>
         <section id="member-access">
@@ -312,9 +327,50 @@
               using symtensor::<wbr />Multipole&lt;Order, Tensors&gt;::<wbr /><a href="#a364f4b27efbcd281c2823f729b4fca61" class="m-doc-self">TensorType</a> = std::tuple_element_t&lt;indexForRank(R), TensorTuple&gt;
             </h3>
           </div></section>
+          <section class="m-doc-details" id="ade72830f3505c84db2b7ee16ca66f20f"><div>
+            <h3>
+              <div class="m-doc-include m-code m-inverted m-right-m m-text-right"><span class="cp">#include</span> <a class="cpf" href="MultipoleBase_8h.html">&lt;symtensor/MultipoleBase.h&gt;</a></div>
+              <div class="m-doc-template">
+                template&lt;std::size_t Order, typename ... Tensors&gt;
+              </div>
+              using symtensor::<wbr />Multipole&lt;Order, Tensors&gt;::<wbr /><a href="#ade72830f3505c84db2b7ee16ca66f20f" class="m-doc-self">Ranks</a> = std::integer_sequence&lt;std::size_t, Tensors::Rank...&gt;
+            </h3>
+          </div></section>
         </section>
         <section>
           <h2>Function documentation</h2>
+          <section class="m-doc-details" id="af8fe287fdb9ef5f44d046317d9eeb086"><div>
+            <h3>
+              <div class="m-doc-include m-code m-inverted m-right-m m-text-right"><span class="cp">#include</span> <a class="cpf" href="MultipoleBase_8h.html">&lt;symtensor/MultipoleBase.h&gt;</a></div>
+              <div class="m-doc-template">
+                template&lt;std::size_t Order, typename ... Tensors&gt;
+                template&lt;indexable Vector&gt;
+              </div>
+              <span class="m-doc-wrap-bumper">static Implementation symtensor::<wbr />Multipole&lt;Order, Tensors&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#af8fe287fdb9ef5f44d046317d9eeb086" class="m-doc-self">FromVector</a>(</span><span class="m-doc-wrap">const Vector&amp; vector) <span class="m-label m-primary">constexpr</span></span></span>
+            </h3>
+            <p>Creator method from a single vector.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Template parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">Vector</td>
+                  <td>vector type, must have a subscript operator and provide at least D elements</td>
+                </tr>
+              </tbody>
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>vector</td>
+                  <td>base vector</td>
+                </tr>
+              </tbody>
+            </table>
+<p>Tensors are produced by repeatedly performing cartesian products with the vector.</p>
+          </div></section>
           <section class="m-doc-details" id="ab72fa07efce5c237db7d2ae297b12336"><div>
             <h3>
               <div class="m-doc-include m-code m-inverted m-right-m m-text-right"><span class="cp">#include</span> <a class="cpf" href="MultipoleBase_8h.html">&lt;symtensor/MultipoleBase.h&gt;</a></div>
