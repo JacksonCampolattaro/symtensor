@@ -13,6 +13,7 @@ TEST_CASE("benchmark: Multipole construction from a vector", "[Multipole]") {
     {
 
         BENCHMARK("Quadrupole constructor") { return Quadrupole3f{vector}; };
+        BENCHMARK("Quadrupole creation method") { return Quadrupole3f::FromVector(vector); };
         BENCHMARK("Quadrupole manual construction") {
                                                         return std::tuple<
                                                                 SymmetricTensor3f<1>,
@@ -28,6 +29,7 @@ TEST_CASE("benchmark: Multipole construction from a vector", "[Multipole]") {
     {
 
         BENCHMARK("Octupole constructor") { return Octupole3f{vector}; };
+        BENCHMARK("Octupole creation method") { return Octupole3f::FromVector(vector); };
         BENCHMARK("Octupole manual construction") {
                                                       return std::tuple<
                                                               SymmetricTensor3f<1>,
@@ -45,6 +47,7 @@ TEST_CASE("benchmark: Multipole construction from a vector", "[Multipole]") {
     {
 
         BENCHMARK("Hexadecupole constructor") { return Hexadecupole3f{vector}; };
+        BENCHMARK("Hexadecupole creation method") { return Hexadecupole3f::FromVector(vector); };
         BENCHMARK("Hexadecupole manual construction")
                     {
                         return std::tuple<
@@ -82,6 +85,7 @@ TEST_CASE("benchmark: Multipole construction from a vector", "[Multipole]") {
     {
 
         BENCHMARK("Triacontadyupole constructor") { return Triacontadyupole3f{vector}; };
+        BENCHMARK("Triacontadyupole creation method") { return Triacontadyupole3f::FromVector(vector); };
         BENCHMARK("Triacontadyupole manual construction")
                     {
                         return std::tuple<

@@ -116,6 +116,8 @@ namespace symtensor {
         template<std::size_t R>
         using TensorType = std::tuple_element_t<indexForRank(R), TensorTuple>;
 
+        using Ranks = std::integer_sequence<std::size_t, Tensors::Rank...>;
+
     private:
 
         TensorTuple _tuple;
@@ -165,6 +167,23 @@ namespace symtensor {
             //            [&]<std::size_t _0, std::size_t _1, std::size_t... r>(std::index_sequence<_0, _1, r...>) {
             //                ((tensor<r>() = TensorType<r>::CartesianProduct(tensor<r - 1>(), vector)), ...);
             //            }(std::make_index_sequence<Order - 1>());
+        }
+
+
+        /**
+         * @brief Creator method from a single vector
+         *
+         * Tensors are produced by repeatedly performing cartesian products with the vector.
+         *
+         * @tparam Vector vector type, must have a subscript operator and provide at least D elements
+         * @param vector base vector
+         */
+        template<indexable Vector>
+        static inline constexpr Implementation FromVector(const Vector &vector) {
+            // todo: this assumes that all Tensor types have a CartesianPower method
+            return [&]<std::size_t... i>(std::index_sequence<i...>) constexpr {
+                return Implementation{std::tuple_element_t<i, TensorTuple>::CartesianPower(vector) ...};
+            }(std::make_index_sequence<NumTensors>());
         }
 
         /// @}
