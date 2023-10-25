@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>symtensor</title>
+  <title>symtensor/MultipoleMoment.h file | symtensor</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:400,400i,700,700i|JetBrains+Mono:400,400i,600" />
   <link rel="stylesheet" href="m-theme-light.css" />
   <link rel="stylesheet" href="m-layout.css" />
@@ -32,7 +32,7 @@
           <ol class="m-col-t-6 m-col-m-none">
             <li><a href="pages.html">Pages</a></li>
             <li><a href="namespaces.html">Namespaces</a></li>
-            <li><a href="annotated.html" id="m-navbar-current">Classes</a></li>
+            <li><a href="annotated.html">Classes</a></li>
           </ol>
           <ol class="m-col-t-6 m-col-m-none" start="4">
             <li><a href="files.html">Files</a></li>
@@ -57,36 +57,39 @@
   <div class="m-container m-container-inflatable">
     <div class="m-row">
       <div class="m-col-l-10 m-push-l-1">
-        <h1>Classes</h1>
-        <ul class="m-doc">
-          <li class="m-doc-collapsible">
-            <a href="#" onclick="return toggle(this)">namespace</a> <a href="namespacesymtensor.html" class="m-doc">symtensor</a> <span class="m-doc"></span>
-            <ul class="m-doc">
-              <li>class <a href="classsymtensor_1_1Multipole.html" class="m-doc">Multipole</a> <span class="m-doc">Generic multipole type.</span></li>
-              <li>class <a href="classsymtensor_1_1MultipoleBase.html" class="m-doc">MultipoleBase</a> <span class="m-doc"><a href="classsymtensor_1_1Multipole.html" class="m-doc">Multipole</a> base-type for use with CRTP implementations.</span></li>
-              <li>class <a href="classsymtensor_1_1MultipoleBaseFromTuple.html" class="m-doc">MultipoleBaseFromTuple</a> <span class="m-doc">Helper class for defining a multipole based on an std::tuple of tensors.</span></li>
-              <li>class <a href="classsymtensor_1_1MultipoleMoment.html" class="m-doc">MultipoleMoment</a> <span class="m-doc">Generic multipole type.</span></li>
-              <li>class <a href="classsymtensor_1_1SymmetricTensor.html" class="m-doc">SymmetricTensor</a> <span class="m-doc">Generic symmetric tensor type.</span></li>
-              <li>class <a href="classsymtensor_1_1SymmetricTensorBase.html" class="m-doc">SymmetricTensorBase</a> <span class="m-doc">Symmetric tensor base-type for use with CRTP implementations.</span></li>
-            </ul>
-          </li>
-        </ul>
-        <script>
-        function toggle(e) {
-            e.parentElement.className = e.parentElement.className == 'm-doc-collapsible' ?
-                'm-doc-expansible' : 'm-doc-collapsible';
-            return false;
-        }
-        /* Collapse all nodes marked as such. Doing it via JS instead of
-           directly in markup so disabling it doesn't harm usability. The list
-           is somehow regenerated on every iteration and shrinks as I change
-           the classes. It's not documented anywhere and I'm not sure if this
-           is the same across browsers, so I am going backwards in that list to
-           be sure. */
-        var collapsed = document.getElementsByClassName("collapsed");
-        for(var i = collapsed.length - 1; i >= 0; --i)
-            collapsed[i].className = 'm-doc-expansible';
-        </script>
+        <h1>
+          <span class="m-breadcrumb"><a href="dir_ac8328523b41d8ce239fc77edbe15305.html">symtensor</a>/</span>MultipoleMoment.h <span class="m-thin">file</span>
+        </h1>
+        <p>Provides the generic multipole type alongside typedefs for common uses.</p>
+        <nav class="m-block m-default">
+          <h3>Contents</h3>
+          <ul>
+            <li>
+              Reference
+              <ul>
+                <li><a href="#namespaces">Namespaces</a></li>
+                <li><a href="#nested-classes">Classes</a></li>
+              </ul>
+            </li>
+          </ul>
+        </nav>
+        <section id="namespaces">
+          <h2><a href="#namespaces">Namespaces</a></h2>
+          <dl class="m-doc">
+            <dt>namespace <a href="namespacesymtensor.html" class="m-doc">symtensor</a></dt>
+            <dd></dd>
+          </dl>
+        </section>
+        <section id="nested-classes">
+          <h2><a href="#nested-classes">Classes</a></h2>
+          <dl class="m-doc">
+            <dt>
+              <div class="m-doc-template">template&lt;std::size_t Order, typename ... Tensors&gt;</div>
+              class <a href="classsymtensor_1_1MultipoleMoment.html" class="m-doc">symtensor::MultipoleMoment</a>
+            </dt>
+            <dd>Generic multipole type.</dd>
+          </dl>
+        </section>
       </div>
     </div>
   </div>

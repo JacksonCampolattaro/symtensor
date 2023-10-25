@@ -93,6 +93,11 @@
             </dt>
             <dd>Helper class for defining a multipole based on an std::tuple of tensors.</dd>
             <dt>
+              <div class="m-doc-template">template&lt;std::size_t Order, typename ... Tensors&gt;</div>
+              class <a href="classsymtensor_1_1MultipoleMoment.html" class="m-doc">MultipoleMoment</a>
+            </dt>
+            <dd>Generic multipole type.</dd>
+            <dt>
               <div class="m-doc-template">template&lt;typename S, std::size_t D, std::size_t R, typename I = Index&lt;D&gt;&gt;</div>
               class <a href="classsymtensor_1_1SymmetricTensor.html" class="m-doc">SymmetricTensor</a>
             </dt>
@@ -149,6 +154,38 @@
               using <a href="#a9303084ed4ed18b14e2ed87f32f33495" class="m-doc">TensorSequence</a> = typename TensorSequenceHelper&lt;Order, PrefixTensors...&gt;::type
             </dt>
             <dd>Produces an std::tuple of tensors based on a &quot;prefix&quot; and a desired order.</dd>
+            <dt>
+              using <a href="#a312ae493c467446f82eb9eab4f7125a2" class="m-doc">QuadrupoleMoment2f</a> = <a href="classsymtensor_1_1MultipoleMoment.html" class="m-doc">MultipoleMoment2f</a>&lt;2&gt;
+            </dt>
+            <dd>2d quadrupole moment with floating point elements</dd>
+            <dt>
+              using <a href="#aa8a9975fb65e964fe3a1df132b4f6620" class="m-doc">QuadrupoleMoment3f</a> = <a href="classsymtensor_1_1MultipoleMoment.html" class="m-doc">MultipoleMoment3f</a>&lt;2&gt;
+            </dt>
+            <dd>3d quadrupole moment with floating point elements</dd>
+            <dt>
+              using <a href="#a03c53828adbca0e4a1e72597a8c26282" class="m-doc">OctupoleMoment2f</a> = <a href="classsymtensor_1_1MultipoleMoment.html" class="m-doc">MultipoleMoment2f</a>&lt;3&gt;
+            </dt>
+            <dd>2d octupole moment with floating point elements</dd>
+            <dt>
+              using <a href="#a175b774c2e10ad18785042b3f206ad32" class="m-doc">OctupoleMoment3f</a> = <a href="classsymtensor_1_1MultipoleMoment.html" class="m-doc">MultipoleMoment3f</a>&lt;3&gt;
+            </dt>
+            <dd>3d octupole moment with floating point elements</dd>
+            <dt>
+              using <a href="#a1b4b2559b6df4f62bc67260a664ee4dd" class="m-doc">HexadecupoleMoment2f</a> = <a href="classsymtensor_1_1MultipoleMoment.html" class="m-doc">MultipoleMoment2f</a>&lt;4&gt;
+            </dt>
+            <dd>2d hexadecupole moment with floating point elements</dd>
+            <dt>
+              using <a href="#a5775e1782a97b182e9c0cabac5779c70" class="m-doc">HexadecupoleMoment3f</a> = <a href="classsymtensor_1_1MultipoleMoment.html" class="m-doc">MultipoleMoment3f</a>&lt;4&gt;
+            </dt>
+            <dd>3d hexadecupole moment with floating point elements</dd>
+            <dt>
+              using <a href="#adaa57d5a237c06d09cfa9b3a1104ac0b" class="m-doc">TriacontadyupoleMoment2f</a> = <a href="classsymtensor_1_1MultipoleMoment.html" class="m-doc">MultipoleMoment2f</a>&lt;5&gt;
+            </dt>
+            <dd>2d triacontadyupole moment with floating point elements</dd>
+            <dt>
+              using <a href="#a83ac6bb2c2fbf6ccd4cf4dbd7c694dc8" class="m-doc">TriacontadyupoleMoment3f</a> = <a href="classsymtensor_1_1MultipoleMoment.html" class="m-doc">MultipoleMoment3f</a>&lt;5&gt;
+            </dt>
+            <dd>3d triacontadyupole moment with floating point elements</dd>
             <dt>
               <div class="m-doc-template">template&lt;class ST, std::size_t R&gt;</div>
               using <a href="#a68e34bb9b75d60c4c11a5931046deb31" class="m-doc">ReplaceRank</a> = typename ReplaceRankHelper&lt;R, ST&gt;::type
@@ -297,6 +334,62 @@
 <span class="w"> </span><span class="n">SymmetricTensor3f</span><span class="o">&lt;</span><span class="mi">2</span><span class="o">&gt;</span><span class="p">,</span>
 <span class="w"> </span><span class="n">SymmetricTensor3f</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span>
 <span class="o">&gt;</span></pre>
+          </div></section>
+          <section class="m-doc-details" id="a312ae493c467446f82eb9eab4f7125a2"><div>
+            <h3>
+              using symtensor::<wbr /><a href="#a312ae493c467446f82eb9eab4f7125a2" class="m-doc-self">QuadrupoleMoment2f</a> = <a href="classsymtensor_1_1MultipoleMoment.html" class="m-doc">MultipoleMoment2f</a>&lt;2&gt;
+              <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="MultipoleMoment_8h.html">&lt;symtensor/MultipoleMoment.h&gt;</a></div>
+            </h3>
+            <p>2d quadrupole moment with floating point elements</p>
+          </div></section>
+          <section class="m-doc-details" id="aa8a9975fb65e964fe3a1df132b4f6620"><div>
+            <h3>
+              using symtensor::<wbr /><a href="#aa8a9975fb65e964fe3a1df132b4f6620" class="m-doc-self">QuadrupoleMoment3f</a> = <a href="classsymtensor_1_1MultipoleMoment.html" class="m-doc">MultipoleMoment3f</a>&lt;2&gt;
+              <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="MultipoleMoment_8h.html">&lt;symtensor/MultipoleMoment.h&gt;</a></div>
+            </h3>
+            <p>3d quadrupole moment with floating point elements</p>
+          </div></section>
+          <section class="m-doc-details" id="a03c53828adbca0e4a1e72597a8c26282"><div>
+            <h3>
+              using symtensor::<wbr /><a href="#a03c53828adbca0e4a1e72597a8c26282" class="m-doc-self">OctupoleMoment2f</a> = <a href="classsymtensor_1_1MultipoleMoment.html" class="m-doc">MultipoleMoment2f</a>&lt;3&gt;
+              <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="MultipoleMoment_8h.html">&lt;symtensor/MultipoleMoment.h&gt;</a></div>
+            </h3>
+            <p>2d octupole moment with floating point elements</p>
+          </div></section>
+          <section class="m-doc-details" id="a175b774c2e10ad18785042b3f206ad32"><div>
+            <h3>
+              using symtensor::<wbr /><a href="#a175b774c2e10ad18785042b3f206ad32" class="m-doc-self">OctupoleMoment3f</a> = <a href="classsymtensor_1_1MultipoleMoment.html" class="m-doc">MultipoleMoment3f</a>&lt;3&gt;
+              <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="MultipoleMoment_8h.html">&lt;symtensor/MultipoleMoment.h&gt;</a></div>
+            </h3>
+            <p>3d octupole moment with floating point elements</p>
+          </div></section>
+          <section class="m-doc-details" id="a1b4b2559b6df4f62bc67260a664ee4dd"><div>
+            <h3>
+              using symtensor::<wbr /><a href="#a1b4b2559b6df4f62bc67260a664ee4dd" class="m-doc-self">HexadecupoleMoment2f</a> = <a href="classsymtensor_1_1MultipoleMoment.html" class="m-doc">MultipoleMoment2f</a>&lt;4&gt;
+              <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="MultipoleMoment_8h.html">&lt;symtensor/MultipoleMoment.h&gt;</a></div>
+            </h3>
+            <p>2d hexadecupole moment with floating point elements</p>
+          </div></section>
+          <section class="m-doc-details" id="a5775e1782a97b182e9c0cabac5779c70"><div>
+            <h3>
+              using symtensor::<wbr /><a href="#a5775e1782a97b182e9c0cabac5779c70" class="m-doc-self">HexadecupoleMoment3f</a> = <a href="classsymtensor_1_1MultipoleMoment.html" class="m-doc">MultipoleMoment3f</a>&lt;4&gt;
+              <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="MultipoleMoment_8h.html">&lt;symtensor/MultipoleMoment.h&gt;</a></div>
+            </h3>
+            <p>3d hexadecupole moment with floating point elements</p>
+          </div></section>
+          <section class="m-doc-details" id="adaa57d5a237c06d09cfa9b3a1104ac0b"><div>
+            <h3>
+              using symtensor::<wbr /><a href="#adaa57d5a237c06d09cfa9b3a1104ac0b" class="m-doc-self">TriacontadyupoleMoment2f</a> = <a href="classsymtensor_1_1MultipoleMoment.html" class="m-doc">MultipoleMoment2f</a>&lt;5&gt;
+              <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="MultipoleMoment_8h.html">&lt;symtensor/MultipoleMoment.h&gt;</a></div>
+            </h3>
+            <p>2d triacontadyupole moment with floating point elements</p>
+          </div></section>
+          <section class="m-doc-details" id="a83ac6bb2c2fbf6ccd4cf4dbd7c694dc8"><div>
+            <h3>
+              using symtensor::<wbr /><a href="#a83ac6bb2c2fbf6ccd4cf4dbd7c694dc8" class="m-doc-self">TriacontadyupoleMoment3f</a> = <a href="classsymtensor_1_1MultipoleMoment.html" class="m-doc">MultipoleMoment3f</a>&lt;5&gt;
+              <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="MultipoleMoment_8h.html">&lt;symtensor/MultipoleMoment.h&gt;</a></div>
+            </h3>
+            <p>3d triacontadyupole moment with floating point elements</p>
           </div></section>
           <section class="m-doc-details" id="a68e34bb9b75d60c4c11a5931046deb31"><div>
             <h3>

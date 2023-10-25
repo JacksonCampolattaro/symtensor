@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>symtensor::MultipoleBase class | symtensor</title>
+  <title>symtensor::MultipoleMoment class | symtensor</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:400,400i,700,700i|JetBrains+Mono:400,400i,600" />
   <link rel="stylesheet" href="m-theme-light.css" />
   <link rel="stylesheet" href="m-layout.css" />
@@ -58,23 +58,23 @@
     <div class="m-row">
       <div class="m-col-l-10 m-push-l-1">
         <h1>
-          <div class="m-doc-include m-code m-inverted m-right-m m-text-right"><span class="cp">#include</span> <a class="cpf" href="MultipoleBase_8h.html">&lt;symtensor/MultipoleBase.h&gt;</a></div>
-          <div class="m-doc-template">template&lt;class Implementation, typename ... Tensors&gt;</div>
-          <span class="m-breadcrumb"><a href="namespacesymtensor.html">symtensor</a>::<wbr/></span>MultipoleBase <span class="m-thin">class</span>
+          <div class="m-doc-include m-code m-inverted m-right-m m-text-right"><span class="cp">#include</span> <a class="cpf" href="MultipoleMoment_8h.html">&lt;symtensor/MultipoleMoment.h&gt;</a></div>
+          <div class="m-doc-template">template&lt;std::size_t Order, typename ... Tensors&gt;</div>
+          <span class="m-breadcrumb"><a href="namespacesymtensor.html">symtensor</a>::<wbr/></span>MultipoleMoment <span class="m-thin">class</span>
         </h1>
-        <p><a href="classsymtensor_1_1Multipole.html" class="m-doc">Multipole</a> base-type for use with CRTP implementations.</p>
+        <p>Generic multipole type.</p>
         <table class="m-table m-fullwidth m-flat">
           <thead>
             <tr><th colspan="2">Template parameters</th></tr>
           </thead>
           <tbody>
             <tr>
-              <td style="width: 1%">Implementation</td>
-              <td>CRTP subclass</td>
+              <td style="width: 1%">Order</td>
+              <td>the rank of the highest symmetric tensor</td>
             </tr>
             <tr>
               <td>Tensors</td>
-              <td>sequence of tensors which make up the multipole. The order of the multipole is equivalent to the rank of the last tensor. The tensors should be provided in ascending order and without gaps.</td>
+              <td>prefix of types which make up the lowest ranks of the multipole. Must end in a Symmetric tensor &ndash; the final type is &quot;promoted&quot; to produce higher rank tensors until the requested Order is reached.</td>
             </tr>
           </tbody>
         </table>
@@ -84,7 +84,7 @@
             <li>
               Reference
               <ul>
-                <li><a href="#derived-classes">Derived classes</a></li>
+                <li><a href="#base-classes">Base classes</a></li>
                 <li><a href="#pub-types">Public types</a></li>
                 <li><a href="#pub-static-attribs">Public static variables</a></li>
                 <li><a href="#constructors">Constructors</a></li>
@@ -97,18 +97,12 @@
             </li>
           </ul>
         </nav>
-<p>In order to create a new type which behaves like a multipole, you can derive from this class so that operators will function correctly.</p>
-        <section id="derived-classes">
-          <h2><a href="#derived-classes">Derived classes</a></h2>
+        <section id="base-classes">
+          <h2><a href="#base-classes">Base classes</a></h2>
           <dl class="m-doc">
             <dt>
               <div class="m-doc-template">template&lt;typename Implementation, typename Tuple&gt;</div>
-              class <a href="classsymtensor_1_1MultipoleBaseFromTuple.html" class="m-doc">MultipoleBaseFromTuple</a>
-            </dt>
-            <dd>Helper class for defining a multipole based on an std::tuple of tensors.</dd>
-            <dt>
-              <div class="m-doc-template">template&lt;typename Implementation, typename Tuple&gt;</div>
-              class <a href="classsymtensor_1_1MultipoleBaseFromTuple.html" class="m-doc">MultipoleBaseFromTuple</a>
+              class <a href="classsymtensor_1_1MultipoleBaseFromTuple.html" class="m-doc">MultipoleBaseFromTuple&lt;MultipoleMoment&lt;Order, Tensors...&gt;, TensorSequence&lt;Order, last_type&lt;Tensors...&gt;::Scalar, Tensors...&gt;&gt;</a>
             </dt>
             <dd>Helper class for defining a multipole based on an std::tuple of tensors.</dd>
           </dl>
@@ -116,21 +110,34 @@
         <section id="pub-types">
           <h2><a href="#pub-types">Public types</a></h2>
           <dl class="m-doc">
-            <dt id="a89c7efbc2811d0bdc588e8dbd1402dd1">
-              using <a href="#a89c7efbc2811d0bdc588e8dbd1402dd1" class="m-doc-self">Index</a> = typename last_type_of_tuple&lt;TensorTuple&gt;::<a href="classsymtensor_1_1MultipoleBase.html#a89c7efbc2811d0bdc588e8dbd1402dd1" class="m-doc">Index</a>
+            <dt>
+              using <a href="classsymtensor_1_1MultipoleBase.html#a7452d852acda9c0c231982c857bef1b1" class="m-doc">TensorTuple</a> = std::tuple&lt;Tensors...&gt;
+            </dt>
+            <dd></dd>
+            <dt>
+              using <a href="classsymtensor_1_1MultipoleBase.html#a89c7efbc2811d0bdc588e8dbd1402dd1" class="m-doc">Index</a> = typename last_type_of_tuple&lt;TensorTuple&gt;::<a href="classsymtensor_1_1MultipoleBase.html#a89c7efbc2811d0bdc588e8dbd1402dd1" class="m-doc">Index</a>
             </dt>
             <dd>Index type used to access tensor members Common to all contained tensors, as they should all have the same size.</dd>
+            <dt>
+              <div class="m-doc-template">template&lt;std::size_t R&gt;</div>
+              using <a href="classsymtensor_1_1MultipoleBase.html#a364f4b27efbcd281c2823f729b4fca61" class="m-doc">TensorType</a> = std::tuple_element_t&lt;indexForRank(R), TensorTuple&gt;
+            </dt>
+            <dd></dd>
+            <dt>
+              using <a href="classsymtensor_1_1MultipoleBase.html#a3f2f05d9e359a2983e35f48beb2a1a79" class="m-doc">Ranks</a> = std::integer_sequence&lt;std::size_t, Rank&lt;Tensors&gt;()...&gt;
+            </dt>
+            <dd></dd>
           </dl>
         </section>
         <section id="pub-static-attribs">
           <h2><a href="#pub-static-attribs">Public static variables</a></h2>
           <dl class="m-doc">
-            <dt id="aed44a9da6ac0cccc4c4935708e5b84e0">
-              static std::size_t <a href="#aed44a9da6ac0cccc4c4935708e5b84e0" class="m-doc-self">Order</a> <span class="m-label m-flat m-primary">constexpr</span>
+            <dt>
+              static std::size_t <a href="classsymtensor_1_1MultipoleBase.html#aed44a9da6ac0cccc4c4935708e5b84e0" class="m-doc">Order</a> <span class="m-label m-flat m-primary">constexpr</span>
             </dt>
             <dd><a href="classsymtensor_1_1Multipole.html" class="m-doc">Multipole</a> order, equivalent to the rank of the highest contained tensor.</dd>
-            <dt id="aa395d7ff45a9da103e9bdb50b98196e4">
-              static std::size_t <a href="#aa395d7ff45a9da103e9bdb50b98196e4" class="m-doc-self">NumTensors</a> <span class="m-label m-flat m-primary">constexpr</span>
+            <dt>
+              static std::size_t <a href="classsymtensor_1_1MultipoleBase.html#aa395d7ff45a9da103e9bdb50b98196e4" class="m-doc">NumTensors</a> <span class="m-label m-flat m-primary">constexpr</span>
             </dt>
             <dd>Number of contained elements, all assumed to be tensors. A multipole may have a scalar component; this is treated a tensor of rank 0.</dd>
           </dl>
@@ -139,21 +146,8 @@
           <h2><a href="#constructors">Constructors</a></h2>
           <dl class="m-doc">
             <dt>
-              <span class="m-doc-wrap-bumper"><a href="#aa35c8e9c1fa76425385bd0686102a785" class="m-doc">MultipoleBase</a>(</span><span class="m-doc-wrap">) <span class="m-label m-flat m-info">defaulted</span> <span class="m-label m-flat m-info">explicit</span>  <span class="m-label m-flat m-primary">constexpr</span></span>
-            </dt>
-            <dd>Default constructor.</dd>
-            <dt>
-              <span class="m-doc-wrap-bumper"><a href="#a9bde82e7c0ccceef305ba9fdd936838f" class="m-doc">MultipoleBase</a>(</span><span class="m-doc-wrap">const Tensors&amp;... types) <span class="m-label m-flat m-info">explicit</span>  <span class="m-label m-flat m-primary">constexpr</span></span>
-            </dt>
-            <dd>Constructor from a sequence of tensors.</dd>
-            <dt>
               <div class="m-doc-template">template&lt;indexable Vector&gt;</div>
-              <span class="m-doc-wrap-bumper"><a href="#a3cbc4ec2ec684001e7100266385f67c3" class="m-doc">MultipoleBase</a>(</span><span class="m-doc-wrap">const Vector&amp; vector) <span class="m-label m-flat m-info">explicit</span>  <span class="m-label m-flat m-primary">constexpr</span></span>
-            </dt>
-            <dd>Constructor from a single vector.</dd>
-            <dt>
-              <div class="m-doc-template">template&lt;indexable Vector&gt;</div>
-              <span class="m-doc-wrap-bumper">static auto <a href="#af8fe287fdb9ef5f44d046317d9eeb086" class="m-doc">FromVector</a>(</span><span class="m-doc-wrap">const Vector&amp; vector) -&gt; Implementation <span class="m-label m-flat m-primary">constexpr</span></span>
+              <span class="m-doc-wrap-bumper">static auto <a href="classsymtensor_1_1MultipoleBase.html#af8fe287fdb9ef5f44d046317d9eeb086" class="m-doc">FromVector</a>(</span><span class="m-doc-wrap">const Vector&amp; vector) -&gt; Implementation <span class="m-label m-flat m-primary">constexpr</span></span>
             </dt>
             <dd>Creator method from a single vector.</dd>
           </dl>
@@ -163,22 +157,22 @@
           <dl class="m-doc">
             <dt>
               <div class="m-doc-template">template&lt;std::size_t R&gt;</div>
-              <span class="m-doc-wrap-bumper">auto <a href="#ab72fa07efce5c237db7d2ae297b12336" class="m-doc">tensor</a>(</span><span class="m-doc-wrap">) const -&gt; const auto&amp; <span class="m-label m-flat m-primary">constexpr</span></span>
+              <span class="m-doc-wrap-bumper">auto <a href="classsymtensor_1_1MultipoleBase.html#ab72fa07efce5c237db7d2ae297b12336" class="m-doc">tensor</a>(</span><span class="m-doc-wrap">) const -&gt; const auto&amp; <span class="m-label m-flat m-primary">constexpr</span></span>
             </dt>
             <dd>Tensor access by rank.</dd>
             <dt>
               <div class="m-doc-template">template&lt;std::size_t R&gt;</div>
-              <span class="m-doc-wrap-bumper">auto <a href="#a8b0be5236ed2c49b419920c07308dd52" class="m-doc">tensor</a>(</span><span class="m-doc-wrap">) -&gt; auto&amp; <span class="m-label m-flat m-primary">constexpr</span></span>
+              <span class="m-doc-wrap-bumper">auto <a href="classsymtensor_1_1MultipoleBase.html#a8b0be5236ed2c49b419920c07308dd52" class="m-doc">tensor</a>(</span><span class="m-doc-wrap">) -&gt; auto&amp; <span class="m-label m-flat m-primary">constexpr</span></span>
             </dt>
             <dd>Tensor access by rank.</dd>
             <dt>
               <div class="m-doc-template">template&lt;Index... Indices&gt;</div>
-              <span class="m-doc-wrap-bumper">auto <a href="#a6e6e07bd83580ba165eaf3d825a989ac" class="m-doc">at</a>(</span><span class="m-doc-wrap">) const -&gt; const auto&amp; <span class="m-label m-flat m-primary">constexpr</span></span>
+              <span class="m-doc-wrap-bumper">auto <a href="classsymtensor_1_1MultipoleBase.html#a6e6e07bd83580ba165eaf3d825a989ac" class="m-doc">at</a>(</span><span class="m-doc-wrap">) const -&gt; const auto&amp; <span class="m-label m-flat m-primary">constexpr</span></span>
             </dt>
             <dd>Direct access to members of tensors.</dd>
             <dt>
               <div class="m-doc-template">template&lt;Index... Indices&gt;</div>
-              <span class="m-doc-wrap-bumper">auto <a href="#aa39b3020a1d8f7fc918882b24311f931" class="m-doc">at</a>(</span><span class="m-doc-wrap">) -&gt; auto&amp; <span class="m-label m-flat m-primary">constexpr</span></span>
+              <span class="m-doc-wrap-bumper">auto <a href="classsymtensor_1_1MultipoleBase.html#aa39b3020a1d8f7fc918882b24311f931" class="m-doc">at</a>(</span><span class="m-doc-wrap">) -&gt; auto&amp; <span class="m-label m-flat m-primary">constexpr</span></span>
             </dt>
             <dd>Direct access to members of tensors.</dd>
           </dl>
@@ -188,42 +182,32 @@
           <dl class="m-doc">
             <dt>
               <div class="m-doc-template">template&lt;typename T&gt;</div>
-              <span class="m-doc-wrap-bumper">auto <a href="#afab1fff4ce4420ca873c8a9a4cac737d" class="m-doc">operator+=</a>(</span><span class="m-doc-wrap">const T&amp; scalar) -&gt; Implementation&amp; <span class="m-label m-flat m-primary">constexpr</span></span>
+              <span class="m-doc-wrap-bumper">auto <a href="classsymtensor_1_1MultipoleBase.html#afab1fff4ce4420ca873c8a9a4cac737d" class="m-doc">operator+=</a>(</span><span class="m-doc-wrap">const T&amp; scalar) -&gt; Implementation&amp; <span class="m-label m-flat m-primary">constexpr</span></span>
             </dt>
             <dd>Element-wise addition of a scalar.</dd>
             <dt>
               <div class="m-doc-template">template&lt;typename T&gt;</div>
-              <span class="m-doc-wrap-bumper">auto <a href="#af10545550ccc622c44a282aa8cd1d551" class="m-doc">operator-=</a>(</span><span class="m-doc-wrap">const T&amp; scalar) -&gt; Implementation&amp; <span class="m-label m-flat m-primary">constexpr</span></span>
+              <span class="m-doc-wrap-bumper">auto <a href="classsymtensor_1_1MultipoleBase.html#af10545550ccc622c44a282aa8cd1d551" class="m-doc">operator-=</a>(</span><span class="m-doc-wrap">const T&amp; scalar) -&gt; Implementation&amp; <span class="m-label m-flat m-primary">constexpr</span></span>
             </dt>
             <dd>Element-wise subtraction of a scalar.</dd>
             <dt>
               <div class="m-doc-template">template&lt;typename T&gt;</div>
-              <span class="m-doc-wrap-bumper">auto <a href="#a4d4c0f9aa5b4ee2ae9aabdae4bc5e824" class="m-doc">operator*=</a>(</span><span class="m-doc-wrap">const T&amp; scalar) -&gt; Implementation&amp; <span class="m-label m-flat m-primary">constexpr</span></span>
-            </dt>
-            <dd>Element-wise multiplication by a scalar.</dd>
-            <dt>
-              <div class="m-doc-template">template&lt;typename T&gt;</div>
-              <span class="m-doc-wrap-bumper">auto <a href="#a30261b6381a2400cc01213206a613a6c" class="m-doc">operator/=</a>(</span><span class="m-doc-wrap">const T&amp; scalar) -&gt; Implementation&amp; <span class="m-label m-flat m-primary">constexpr</span></span>
-            </dt>
-            <dd>Element-wise division by a scalar.</dd>
-            <dt>
-              <div class="m-doc-template">template&lt;typename T&gt;</div>
-              <span class="m-doc-wrap-bumper">auto <a href="#ab3e7aa5f2bd3209ff7588918077b04a3" class="m-doc">operator+</a>(</span><span class="m-doc-wrap">const T&amp; scalar) const -&gt; Implementation <span class="m-label m-flat m-primary">constexpr</span></span>
+              <span class="m-doc-wrap-bumper">auto <a href="classsymtensor_1_1MultipoleBase.html#ab3e7aa5f2bd3209ff7588918077b04a3" class="m-doc">operator+</a>(</span><span class="m-doc-wrap">const T&amp; scalar) const -&gt; Implementation <span class="m-label m-flat m-primary">constexpr</span></span>
             </dt>
             <dd>Element-wise addition of a scalar.</dd>
             <dt>
               <div class="m-doc-template">template&lt;typename T&gt;</div>
-              <span class="m-doc-wrap-bumper">auto <a href="#ad28bdeb34e3ca4dc294aae7e6991ba3f" class="m-doc">operator-</a>(</span><span class="m-doc-wrap">const T&amp; scalar) const -&gt; Implementation <span class="m-label m-flat m-primary">constexpr</span></span>
+              <span class="m-doc-wrap-bumper">auto <a href="classsymtensor_1_1MultipoleBase.html#ad28bdeb34e3ca4dc294aae7e6991ba3f" class="m-doc">operator-</a>(</span><span class="m-doc-wrap">const T&amp; scalar) const -&gt; Implementation <span class="m-label m-flat m-primary">constexpr</span></span>
             </dt>
             <dd>Element-wise subtraction of a scalar.</dd>
             <dt>
               <div class="m-doc-template">template&lt;typename T&gt;</div>
-              <span class="m-doc-wrap-bumper">auto <a href="#a729a16fc47fca317a55deb7380dfbd0f" class="m-doc">operator*</a>(</span><span class="m-doc-wrap">const T&amp; scalar) const -&gt; Implementation <span class="m-label m-flat m-primary">constexpr</span></span>
+              <span class="m-doc-wrap-bumper">auto <a href="classsymtensor_1_1MultipoleBase.html#a729a16fc47fca317a55deb7380dfbd0f" class="m-doc">operator*</a>(</span><span class="m-doc-wrap">const T&amp; scalar) const -&gt; Implementation <span class="m-label m-flat m-primary">constexpr</span></span>
             </dt>
             <dd>Element-wise multiplication by a scalar.</dd>
             <dt>
               <div class="m-doc-template">template&lt;typename T&gt;</div>
-              <span class="m-doc-wrap-bumper">auto <a href="#ae43d2a5cf7c4edf149565f3d87f96bfb" class="m-doc">operator/</a>(</span><span class="m-doc-wrap">const T&amp; scalar) const -&gt; Implementation <span class="m-label m-flat m-primary">constexpr</span></span>
+              <span class="m-doc-wrap-bumper">auto <a href="classsymtensor_1_1MultipoleBase.html#ae43d2a5cf7c4edf149565f3d87f96bfb" class="m-doc">operator/</a>(</span><span class="m-doc-wrap">const T&amp; scalar) const -&gt; Implementation <span class="m-label m-flat m-primary">constexpr</span></span>
             </dt>
             <dd>Element-wise division by a scalar.</dd>
           </dl>
@@ -232,35 +216,35 @@
           <h2><a href="#multipole-multipole-operations">Multipole-multipole operations</a></h2>
           <dl class="m-doc">
             <dt>
-              <span class="m-doc-wrap-bumper">auto <a href="#aba59ac0bfad9004fae8794c694f1ecb9" class="m-doc">operator+=</a>(</span><span class="m-doc-wrap">const Implementation&amp; other) -&gt; Implementation&amp; <span class="m-label m-flat m-primary">constexpr</span></span>
+              <span class="m-doc-wrap-bumper">auto <a href="classsymtensor_1_1MultipoleBase.html#aba59ac0bfad9004fae8794c694f1ecb9" class="m-doc">operator+=</a>(</span><span class="m-doc-wrap">const Implementation&amp; other) -&gt; Implementation&amp; <span class="m-label m-flat m-primary">constexpr</span></span>
             </dt>
             <dd>Element-wise addition with another multipole.</dd>
             <dt>
-              <span class="m-doc-wrap-bumper">auto <a href="#afda7208037784e1db9ffdab0ad2bc200" class="m-doc">operator-=</a>(</span><span class="m-doc-wrap">const Implementation&amp; other) -&gt; Implementation&amp; <span class="m-label m-flat m-primary">constexpr</span></span>
+              <span class="m-doc-wrap-bumper">auto <a href="classsymtensor_1_1MultipoleBase.html#afda7208037784e1db9ffdab0ad2bc200" class="m-doc">operator-=</a>(</span><span class="m-doc-wrap">const Implementation&amp; other) -&gt; Implementation&amp; <span class="m-label m-flat m-primary">constexpr</span></span>
             </dt>
             <dd>Element-wise subtraction by another multipole.</dd>
             <dt>
-              <span class="m-doc-wrap-bumper">auto <a href="#afac76bd5528cda1f03c68bd8c032c2fd" class="m-doc">operator*=</a>(</span><span class="m-doc-wrap">const Implementation&amp; other) -&gt; Implementation&amp; <span class="m-label m-flat m-primary">constexpr</span></span>
+              <span class="m-doc-wrap-bumper">auto <a href="classsymtensor_1_1MultipoleBase.html#afac76bd5528cda1f03c68bd8c032c2fd" class="m-doc">operator*=</a>(</span><span class="m-doc-wrap">const Implementation&amp; other) -&gt; Implementation&amp; <span class="m-label m-flat m-primary">constexpr</span></span>
             </dt>
             <dd>Element-wise multiplication by another multipole.</dd>
             <dt>
-              <span class="m-doc-wrap-bumper">auto <a href="#aff7f228a4feab037d9b93cdcda354569" class="m-doc">operator/=</a>(</span><span class="m-doc-wrap">const Implementation&amp; other) -&gt; Implementation&amp; <span class="m-label m-flat m-primary">constexpr</span></span>
+              <span class="m-doc-wrap-bumper">auto <a href="classsymtensor_1_1MultipoleBase.html#aff7f228a4feab037d9b93cdcda354569" class="m-doc">operator/=</a>(</span><span class="m-doc-wrap">const Implementation&amp; other) -&gt; Implementation&amp; <span class="m-label m-flat m-primary">constexpr</span></span>
             </dt>
             <dd>Element-wise division by another multipole.</dd>
             <dt>
-              <span class="m-doc-wrap-bumper">auto <a href="#ac844a3decd5510517feb3ce5a5750ee6" class="m-doc">operator+</a>(</span><span class="m-doc-wrap">const Implementation&amp; other) const -&gt; Implementation <span class="m-label m-flat m-primary">constexpr</span></span>
+              <span class="m-doc-wrap-bumper">auto <a href="classsymtensor_1_1MultipoleBase.html#ac844a3decd5510517feb3ce5a5750ee6" class="m-doc">operator+</a>(</span><span class="m-doc-wrap">const Implementation&amp; other) const -&gt; Implementation <span class="m-label m-flat m-primary">constexpr</span></span>
             </dt>
             <dd>Element-wise addition with another multipole.</dd>
             <dt>
-              <span class="m-doc-wrap-bumper">auto <a href="#a82a9c1137edd863e5817a6a259b0fbf5" class="m-doc">operator-</a>(</span><span class="m-doc-wrap">const Implementation&amp; other) const -&gt; Implementation <span class="m-label m-flat m-primary">constexpr</span></span>
+              <span class="m-doc-wrap-bumper">auto <a href="classsymtensor_1_1MultipoleBase.html#a82a9c1137edd863e5817a6a259b0fbf5" class="m-doc">operator-</a>(</span><span class="m-doc-wrap">const Implementation&amp; other) const -&gt; Implementation <span class="m-label m-flat m-primary">constexpr</span></span>
             </dt>
             <dd>Element-wise subtraction by another multipole.</dd>
             <dt>
-              <span class="m-doc-wrap-bumper">auto <a href="#a26605a9b00198da3f4eb9e11d6008826" class="m-doc">operator*</a>(</span><span class="m-doc-wrap">const Implementation&amp; other) const -&gt; Implementation <span class="m-label m-flat m-primary">constexpr</span></span>
+              <span class="m-doc-wrap-bumper">auto <a href="classsymtensor_1_1MultipoleBase.html#a26605a9b00198da3f4eb9e11d6008826" class="m-doc">operator*</a>(</span><span class="m-doc-wrap">const Implementation&amp; other) const -&gt; Implementation <span class="m-label m-flat m-primary">constexpr</span></span>
             </dt>
             <dd>Element-wise multiplication by another multipole.</dd>
             <dt>
-              <span class="m-doc-wrap-bumper">auto <a href="#a2163482633fa4940351c962eec6f7114" class="m-doc">operator/</a>(</span><span class="m-doc-wrap">const Implementation&amp; other) const -&gt; Implementation <span class="m-label m-flat m-primary">constexpr</span></span>
+              <span class="m-doc-wrap-bumper">auto <a href="classsymtensor_1_1MultipoleBase.html#a2163482633fa4940351c962eec6f7114" class="m-doc">operator/</a>(</span><span class="m-doc-wrap">const Implementation&amp; other) const -&gt; Implementation <span class="m-label m-flat m-primary">constexpr</span></span>
             </dt>
             <dd>Element-wise division by another multipole.</dd>
           </dl>
@@ -269,7 +253,7 @@
           <h2><a href="#comparison-operators">Comparison operators</a></h2>
           <dl class="m-doc">
             <dt>
-              <span class="m-doc-wrap-bumper">auto <a href="#ac582b6b1f8901dff568eef9e821cfa49" class="m-doc">operator==</a>(</span><span class="m-doc-wrap">const <a href="classsymtensor_1_1MultipoleBase.html" class="m-doc">Self</a>&amp; other) const -&gt; bool <span class="m-label m-flat m-info">defaulted</span> <span class="m-label m-flat m-primary">constexpr</span></span>
+              <span class="m-doc-wrap-bumper">auto <a href="classsymtensor_1_1MultipoleBase.html#ac582b6b1f8901dff568eef9e821cfa49" class="m-doc">operator==</a>(</span><span class="m-doc-wrap">const <a href="classsymtensor_1_1MultipoleBase.html" class="m-doc">Self</a>&amp; other) const -&gt; bool <span class="m-label m-flat m-info">defaulted</span> <span class="m-label m-flat m-primary">constexpr</span></span>
             </dt>
             <dd>Comparison with another multipole.</dd>
           </dl>
@@ -278,100 +262,81 @@
           <h2><a href="#stdtuple-compatibility">std::tuple compatibility</a></h2>
           <dl class="m-doc">
             <dt>
-              <span class="m-doc-wrap-bumper">auto <a href="#a1b9513e30d8af6e78c07bd7282e33952" class="m-doc">underlying_tuple</a>(</span><span class="m-doc-wrap">) const -&gt; const TensorTuple&amp; <span class="m-label m-flat m-primary">constexpr</span></span>
+              <span class="m-doc-wrap-bumper">auto <a href="classsymtensor_1_1MultipoleBase.html#a1b9513e30d8af6e78c07bd7282e33952" class="m-doc">underlying_tuple</a>(</span><span class="m-doc-wrap">) const -&gt; const TensorTuple&amp; <span class="m-label m-flat m-primary">constexpr</span></span>
             </dt>
             <dd>direct access to the tuple of tensors which comprises the multipole</dd>
             <dt>
-              <span class="m-doc-wrap-bumper">auto <a href="#a9e6763ed433d1e2a73da9ec845702522" class="m-doc">underlying_tuple</a>(</span><span class="m-doc-wrap">) -&gt; TensorTuple&amp; <span class="m-label m-flat m-primary">constexpr</span></span>
+              <span class="m-doc-wrap-bumper">auto <a href="classsymtensor_1_1MultipoleBase.html#a9e6763ed433d1e2a73da9ec845702522" class="m-doc">underlying_tuple</a>(</span><span class="m-doc-wrap">) -&gt; TensorTuple&amp; <span class="m-label m-flat m-primary">constexpr</span></span>
             </dt>
             <dd>direct access to the tuple of tensors which comprises the multipole</dd>
             <dt>
               <div class="m-doc-template">template&lt;std::size_t I&gt;</div>
-              <span class="m-doc-wrap-bumper">auto <a href="#ab6209003afcb0fa8f6c7aedd1e53f93d" class="m-doc">get</a>(</span><span class="m-doc-wrap">) &amp; -&gt; auto&amp; <span class="m-label m-flat m-primary">constexpr</span></span>
+              <span class="m-doc-wrap-bumper">auto <a href="classsymtensor_1_1MultipoleBase.html#ab6209003afcb0fa8f6c7aedd1e53f93d" class="m-doc">get</a>(</span><span class="m-doc-wrap">) &amp; -&gt; auto&amp; <span class="m-label m-flat m-primary">constexpr</span></span>
             </dt>
             <dd>element access for use with structured bindings</dd>
             <dt>
               <div class="m-doc-template">template&lt;std::size_t I&gt;</div>
-              <span class="m-doc-wrap-bumper">auto <a href="#a4c88f28aa0ba9f7ae0c5ff252bb81a37" class="m-doc">get</a>(</span><span class="m-doc-wrap">) const &amp; -&gt; const auto&amp; <span class="m-label m-flat m-primary">constexpr</span></span>
+              <span class="m-doc-wrap-bumper">auto <a href="classsymtensor_1_1MultipoleBase.html#a4c88f28aa0ba9f7ae0c5ff252bb81a37" class="m-doc">get</a>(</span><span class="m-doc-wrap">) const &amp; -&gt; const auto&amp; <span class="m-label m-flat m-primary">constexpr</span></span>
             </dt>
             <dd>element access for use with structured bindings</dd>
             <dt>
               <div class="m-doc-template">template&lt;std::size_t I&gt;</div>
-              <span class="m-doc-wrap-bumper">auto <a href="#af438153ed0d715d23909a824c4ecdf53" class="m-doc">get</a>(</span><span class="m-doc-wrap">) &amp;&amp; -&gt; auto&amp;&amp; <span class="m-label m-flat m-primary">constexpr</span></span>
+              <span class="m-doc-wrap-bumper">auto <a href="classsymtensor_1_1MultipoleBase.html#af438153ed0d715d23909a824c4ecdf53" class="m-doc">get</a>(</span><span class="m-doc-wrap">) &amp;&amp; -&gt; auto&amp;&amp; <span class="m-label m-flat m-primary">constexpr</span></span>
             </dt>
             <dd>element access for use with structured bindings</dd>
           </dl>
         </section>
         <section>
+          <h2>Typedef documentation</h2>
+          <section class="m-doc-details" id="a7452d852acda9c0c231982c857bef1b1"><div>
+            <h3>
+              <div class="m-doc-include m-code m-inverted m-right-m m-text-right"><span class="cp">#include</span> <a class="cpf" href="MultipoleBase_8h.html">&lt;symtensor/MultipoleBase.h&gt;</a></div>
+              <div class="m-doc-template">
+                template&lt;std::size_t Order, typename ... Tensors&gt;
+              </div>
+              using symtensor::<wbr />MultipoleMoment&lt;Order, Tensors&gt;::<wbr /><a href="#a7452d852acda9c0c231982c857bef1b1" class="m-doc-self">TensorTuple</a> = std::tuple&lt;Tensors...&gt;
+            </h3>
+          </div></section>
+          <section class="m-doc-details" id="a89c7efbc2811d0bdc588e8dbd1402dd1"><div>
+            <h3>
+              <div class="m-doc-include m-code m-inverted m-right-m m-text-right"><span class="cp">#include</span> <a class="cpf" href="MultipoleBase_8h.html">&lt;symtensor/MultipoleBase.h&gt;</a></div>
+              <div class="m-doc-template">
+                template&lt;std::size_t Order, typename ... Tensors&gt;
+              </div>
+              using symtensor::<wbr />MultipoleMoment&lt;Order, Tensors&gt;::<wbr /><a href="#a89c7efbc2811d0bdc588e8dbd1402dd1" class="m-doc-self">Index</a> = typename last_type_of_tuple&lt;TensorTuple&gt;::<a href="classsymtensor_1_1MultipoleBase.html#a89c7efbc2811d0bdc588e8dbd1402dd1" class="m-doc">Index</a>
+            </h3>
+            <p>Index type used to access tensor members Common to all contained tensors, as they should all have the same size.</p>
+          </div></section>
+          <section class="m-doc-details" id="a364f4b27efbcd281c2823f729b4fca61"><div>
+            <h3>
+              <div class="m-doc-include m-code m-inverted m-right-m m-text-right"><span class="cp">#include</span> <a class="cpf" href="MultipoleBase_8h.html">&lt;symtensor/MultipoleBase.h&gt;</a></div>
+              <div class="m-doc-template">
+                template&lt;std::size_t Order, typename ... Tensors&gt;
+                template&lt;std::size_t R&gt;
+              </div>
+              using symtensor::<wbr />MultipoleMoment&lt;Order, Tensors&gt;::<wbr /><a href="#a364f4b27efbcd281c2823f729b4fca61" class="m-doc-self">TensorType</a> = std::tuple_element_t&lt;indexForRank(R), TensorTuple&gt;
+            </h3>
+          </div></section>
+          <section class="m-doc-details" id="a3f2f05d9e359a2983e35f48beb2a1a79"><div>
+            <h3>
+              <div class="m-doc-include m-code m-inverted m-right-m m-text-right"><span class="cp">#include</span> <a class="cpf" href="MultipoleBase_8h.html">&lt;symtensor/MultipoleBase.h&gt;</a></div>
+              <div class="m-doc-template">
+                template&lt;std::size_t Order, typename ... Tensors&gt;
+              </div>
+              using symtensor::<wbr />MultipoleMoment&lt;Order, Tensors&gt;::<wbr /><a href="#a3f2f05d9e359a2983e35f48beb2a1a79" class="m-doc-self">Ranks</a> = std::integer_sequence&lt;std::size_t, Rank&lt;Tensors&gt;()...&gt;
+            </h3>
+          </div></section>
+        </section>
+        <section>
           <h2>Function documentation</h2>
-          <section class="m-doc-details" id="aa35c8e9c1fa76425385bd0686102a785"><div>
-            <h3>
-              <div class="m-doc-template">
-                template&lt;class Implementation, typename ... Tensors&gt;
-              </div>
-              <span class="m-doc-wrap-bumper"> symtensor::<wbr />MultipoleBase&lt;Implementation, Tensors&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#aa35c8e9c1fa76425385bd0686102a785" class="m-doc-self">MultipoleBase</a>(</span><span class="m-doc-wrap">) <span class="m-label m-info">explicit</span>  <span class="m-label m-info">defaulted</span> <span class="m-label m-primary">constexpr</span></span></span>
-            </h3>
-            <p>Default constructor.</p>
-<p>Invokes the default constructor for all contained tensors.</p>
-          </div></section>
-          <section class="m-doc-details" id="a9bde82e7c0ccceef305ba9fdd936838f"><div>
-            <h3>
-              <div class="m-doc-template">
-                template&lt;class Implementation, typename ... Tensors&gt;
-              </div>
-              <span class="m-doc-wrap-bumper"> symtensor::<wbr />MultipoleBase&lt;Implementation, Tensors&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a9bde82e7c0ccceef305ba9fdd936838f" class="m-doc-self">MultipoleBase</a>(</span><span class="m-doc-wrap">const Tensors&amp;... types) <span class="m-label m-info">explicit</span>  <span class="m-label m-primary">constexpr</span></span></span>
-            </h3>
-            <p>Constructor from a sequence of tensors.</p>
-            <table class="m-table m-fullwidth m-flat">
-              <thead>
-                <tr><th colspan="2">Parameters</th></tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td style="width: 1%">types</td>
-                  <td>The values for each tensor contained in the multipole. So long as each tensor type has an implicit constructor, initializer-list syntax works.</td>
-                </tr>
-              </tbody>
-            </table>
-          </div></section>
-          <section class="m-doc-details" id="a3cbc4ec2ec684001e7100266385f67c3"><div>
-            <h3>
-              <div class="m-doc-template">
-                template&lt;class Implementation, typename ... Tensors&gt;
-                template&lt;indexable Vector&gt;
-              </div>
-              <span class="m-doc-wrap-bumper"> symtensor::<wbr />MultipoleBase&lt;Implementation, Tensors&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a3cbc4ec2ec684001e7100266385f67c3" class="m-doc-self">MultipoleBase</a>(</span><span class="m-doc-wrap">const Vector&amp; vector) <span class="m-label m-info">explicit</span>  <span class="m-label m-primary">constexpr</span></span></span>
-            </h3>
-            <p>Constructor from a single vector.</p>
-            <table class="m-table m-fullwidth m-flat">
-              <thead>
-                <tr><th colspan="2">Template parameters</th></tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td style="width: 1%">Vector</td>
-                  <td>vector type, must have a subscript operator and provide at least D elements</td>
-                </tr>
-              </tbody>
-              <thead>
-                <tr><th colspan="2">Parameters</th></tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>vector</td>
-                  <td>base vector</td>
-                </tr>
-              </tbody>
-            </table>
-<p>Tensors are produced by repeatedly performing cartesian products with the vector.</p>
-          </div></section>
           <section class="m-doc-details" id="af8fe287fdb9ef5f44d046317d9eeb086"><div>
             <h3>
+              <div class="m-doc-include m-code m-inverted m-right-m m-text-right"><span class="cp">#include</span> <a class="cpf" href="MultipoleBase_8h.html">&lt;symtensor/MultipoleBase.h&gt;</a></div>
               <div class="m-doc-template">
-                template&lt;class Implementation, typename ... Tensors&gt;
+                template&lt;std::size_t Order, typename ... Tensors&gt;
                 template&lt;indexable Vector&gt;
               </div>
-              <span class="m-doc-wrap-bumper">static Implementation symtensor::<wbr />MultipoleBase&lt;Implementation, Tensors&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#af8fe287fdb9ef5f44d046317d9eeb086" class="m-doc-self">FromVector</a>(</span><span class="m-doc-wrap">const Vector&amp; vector) <span class="m-label m-primary">constexpr</span></span></span>
+              <span class="m-doc-wrap-bumper">static Implementation symtensor::<wbr />MultipoleMoment&lt;Order, Tensors&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#af8fe287fdb9ef5f44d046317d9eeb086" class="m-doc-self">FromVector</a>(</span><span class="m-doc-wrap">const Vector&amp; vector) <span class="m-label m-primary">constexpr</span></span></span>
             </h3>
             <p>Creator method from a single vector.</p>
             <table class="m-table m-fullwidth m-flat">
@@ -398,11 +363,12 @@
           </div></section>
           <section class="m-doc-details" id="ab72fa07efce5c237db7d2ae297b12336"><div>
             <h3>
+              <div class="m-doc-include m-code m-inverted m-right-m m-text-right"><span class="cp">#include</span> <a class="cpf" href="MultipoleBase_8h.html">&lt;symtensor/MultipoleBase.h&gt;</a></div>
               <div class="m-doc-template">
-                template&lt;class Implementation, typename ... Tensors&gt;
+                template&lt;std::size_t Order, typename ... Tensors&gt;
                 template&lt;std::size_t R&gt;
               </div>
-              <span class="m-doc-wrap-bumper">const auto&amp; symtensor::<wbr />MultipoleBase&lt;Implementation, Tensors&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#ab72fa07efce5c237db7d2ae297b12336" class="m-doc-self">tensor</a>(</span><span class="m-doc-wrap">) const <span class="m-label m-primary">constexpr</span></span></span>
+              <span class="m-doc-wrap-bumper">const auto&amp; symtensor::<wbr />MultipoleMoment&lt;Order, Tensors&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#ab72fa07efce5c237db7d2ae297b12336" class="m-doc-self">tensor</a>(</span><span class="m-doc-wrap">) const <span class="m-label m-primary">constexpr</span></span></span>
             </h3>
             <p>Tensor access by rank.</p>
             <table class="m-table m-fullwidth m-flat">
@@ -425,11 +391,12 @@
           </div></section>
           <section class="m-doc-details" id="a8b0be5236ed2c49b419920c07308dd52"><div>
             <h3>
+              <div class="m-doc-include m-code m-inverted m-right-m m-text-right"><span class="cp">#include</span> <a class="cpf" href="MultipoleBase_8h.html">&lt;symtensor/MultipoleBase.h&gt;</a></div>
               <div class="m-doc-template">
-                template&lt;class Implementation, typename ... Tensors&gt;
+                template&lt;std::size_t Order, typename ... Tensors&gt;
                 template&lt;std::size_t R&gt;
               </div>
-              <span class="m-doc-wrap-bumper">auto&amp; symtensor::<wbr />MultipoleBase&lt;Implementation, Tensors&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a8b0be5236ed2c49b419920c07308dd52" class="m-doc-self">tensor</a>(</span><span class="m-doc-wrap">) <span class="m-label m-primary">constexpr</span></span></span>
+              <span class="m-doc-wrap-bumper">auto&amp; symtensor::<wbr />MultipoleMoment&lt;Order, Tensors&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a8b0be5236ed2c49b419920c07308dd52" class="m-doc-self">tensor</a>(</span><span class="m-doc-wrap">) <span class="m-label m-primary">constexpr</span></span></span>
             </h3>
             <p>Tensor access by rank.</p>
             <table class="m-table m-fullwidth m-flat">
@@ -452,11 +419,12 @@
           </div></section>
           <section class="m-doc-details" id="a6e6e07bd83580ba165eaf3d825a989ac"><div>
             <h3>
+              <div class="m-doc-include m-code m-inverted m-right-m m-text-right"><span class="cp">#include</span> <a class="cpf" href="MultipoleBase_8h.html">&lt;symtensor/MultipoleBase.h&gt;</a></div>
               <div class="m-doc-template">
-                template&lt;class Implementation, typename ... Tensors&gt;
+                template&lt;std::size_t Order, typename ... Tensors&gt;
                 template&lt;Index... Indices&gt;
               </div>
-              <span class="m-doc-wrap-bumper">const auto&amp; symtensor::<wbr />MultipoleBase&lt;Implementation, Tensors&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a6e6e07bd83580ba165eaf3d825a989ac" class="m-doc-self">at</a>(</span><span class="m-doc-wrap">) const <span class="m-label m-primary">constexpr</span></span></span>
+              <span class="m-doc-wrap-bumper">const auto&amp; symtensor::<wbr />MultipoleMoment&lt;Order, Tensors&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a6e6e07bd83580ba165eaf3d825a989ac" class="m-doc-self">at</a>(</span><span class="m-doc-wrap">) const <span class="m-label m-primary">constexpr</span></span></span>
             </h3>
             <p>Direct access to members of tensors.</p>
             <table class="m-table m-fullwidth m-flat">
@@ -480,11 +448,12 @@
           </div></section>
           <section class="m-doc-details" id="aa39b3020a1d8f7fc918882b24311f931"><div>
             <h3>
+              <div class="m-doc-include m-code m-inverted m-right-m m-text-right"><span class="cp">#include</span> <a class="cpf" href="MultipoleBase_8h.html">&lt;symtensor/MultipoleBase.h&gt;</a></div>
               <div class="m-doc-template">
-                template&lt;class Implementation, typename ... Tensors&gt;
+                template&lt;std::size_t Order, typename ... Tensors&gt;
                 template&lt;Index... Indices&gt;
               </div>
-              <span class="m-doc-wrap-bumper">auto&amp; symtensor::<wbr />MultipoleBase&lt;Implementation, Tensors&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#aa39b3020a1d8f7fc918882b24311f931" class="m-doc-self">at</a>(</span><span class="m-doc-wrap">) <span class="m-label m-primary">constexpr</span></span></span>
+              <span class="m-doc-wrap-bumper">auto&amp; symtensor::<wbr />MultipoleMoment&lt;Order, Tensors&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#aa39b3020a1d8f7fc918882b24311f931" class="m-doc-self">at</a>(</span><span class="m-doc-wrap">) <span class="m-label m-primary">constexpr</span></span></span>
             </h3>
             <p>Direct access to members of tensors.</p>
             <table class="m-table m-fullwidth m-flat">
@@ -508,11 +477,12 @@
           </div></section>
           <section class="m-doc-details" id="afab1fff4ce4420ca873c8a9a4cac737d"><div>
             <h3>
+              <div class="m-doc-include m-code m-inverted m-right-m m-text-right"><span class="cp">#include</span> <a class="cpf" href="MultipoleBase_8h.html">&lt;symtensor/MultipoleBase.h&gt;</a></div>
               <div class="m-doc-template">
-                template&lt;class Implementation, typename ... Tensors&gt;
+                template&lt;std::size_t Order, typename ... Tensors&gt;
                 template&lt;typename T&gt;
               </div>
-              <span class="m-doc-wrap-bumper">Implementation&amp; symtensor::<wbr />MultipoleBase&lt;Implementation, Tensors&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#afab1fff4ce4420ca873c8a9a4cac737d" class="m-doc-self">operator+=</a>(</span><span class="m-doc-wrap">const T&amp; scalar) <span class="m-label m-primary">constexpr</span></span></span>
+              <span class="m-doc-wrap-bumper">Implementation&amp; symtensor::<wbr />MultipoleMoment&lt;Order, Tensors&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#afab1fff4ce4420ca873c8a9a4cac737d" class="m-doc-self">operator+=</a>(</span><span class="m-doc-wrap">const T&amp; scalar) <span class="m-label m-primary">constexpr</span></span></span>
             </h3>
             <p>Element-wise addition of a scalar.</p>
             <table class="m-table m-fullwidth m-flat">
@@ -535,11 +505,12 @@
           </div></section>
           <section class="m-doc-details" id="af10545550ccc622c44a282aa8cd1d551"><div>
             <h3>
+              <div class="m-doc-include m-code m-inverted m-right-m m-text-right"><span class="cp">#include</span> <a class="cpf" href="MultipoleBase_8h.html">&lt;symtensor/MultipoleBase.h&gt;</a></div>
               <div class="m-doc-template">
-                template&lt;class Implementation, typename ... Tensors&gt;
+                template&lt;std::size_t Order, typename ... Tensors&gt;
                 template&lt;typename T&gt;
               </div>
-              <span class="m-doc-wrap-bumper">Implementation&amp; symtensor::<wbr />MultipoleBase&lt;Implementation, Tensors&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#af10545550ccc622c44a282aa8cd1d551" class="m-doc-self">operator-=</a>(</span><span class="m-doc-wrap">const T&amp; scalar) <span class="m-label m-primary">constexpr</span></span></span>
+              <span class="m-doc-wrap-bumper">Implementation&amp; symtensor::<wbr />MultipoleMoment&lt;Order, Tensors&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#af10545550ccc622c44a282aa8cd1d551" class="m-doc-self">operator-=</a>(</span><span class="m-doc-wrap">const T&amp; scalar) <span class="m-label m-primary">constexpr</span></span></span>
             </h3>
             <p>Element-wise subtraction of a scalar.</p>
             <table class="m-table m-fullwidth m-flat">
@@ -560,67 +531,14 @@
               </tfoot>
             </table>
           </div></section>
-          <section class="m-doc-details" id="a4d4c0f9aa5b4ee2ae9aabdae4bc5e824"><div>
-            <h3>
-              <div class="m-doc-template">
-                template&lt;class Implementation, typename ... Tensors&gt;
-                template&lt;typename T&gt;
-              </div>
-              <span class="m-doc-wrap-bumper">Implementation&amp; symtensor::<wbr />MultipoleBase&lt;Implementation, Tensors&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a4d4c0f9aa5b4ee2ae9aabdae4bc5e824" class="m-doc-self">operator*=</a>(</span><span class="m-doc-wrap">const T&amp; scalar) <span class="m-label m-primary">constexpr</span></span></span>
-            </h3>
-            <p>Element-wise multiplication by a scalar.</p>
-            <table class="m-table m-fullwidth m-flat">
-              <thead>
-                <tr><th colspan="2">Parameters</th></tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td style="width: 1%">scalar</td>
-                  <td>value to multiply each tensor of the multipole by.</td>
-                </tr>
-              </tbody>
-              <tfoot>
-                <tr>
-                  <th>Returns</th>
-                  <td>the modified multipole</td>
-                </tr>
-              </tfoot>
-            </table>
-          </div></section>
-          <section class="m-doc-details" id="a30261b6381a2400cc01213206a613a6c"><div>
-            <h3>
-              <div class="m-doc-template">
-                template&lt;class Implementation, typename ... Tensors&gt;
-                template&lt;typename T&gt;
-              </div>
-              <span class="m-doc-wrap-bumper">Implementation&amp; symtensor::<wbr />MultipoleBase&lt;Implementation, Tensors&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a30261b6381a2400cc01213206a613a6c" class="m-doc-self">operator/=</a>(</span><span class="m-doc-wrap">const T&amp; scalar) <span class="m-label m-primary">constexpr</span></span></span>
-            </h3>
-            <p>Element-wise division by a scalar.</p>
-            <table class="m-table m-fullwidth m-flat">
-              <thead>
-                <tr><th colspan="2">Parameters</th></tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td style="width: 1%">scalar</td>
-                  <td>value to divide each element of the multipole by.</td>
-                </tr>
-              </tbody>
-              <tfoot>
-                <tr>
-                  <th>Returns</th>
-                  <td>the modified multipole</td>
-                </tr>
-              </tfoot>
-            </table>
-          </div></section>
           <section class="m-doc-details" id="ab3e7aa5f2bd3209ff7588918077b04a3"><div>
             <h3>
+              <div class="m-doc-include m-code m-inverted m-right-m m-text-right"><span class="cp">#include</span> <a class="cpf" href="MultipoleBase_8h.html">&lt;symtensor/MultipoleBase.h&gt;</a></div>
               <div class="m-doc-template">
-                template&lt;class Implementation, typename ... Tensors&gt;
+                template&lt;std::size_t Order, typename ... Tensors&gt;
                 template&lt;typename T&gt;
               </div>
-              <span class="m-doc-wrap-bumper">Implementation symtensor::<wbr />MultipoleBase&lt;Implementation, Tensors&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#ab3e7aa5f2bd3209ff7588918077b04a3" class="m-doc-self">operator+</a>(</span><span class="m-doc-wrap">const T&amp; scalar) const <span class="m-label m-primary">constexpr</span></span></span>
+              <span class="m-doc-wrap-bumper">Implementation symtensor::<wbr />MultipoleMoment&lt;Order, Tensors&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#ab3e7aa5f2bd3209ff7588918077b04a3" class="m-doc-self">operator+</a>(</span><span class="m-doc-wrap">const T&amp; scalar) const <span class="m-label m-primary">constexpr</span></span></span>
             </h3>
             <p>Element-wise addition of a scalar.</p>
             <table class="m-table m-fullwidth m-flat">
@@ -643,11 +561,12 @@
           </div></section>
           <section class="m-doc-details" id="ad28bdeb34e3ca4dc294aae7e6991ba3f"><div>
             <h3>
+              <div class="m-doc-include m-code m-inverted m-right-m m-text-right"><span class="cp">#include</span> <a class="cpf" href="MultipoleBase_8h.html">&lt;symtensor/MultipoleBase.h&gt;</a></div>
               <div class="m-doc-template">
-                template&lt;class Implementation, typename ... Tensors&gt;
+                template&lt;std::size_t Order, typename ... Tensors&gt;
                 template&lt;typename T&gt;
               </div>
-              <span class="m-doc-wrap-bumper">Implementation symtensor::<wbr />MultipoleBase&lt;Implementation, Tensors&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#ad28bdeb34e3ca4dc294aae7e6991ba3f" class="m-doc-self">operator-</a>(</span><span class="m-doc-wrap">const T&amp; scalar) const <span class="m-label m-primary">constexpr</span></span></span>
+              <span class="m-doc-wrap-bumper">Implementation symtensor::<wbr />MultipoleMoment&lt;Order, Tensors&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#ad28bdeb34e3ca4dc294aae7e6991ba3f" class="m-doc-self">operator-</a>(</span><span class="m-doc-wrap">const T&amp; scalar) const <span class="m-label m-primary">constexpr</span></span></span>
             </h3>
             <p>Element-wise subtraction of a scalar.</p>
             <table class="m-table m-fullwidth m-flat">
@@ -670,11 +589,12 @@
           </div></section>
           <section class="m-doc-details" id="a729a16fc47fca317a55deb7380dfbd0f"><div>
             <h3>
+              <div class="m-doc-include m-code m-inverted m-right-m m-text-right"><span class="cp">#include</span> <a class="cpf" href="MultipoleBase_8h.html">&lt;symtensor/MultipoleBase.h&gt;</a></div>
               <div class="m-doc-template">
-                template&lt;class Implementation, typename ... Tensors&gt;
+                template&lt;std::size_t Order, typename ... Tensors&gt;
                 template&lt;typename T&gt;
               </div>
-              <span class="m-doc-wrap-bumper">Implementation symtensor::<wbr />MultipoleBase&lt;Implementation, Tensors&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a729a16fc47fca317a55deb7380dfbd0f" class="m-doc-self">operator*</a>(</span><span class="m-doc-wrap">const T&amp; scalar) const <span class="m-label m-primary">constexpr</span></span></span>
+              <span class="m-doc-wrap-bumper">Implementation symtensor::<wbr />MultipoleMoment&lt;Order, Tensors&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a729a16fc47fca317a55deb7380dfbd0f" class="m-doc-self">operator*</a>(</span><span class="m-doc-wrap">const T&amp; scalar) const <span class="m-label m-primary">constexpr</span></span></span>
             </h3>
             <p>Element-wise multiplication by a scalar.</p>
             <table class="m-table m-fullwidth m-flat">
@@ -697,11 +617,12 @@
           </div></section>
           <section class="m-doc-details" id="ae43d2a5cf7c4edf149565f3d87f96bfb"><div>
             <h3>
+              <div class="m-doc-include m-code m-inverted m-right-m m-text-right"><span class="cp">#include</span> <a class="cpf" href="MultipoleBase_8h.html">&lt;symtensor/MultipoleBase.h&gt;</a></div>
               <div class="m-doc-template">
-                template&lt;class Implementation, typename ... Tensors&gt;
+                template&lt;std::size_t Order, typename ... Tensors&gt;
                 template&lt;typename T&gt;
               </div>
-              <span class="m-doc-wrap-bumper">Implementation symtensor::<wbr />MultipoleBase&lt;Implementation, Tensors&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#ae43d2a5cf7c4edf149565f3d87f96bfb" class="m-doc-self">operator/</a>(</span><span class="m-doc-wrap">const T&amp; scalar) const <span class="m-label m-primary">constexpr</span></span></span>
+              <span class="m-doc-wrap-bumper">Implementation symtensor::<wbr />MultipoleMoment&lt;Order, Tensors&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#ae43d2a5cf7c4edf149565f3d87f96bfb" class="m-doc-self">operator/</a>(</span><span class="m-doc-wrap">const T&amp; scalar) const <span class="m-label m-primary">constexpr</span></span></span>
             </h3>
             <p>Element-wise division by a scalar.</p>
             <table class="m-table m-fullwidth m-flat">
@@ -724,10 +645,11 @@
           </div></section>
           <section class="m-doc-details" id="aba59ac0bfad9004fae8794c694f1ecb9"><div>
             <h3>
+              <div class="m-doc-include m-code m-inverted m-right-m m-text-right"><span class="cp">#include</span> <a class="cpf" href="MultipoleBase_8h.html">&lt;symtensor/MultipoleBase.h&gt;</a></div>
               <div class="m-doc-template">
-                template&lt;class Implementation, typename ... Tensors&gt;
+                template&lt;std::size_t Order, typename ... Tensors&gt;
               </div>
-              <span class="m-doc-wrap-bumper">Implementation&amp; symtensor::<wbr />MultipoleBase&lt;Implementation, Tensors&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#aba59ac0bfad9004fae8794c694f1ecb9" class="m-doc-self">operator+=</a>(</span><span class="m-doc-wrap">const Implementation&amp; other) <span class="m-label m-primary">constexpr</span></span></span>
+              <span class="m-doc-wrap-bumper">Implementation&amp; symtensor::<wbr />MultipoleMoment&lt;Order, Tensors&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#aba59ac0bfad9004fae8794c694f1ecb9" class="m-doc-self">operator+=</a>(</span><span class="m-doc-wrap">const Implementation&amp; other) <span class="m-label m-primary">constexpr</span></span></span>
             </h3>
             <p>Element-wise addition with another multipole.</p>
             <table class="m-table m-fullwidth m-flat">
@@ -750,10 +672,11 @@
           </div></section>
           <section class="m-doc-details" id="afda7208037784e1db9ffdab0ad2bc200"><div>
             <h3>
+              <div class="m-doc-include m-code m-inverted m-right-m m-text-right"><span class="cp">#include</span> <a class="cpf" href="MultipoleBase_8h.html">&lt;symtensor/MultipoleBase.h&gt;</a></div>
               <div class="m-doc-template">
-                template&lt;class Implementation, typename ... Tensors&gt;
+                template&lt;std::size_t Order, typename ... Tensors&gt;
               </div>
-              <span class="m-doc-wrap-bumper">Implementation&amp; symtensor::<wbr />MultipoleBase&lt;Implementation, Tensors&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#afda7208037784e1db9ffdab0ad2bc200" class="m-doc-self">operator-=</a>(</span><span class="m-doc-wrap">const Implementation&amp; other) <span class="m-label m-primary">constexpr</span></span></span>
+              <span class="m-doc-wrap-bumper">Implementation&amp; symtensor::<wbr />MultipoleMoment&lt;Order, Tensors&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#afda7208037784e1db9ffdab0ad2bc200" class="m-doc-self">operator-=</a>(</span><span class="m-doc-wrap">const Implementation&amp; other) <span class="m-label m-primary">constexpr</span></span></span>
             </h3>
             <p>Element-wise subtraction by another multipole.</p>
             <table class="m-table m-fullwidth m-flat">
@@ -776,10 +699,11 @@
           </div></section>
           <section class="m-doc-details" id="afac76bd5528cda1f03c68bd8c032c2fd"><div>
             <h3>
+              <div class="m-doc-include m-code m-inverted m-right-m m-text-right"><span class="cp">#include</span> <a class="cpf" href="MultipoleBase_8h.html">&lt;symtensor/MultipoleBase.h&gt;</a></div>
               <div class="m-doc-template">
-                template&lt;class Implementation, typename ... Tensors&gt;
+                template&lt;std::size_t Order, typename ... Tensors&gt;
               </div>
-              <span class="m-doc-wrap-bumper">Implementation&amp; symtensor::<wbr />MultipoleBase&lt;Implementation, Tensors&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#afac76bd5528cda1f03c68bd8c032c2fd" class="m-doc-self">operator*=</a>(</span><span class="m-doc-wrap">const Implementation&amp; other) <span class="m-label m-primary">constexpr</span></span></span>
+              <span class="m-doc-wrap-bumper">Implementation&amp; symtensor::<wbr />MultipoleMoment&lt;Order, Tensors&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#afac76bd5528cda1f03c68bd8c032c2fd" class="m-doc-self">operator*=</a>(</span><span class="m-doc-wrap">const Implementation&amp; other) <span class="m-label m-primary">constexpr</span></span></span>
             </h3>
             <p>Element-wise multiplication by another multipole.</p>
             <table class="m-table m-fullwidth m-flat">
@@ -802,10 +726,11 @@
           </div></section>
           <section class="m-doc-details" id="aff7f228a4feab037d9b93cdcda354569"><div>
             <h3>
+              <div class="m-doc-include m-code m-inverted m-right-m m-text-right"><span class="cp">#include</span> <a class="cpf" href="MultipoleBase_8h.html">&lt;symtensor/MultipoleBase.h&gt;</a></div>
               <div class="m-doc-template">
-                template&lt;class Implementation, typename ... Tensors&gt;
+                template&lt;std::size_t Order, typename ... Tensors&gt;
               </div>
-              <span class="m-doc-wrap-bumper">Implementation&amp; symtensor::<wbr />MultipoleBase&lt;Implementation, Tensors&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#aff7f228a4feab037d9b93cdcda354569" class="m-doc-self">operator/=</a>(</span><span class="m-doc-wrap">const Implementation&amp; other) <span class="m-label m-primary">constexpr</span></span></span>
+              <span class="m-doc-wrap-bumper">Implementation&amp; symtensor::<wbr />MultipoleMoment&lt;Order, Tensors&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#aff7f228a4feab037d9b93cdcda354569" class="m-doc-self">operator/=</a>(</span><span class="m-doc-wrap">const Implementation&amp; other) <span class="m-label m-primary">constexpr</span></span></span>
             </h3>
             <p>Element-wise division by another multipole.</p>
             <table class="m-table m-fullwidth m-flat">
@@ -828,10 +753,11 @@
           </div></section>
           <section class="m-doc-details" id="ac844a3decd5510517feb3ce5a5750ee6"><div>
             <h3>
+              <div class="m-doc-include m-code m-inverted m-right-m m-text-right"><span class="cp">#include</span> <a class="cpf" href="MultipoleBase_8h.html">&lt;symtensor/MultipoleBase.h&gt;</a></div>
               <div class="m-doc-template">
-                template&lt;class Implementation, typename ... Tensors&gt;
+                template&lt;std::size_t Order, typename ... Tensors&gt;
               </div>
-              <span class="m-doc-wrap-bumper">Implementation symtensor::<wbr />MultipoleBase&lt;Implementation, Tensors&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#ac844a3decd5510517feb3ce5a5750ee6" class="m-doc-self">operator+</a>(</span><span class="m-doc-wrap">const Implementation&amp; other) const <span class="m-label m-primary">constexpr</span></span></span>
+              <span class="m-doc-wrap-bumper">Implementation symtensor::<wbr />MultipoleMoment&lt;Order, Tensors&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#ac844a3decd5510517feb3ce5a5750ee6" class="m-doc-self">operator+</a>(</span><span class="m-doc-wrap">const Implementation&amp; other) const <span class="m-label m-primary">constexpr</span></span></span>
             </h3>
             <p>Element-wise addition with another multipole.</p>
             <table class="m-table m-fullwidth m-flat">
@@ -854,10 +780,11 @@
           </div></section>
           <section class="m-doc-details" id="a82a9c1137edd863e5817a6a259b0fbf5"><div>
             <h3>
+              <div class="m-doc-include m-code m-inverted m-right-m m-text-right"><span class="cp">#include</span> <a class="cpf" href="MultipoleBase_8h.html">&lt;symtensor/MultipoleBase.h&gt;</a></div>
               <div class="m-doc-template">
-                template&lt;class Implementation, typename ... Tensors&gt;
+                template&lt;std::size_t Order, typename ... Tensors&gt;
               </div>
-              <span class="m-doc-wrap-bumper">Implementation symtensor::<wbr />MultipoleBase&lt;Implementation, Tensors&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a82a9c1137edd863e5817a6a259b0fbf5" class="m-doc-self">operator-</a>(</span><span class="m-doc-wrap">const Implementation&amp; other) const <span class="m-label m-primary">constexpr</span></span></span>
+              <span class="m-doc-wrap-bumper">Implementation symtensor::<wbr />MultipoleMoment&lt;Order, Tensors&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a82a9c1137edd863e5817a6a259b0fbf5" class="m-doc-self">operator-</a>(</span><span class="m-doc-wrap">const Implementation&amp; other) const <span class="m-label m-primary">constexpr</span></span></span>
             </h3>
             <p>Element-wise subtraction by another multipole.</p>
             <table class="m-table m-fullwidth m-flat">
@@ -880,10 +807,11 @@
           </div></section>
           <section class="m-doc-details" id="a26605a9b00198da3f4eb9e11d6008826"><div>
             <h3>
+              <div class="m-doc-include m-code m-inverted m-right-m m-text-right"><span class="cp">#include</span> <a class="cpf" href="MultipoleBase_8h.html">&lt;symtensor/MultipoleBase.h&gt;</a></div>
               <div class="m-doc-template">
-                template&lt;class Implementation, typename ... Tensors&gt;
+                template&lt;std::size_t Order, typename ... Tensors&gt;
               </div>
-              <span class="m-doc-wrap-bumper">Implementation symtensor::<wbr />MultipoleBase&lt;Implementation, Tensors&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a26605a9b00198da3f4eb9e11d6008826" class="m-doc-self">operator*</a>(</span><span class="m-doc-wrap">const Implementation&amp; other) const <span class="m-label m-primary">constexpr</span></span></span>
+              <span class="m-doc-wrap-bumper">Implementation symtensor::<wbr />MultipoleMoment&lt;Order, Tensors&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a26605a9b00198da3f4eb9e11d6008826" class="m-doc-self">operator*</a>(</span><span class="m-doc-wrap">const Implementation&amp; other) const <span class="m-label m-primary">constexpr</span></span></span>
             </h3>
             <p>Element-wise multiplication by another multipole.</p>
             <table class="m-table m-fullwidth m-flat">
@@ -906,10 +834,11 @@
           </div></section>
           <section class="m-doc-details" id="a2163482633fa4940351c962eec6f7114"><div>
             <h3>
+              <div class="m-doc-include m-code m-inverted m-right-m m-text-right"><span class="cp">#include</span> <a class="cpf" href="MultipoleBase_8h.html">&lt;symtensor/MultipoleBase.h&gt;</a></div>
               <div class="m-doc-template">
-                template&lt;class Implementation, typename ... Tensors&gt;
+                template&lt;std::size_t Order, typename ... Tensors&gt;
               </div>
-              <span class="m-doc-wrap-bumper">Implementation symtensor::<wbr />MultipoleBase&lt;Implementation, Tensors&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a2163482633fa4940351c962eec6f7114" class="m-doc-self">operator/</a>(</span><span class="m-doc-wrap">const Implementation&amp; other) const <span class="m-label m-primary">constexpr</span></span></span>
+              <span class="m-doc-wrap-bumper">Implementation symtensor::<wbr />MultipoleMoment&lt;Order, Tensors&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a2163482633fa4940351c962eec6f7114" class="m-doc-self">operator/</a>(</span><span class="m-doc-wrap">const Implementation&amp; other) const <span class="m-label m-primary">constexpr</span></span></span>
             </h3>
             <p>Element-wise division by another multipole.</p>
             <table class="m-table m-fullwidth m-flat">
@@ -932,10 +861,11 @@
           </div></section>
           <section class="m-doc-details" id="ac582b6b1f8901dff568eef9e821cfa49"><div>
             <h3>
+              <div class="m-doc-include m-code m-inverted m-right-m m-text-right"><span class="cp">#include</span> <a class="cpf" href="MultipoleBase_8h.html">&lt;symtensor/MultipoleBase.h&gt;</a></div>
               <div class="m-doc-template">
-                template&lt;class Implementation, typename ... Tensors&gt;
+                template&lt;std::size_t Order, typename ... Tensors&gt;
               </div>
-              <span class="m-doc-wrap-bumper">bool symtensor::<wbr />MultipoleBase&lt;Implementation, Tensors&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#ac582b6b1f8901dff568eef9e821cfa49" class="m-doc-self">operator==</a>(</span><span class="m-doc-wrap">const <a href="classsymtensor_1_1MultipoleBase.html" class="m-doc">Self</a>&amp; other) const <span class="m-label m-info">defaulted</span> <span class="m-label m-primary">constexpr</span></span></span>
+              <span class="m-doc-wrap-bumper">bool symtensor::<wbr />MultipoleMoment&lt;Order, Tensors&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#ac582b6b1f8901dff568eef9e821cfa49" class="m-doc-self">operator==</a>(</span><span class="m-doc-wrap">const <a href="classsymtensor_1_1MultipoleBase.html" class="m-doc">Self</a>&amp; other) const <span class="m-label m-info">defaulted</span> <span class="m-label m-primary">constexpr</span></span></span>
             </h3>
             <p>Comparison with another multipole.</p>
             <table class="m-table m-fullwidth m-flat">
@@ -958,10 +888,11 @@
           </div></section>
           <section class="m-doc-details" id="a1b9513e30d8af6e78c07bd7282e33952"><div>
             <h3>
+              <div class="m-doc-include m-code m-inverted m-right-m m-text-right"><span class="cp">#include</span> <a class="cpf" href="MultipoleBase_8h.html">&lt;symtensor/MultipoleBase.h&gt;</a></div>
               <div class="m-doc-template">
-                template&lt;class Implementation, typename ... Tensors&gt;
+                template&lt;std::size_t Order, typename ... Tensors&gt;
               </div>
-              <span class="m-doc-wrap-bumper">const TensorTuple&amp; symtensor::<wbr />MultipoleBase&lt;Implementation, Tensors&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a1b9513e30d8af6e78c07bd7282e33952" class="m-doc-self">underlying_tuple</a>(</span><span class="m-doc-wrap">) const <span class="m-label m-primary">constexpr</span></span></span>
+              <span class="m-doc-wrap-bumper">const TensorTuple&amp; symtensor::<wbr />MultipoleMoment&lt;Order, Tensors&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a1b9513e30d8af6e78c07bd7282e33952" class="m-doc-self">underlying_tuple</a>(</span><span class="m-doc-wrap">) const <span class="m-label m-primary">constexpr</span></span></span>
             </h3>
             <p>direct access to the tuple of tensors which comprises the multipole</p>
             <table class="m-table m-fullwidth m-flat">
@@ -975,10 +906,11 @@
           </div></section>
           <section class="m-doc-details" id="a9e6763ed433d1e2a73da9ec845702522"><div>
             <h3>
+              <div class="m-doc-include m-code m-inverted m-right-m m-text-right"><span class="cp">#include</span> <a class="cpf" href="MultipoleBase_8h.html">&lt;symtensor/MultipoleBase.h&gt;</a></div>
               <div class="m-doc-template">
-                template&lt;class Implementation, typename ... Tensors&gt;
+                template&lt;std::size_t Order, typename ... Tensors&gt;
               </div>
-              <span class="m-doc-wrap-bumper">TensorTuple&amp; symtensor::<wbr />MultipoleBase&lt;Implementation, Tensors&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a9e6763ed433d1e2a73da9ec845702522" class="m-doc-self">underlying_tuple</a>(</span><span class="m-doc-wrap">) <span class="m-label m-primary">constexpr</span></span></span>
+              <span class="m-doc-wrap-bumper">TensorTuple&amp; symtensor::<wbr />MultipoleMoment&lt;Order, Tensors&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a9e6763ed433d1e2a73da9ec845702522" class="m-doc-self">underlying_tuple</a>(</span><span class="m-doc-wrap">) <span class="m-label m-primary">constexpr</span></span></span>
             </h3>
             <p>direct access to the tuple of tensors which comprises the multipole</p>
             <table class="m-table m-fullwidth m-flat">
@@ -992,11 +924,12 @@
           </div></section>
           <section class="m-doc-details" id="ab6209003afcb0fa8f6c7aedd1e53f93d"><div>
             <h3>
+              <div class="m-doc-include m-code m-inverted m-right-m m-text-right"><span class="cp">#include</span> <a class="cpf" href="MultipoleBase_8h.html">&lt;symtensor/MultipoleBase.h&gt;</a></div>
               <div class="m-doc-template">
-                template&lt;class Implementation, typename ... Tensors&gt;
+                template&lt;std::size_t Order, typename ... Tensors&gt;
                 template&lt;std::size_t I&gt;
               </div>
-              <span class="m-doc-wrap-bumper">auto&amp; symtensor::<wbr />MultipoleBase&lt;Implementation, Tensors&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#ab6209003afcb0fa8f6c7aedd1e53f93d" class="m-doc-self">get</a>(</span><span class="m-doc-wrap">) &amp; <span class="m-label m-primary">constexpr</span></span></span>
+              <span class="m-doc-wrap-bumper">auto&amp; symtensor::<wbr />MultipoleMoment&lt;Order, Tensors&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#ab6209003afcb0fa8f6c7aedd1e53f93d" class="m-doc-self">get</a>(</span><span class="m-doc-wrap">) &amp; <span class="m-label m-primary">constexpr</span></span></span>
             </h3>
             <p>element access for use with structured bindings</p>
             <table class="m-table m-fullwidth m-flat">
@@ -1019,11 +952,12 @@
           </div></section>
           <section class="m-doc-details" id="a4c88f28aa0ba9f7ae0c5ff252bb81a37"><div>
             <h3>
+              <div class="m-doc-include m-code m-inverted m-right-m m-text-right"><span class="cp">#include</span> <a class="cpf" href="MultipoleBase_8h.html">&lt;symtensor/MultipoleBase.h&gt;</a></div>
               <div class="m-doc-template">
-                template&lt;class Implementation, typename ... Tensors&gt;
+                template&lt;std::size_t Order, typename ... Tensors&gt;
                 template&lt;std::size_t I&gt;
               </div>
-              <span class="m-doc-wrap-bumper">const auto&amp; symtensor::<wbr />MultipoleBase&lt;Implementation, Tensors&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a4c88f28aa0ba9f7ae0c5ff252bb81a37" class="m-doc-self">get</a>(</span><span class="m-doc-wrap">) const &amp; <span class="m-label m-primary">constexpr</span></span></span>
+              <span class="m-doc-wrap-bumper">const auto&amp; symtensor::<wbr />MultipoleMoment&lt;Order, Tensors&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a4c88f28aa0ba9f7ae0c5ff252bb81a37" class="m-doc-self">get</a>(</span><span class="m-doc-wrap">) const &amp; <span class="m-label m-primary">constexpr</span></span></span>
             </h3>
             <p>element access for use with structured bindings</p>
             <table class="m-table m-fullwidth m-flat">
@@ -1046,11 +980,12 @@
           </div></section>
           <section class="m-doc-details" id="af438153ed0d715d23909a824c4ecdf53"><div>
             <h3>
+              <div class="m-doc-include m-code m-inverted m-right-m m-text-right"><span class="cp">#include</span> <a class="cpf" href="MultipoleBase_8h.html">&lt;symtensor/MultipoleBase.h&gt;</a></div>
               <div class="m-doc-template">
-                template&lt;class Implementation, typename ... Tensors&gt;
+                template&lt;std::size_t Order, typename ... Tensors&gt;
                 template&lt;std::size_t I&gt;
               </div>
-              <span class="m-doc-wrap-bumper">auto&amp;&amp; symtensor::<wbr />MultipoleBase&lt;Implementation, Tensors&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#af438153ed0d715d23909a824c4ecdf53" class="m-doc-self">get</a>(</span><span class="m-doc-wrap">) &amp;&amp; <span class="m-label m-primary">constexpr</span></span></span>
+              <span class="m-doc-wrap-bumper">auto&amp;&amp; symtensor::<wbr />MultipoleMoment&lt;Order, Tensors&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#af438153ed0d715d23909a824c4ecdf53" class="m-doc-self">get</a>(</span><span class="m-doc-wrap">) &amp;&amp; <span class="m-label m-primary">constexpr</span></span></span>
             </h3>
             <p>element access for use with structured bindings</p>
             <table class="m-table m-fullwidth m-flat">
@@ -1070,6 +1005,29 @@
                 </tr>
               </tfoot>
             </table>
+          </div></section>
+        </section>
+        <section>
+          <h2>Variable documentation</h2>
+          <section class="m-doc-details" id="aed44a9da6ac0cccc4c4935708e5b84e0"><div>
+            <h3>
+              <div class="m-doc-include m-code m-inverted m-right-m m-text-right"><span class="cp">#include</span> <a class="cpf" href="MultipoleBase_8h.html">&lt;symtensor/MultipoleBase.h&gt;</a></div>
+              <div class="m-doc-template">
+                template&lt;std::size_t Order, typename ... Tensors&gt;
+              </div>
+              static std::size_t symtensor::<wbr />MultipoleMoment&lt;Order, Tensors&gt;::<wbr /><a href="#aed44a9da6ac0cccc4c4935708e5b84e0" class="m-doc-self">Order</a> <span class="m-label m-primary">constexpr</span>
+            </h3>
+            <p><a href="classsymtensor_1_1Multipole.html" class="m-doc">Multipole</a> order, equivalent to the rank of the highest contained tensor.</p>
+          </div></section>
+          <section class="m-doc-details" id="aa395d7ff45a9da103e9bdb50b98196e4"><div>
+            <h3>
+              <div class="m-doc-include m-code m-inverted m-right-m m-text-right"><span class="cp">#include</span> <a class="cpf" href="MultipoleBase_8h.html">&lt;symtensor/MultipoleBase.h&gt;</a></div>
+              <div class="m-doc-template">
+                template&lt;std::size_t Order, typename ... Tensors&gt;
+              </div>
+              static std::size_t symtensor::<wbr />MultipoleMoment&lt;Order, Tensors&gt;::<wbr /><a href="#aa395d7ff45a9da103e9bdb50b98196e4" class="m-doc-self">NumTensors</a> <span class="m-label m-primary">constexpr</span>
+            </h3>
+            <p>Number of contained elements, all assumed to be tensors. A multipole may have a scalar component; this is treated a tensor of rank 0.</p>
           </div></section>
         </section>
       </div>
