@@ -8,6 +8,17 @@
 namespace symtensor {
 
     template<class Implementation, typename Scalar, std::size_t D, typename I>
+    constexpr static inline glm::vec<int(D), Scalar>
+    to_glm(const symtensor::SymmetricTensorBase<Implementation, Scalar, D, 1, I> &vector) {
+
+        glm::vec<int(D), Scalar> result{};
+        for (std::size_t i = 0; i < std::size_t(D); ++i) {
+            result[i] = vector[i];
+        }
+        return result;
+    }
+
+    template<class Implementation, typename Scalar, std::size_t D, typename I>
     constexpr static inline glm::mat<int(D), int(D), Scalar>
     to_glm(const symtensor::SymmetricTensorBase<Implementation, Scalar, D, 2, I> &symmetricMatrix) {
 

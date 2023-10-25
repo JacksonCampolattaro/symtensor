@@ -67,10 +67,10 @@ namespace symtensor {
         template<>
         struct IndexTypeForDimension<4> {
             enum class type : std::size_t {
-                W = 0,
-                X,
+                X = 0,
                 Y,
-                Z
+                Z,
+                W,
             };
         };
 

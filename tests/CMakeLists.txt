@@ -22,6 +22,7 @@ add_executable(tests
         util.cpp
         symmetricTensor.cpp
         multipole.cpp
+        multipoleMoment.cpp
         )
 set_property(TARGET tests PROPERTY CXX_STANDARD 20)
 target_link_libraries(

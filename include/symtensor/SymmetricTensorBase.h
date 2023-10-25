@@ -482,6 +482,10 @@ namespace symtensor {
         /// @copydoc operator*=(const Scalar &)
         inline constexpr Implementation operator*(const Scalar &scalar) const { return Self{*this} *= scalar; }
 
+        friend inline constexpr Implementation operator*(const Scalar &scalar, const Self &tensor) {
+            return tensor * scalar;
+        }
+
         /// @copydoc operator/=(const Scalar &)
         inline constexpr Implementation operator/(const Scalar &scalar) const { return Self{*this} /= scalar; }
 
@@ -522,6 +526,34 @@ namespace symtensor {
         /// @copydoc operator-=(const Implementation &)
         inline constexpr Implementation operator-(const Implementation &other) const {
             return Self{*this} -= other;
+        }
+
+        /// @}
+    public:
+        /// @name Other Tensor-tensor operations
+        /// @{
+
+        template<symmetric_tensor<D, I> OtherTensor>
+        friend auto operator*(
+                const Implementation &lhs,
+                const OtherTensor &rhs
+        ) {
+
+
+            constexpr std::size_t OtherRank = OtherTensor::Rank;
+            constexpr std::size_t ProductRank = Rank - OtherRank;
+            using ProductTensor = ReplaceRank<Implementation, ProductRank>;
+
+            // todo: is this correct?
+            ProductTensor product{};
+            [&]<std::size_t... i>(std::index_sequence<i...>) {
+                ((
+                        product.template at<head<Index, Rank, ProductRank>(lexicographicalIndices<i>())>() +=
+                                lhs.template at<lexicographicalIndices<i>()>() *
+                                rhs.template at<(tail<Index, Rank, OtherRank>(lexicographicalIndices<i>()))>()
+                ), ...);
+            }(std::make_index_sequence<NumValues>());
+            return product;
         }
 
         /// @}

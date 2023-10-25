@@ -20,6 +20,14 @@ namespace symtensor {
             return V * pow(V, P - 1);
     }
 
+    template<std::size_t P, typename T>
+    inline T pow(T value) {
+        if constexpr (P == 0)
+            return T(1);
+        else
+            return value * pow<P - 1>(value);
+    }
+
     constexpr std::size_t pascal(std::size_t x, std::size_t y) {
         if (x == 0 || y == 0) return 1;
         else return pascal(x - 1, y) + pascal(x, y - 1);
@@ -40,26 +48,26 @@ namespace symtensor {
         return array;
     }
 
-    template<typename T, std::size_t N>
+    template<typename T, std::size_t N, std::size_t NewN = N - 1>
     static constexpr auto head(std::array<T, N> array) {
         if constexpr (N == 0)
             // Never try to get the head of an empty array! This makes the compiler very angry.
             return array;
         else {
-            std::array<T, N - 1> copy{};
-            std::copy(array.begin(), array.end() - 1, copy.begin());
+            std::array<T, NewN> copy{};
+            std::copy(array.begin(), array.begin() + NewN, copy.begin());
             return copy;
         }
     }
 
-    template<typename T, std::size_t N>
+    template<typename T, std::size_t N, std::size_t NewN = N - 1>
     static constexpr auto tail(std::array<T, N> array) {
         if constexpr (N == 0)
             // Never try to get the tail of an empty array! This makes the compiler very angry.
             return array;
         else {
-            std::array<T, N - 1> copy{};
-            std::copy(array.begin() + 1, array.end(), copy.begin());
+            std::array<T, NewN> copy{};
+            std::copy(array.end() - NewN, array.end(), copy.begin());
             return copy;
         }
     }

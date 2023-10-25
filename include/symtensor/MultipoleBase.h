@@ -116,7 +116,7 @@ namespace symtensor {
         template<std::size_t R>
         using TensorType = std::tuple_element_t<indexForRank(R), TensorTuple>;
 
-        using Ranks = std::integer_sequence<std::size_t, Tensors::Rank...>;
+        using Ranks = std::integer_sequence<std::size_t, Rank<Tensors>()...>;
 
     private:
 
@@ -141,7 +141,8 @@ namespace symtensor {
          * @param types The values for each tensor contained in the multipole.
          *   So long as each tensor type has an implicit constructor, initializer-list syntax works.
          */
-        explicit inline constexpr MultipoleBase(Tensors &&...types) : _tuple(std::forward<Tensors>(types)...) {}
+        explicit inline constexpr MultipoleBase(const Tensors &...types) : _tuple(types...) {}
+        //explicit inline constexpr MultipoleBase(Tensors &&...types) : _tuple(std::forward<Tensors>(types)...) {}
 
         /**
          * @brief Constructor from a single vector

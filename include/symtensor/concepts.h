@@ -35,11 +35,10 @@ namespace symtensor {
     //    template<typename T>
     //    concept compile_time_indexable = requires{ compile_time_indexable_helper<T, decltype(std::index_sequence<T::Dimensions>)> };
 
-    template<typename T, std::size_t R, std::size_t D, typename I>
+    template<typename T, std::size_t D, typename I>
     concept symmetric_tensor = requires(T tensor){
 
-//        requires T::Dimensions == D;
-//        requires T::Rank == R;
+        requires T::Dimensions == D;
         requires std::same_as<typename T::Index, I>;
         // todo: check for at<>
     };
