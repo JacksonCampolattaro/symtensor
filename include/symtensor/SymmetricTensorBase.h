@@ -102,6 +102,16 @@ namespace symtensor {
     template<class ST>
     using NextLowerRank = ReplaceRank<ST, ST::Rank - 1>;
 
+    template<class ST>
+    static consteval std::size_t Rank() {
+        if constexpr (requires { ST::Rank; })
+            return ST::Rank;
+        else if constexpr (indexable<ST>)
+            return 1;
+        else
+            return 0;
+    }
+
     /**
      * @brief Symmetric tensor base-type for use with CRTP implementations.
      *
@@ -268,7 +278,7 @@ namespace symtensor {
                 // Promoting a tensor of Rank-1 to Rank by cartesian product
                 return NullaryExpression([&]<std::array<I, Rank> index>() constexpr {
                     return vector[static_cast<std::size_t>(index[0])] *
-                           tensor[tail(index)];
+                           tensor.template at<tail(index)>();
                 });
 
             } else {
@@ -505,10 +515,14 @@ namespace symtensor {
         }
 
         /// @copydoc operator+=(const Implementation &)
-        inline constexpr Implementation operator+(const Implementation &other) const { return Self{*this} += other; }
+        inline constexpr Implementation operator+(const Implementation &other) const {
+            return Self{*this} += other;
+        }
 
         /// @copydoc operator-=(const Implementation &)
-        inline constexpr Implementation operator-(const Implementation &other) const { return Self{*this} -= other; }
+        inline constexpr Implementation operator-(const Implementation &other) const {
+            return Self{*this} -= other;
+        }
 
         /// @}
     public:
