@@ -162,15 +162,19 @@ namespace symtensor {
          *
          * @param s a sequence of scalar values to initialize the tensor.
          */
-        constexpr SymmetricTensorBase(auto ...s) : _data{static_cast<S>(s)...} {
+        explicit constexpr SymmetricTensorBase(auto ...s) : _data{static_cast<S>(s)...} {
             static_assert(sizeof...(s) == NumUniqueValues);
         }
 
-        // todo: this might perform better in some cases
-        //        constexpr SymmetricTensorBase(std::initializer_list<Scalar> scalars) {
-        //            assert(scalars.size() == NumUniqueValues);
-        //            std::copy(scalars.begin(), scalars.end(), _data.begin());
-        //        }
+        /**
+         * @brief (Implicit) constructor from a sequence of values.
+         *
+         * @param s a sequence of scalar values to initialize the tensor.
+         */
+        constexpr SymmetricTensorBase(std::initializer_list<Scalar> scalars) {
+            assert(scalars.size() == NumUniqueValues);
+            std::copy(scalars.begin(), scalars.end(), _data.begin());
+        }
 
         constexpr Self &operator=(const Self &other) = default;
 
@@ -542,8 +546,9 @@ namespace symtensor {
         /// @{
 
         template<symmetric_tensor<D, I> OtherTensor>
-        friend auto operator*(
-                const Implementation &lhs,
+        requires requires { OtherTensor::Rank; }
+        inline friend auto operator*(
+                const Self &lhs,
                 const OtherTensor &rhs
         ) {
 
