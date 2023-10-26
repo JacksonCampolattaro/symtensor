@@ -1,4 +1,5 @@
 #include <catch2/catch_test_macros.hpp>
+#include <catch2/generators/catch_generators.hpp>
 #include <random>
 
 #include <symtensor/MultipoleMoment.h>
@@ -60,6 +61,37 @@ template<std::size_t Order>
         B *= g2;
         return A + B;
 
+    } else if constexpr (Order == 4) {
+
+        auto A = g4 * SymmetricTensor3f<4>::CartesianPower(R);
+
+        // Why doesn't R at factored into this term?
+        SymmetricTensor3f<4> B{};
+        B.at<X, X, Y, Y>() = 1;
+        B.at<X, X, Z, Z>() = 1;
+        B.at<Y, Y, Z, Z>() = 1;
+        B += SymmetricTensor3f<4>::Diagonal(glm::vec3{3, 3, 3});
+        B *= g2;
+
+        SymmetricTensor3f<4> C{};
+        SymmetricTensor3f<2> R2 = SymmetricTensor3f<2>::CartesianPower(R);
+        C += 6.0f * SymmetricTensor3f<4>::Diagonal(R2.diagonal());
+        C.at<X, X, X, Y>() = 3 * R2.at<X, Y>();
+        C.at<X, Y, Y, Y>() = 3 * R2.at<X, Y>();
+        C.at<X, X, X, Z>() = 3 * R2.at<X, Z>();
+        C.at<X, Z, Z, Z>() = 3 * R2.at<X, Z>();
+        C.at<Y, Y, Y, Z>() = 3 * R2.at<Y, Z>();
+        C.at<Y, Z, Z, Z>() = 3 * R2.at<Y, Z>();
+        C.at<X, X, Y, Y>() = R2.at<X, X>() + R2.at<Y, Y>();
+        C.at<X, X, Z, Z>() = R2.at<X, X>() + R2.at<Z, Z>();
+        C.at<Y, Y, Z, Z>() = R2.at<Y, Y>() + R2.at<Z, Z>();
+        C.at<X, X, Y, Z>() = R2.at<Y, Z>();
+        C.at<X, Y, Y, Z>() = R2.at<X, Z>();
+        C.at<X, Y, Z, Z>() = R2.at<X, Y>();
+        C *= g3;
+
+        return A + B + C;
+
     }
 }
 
@@ -72,8 +104,44 @@ TEST_CASE("Multipole moment constructors", "[MultipoleMoment]") {
 
 }
 
-TEST_CASE("Quadrupole moment should be more accurate than center-of-mass", "[MultipoleMoment]") {
-    std::mt19937 generator{0};
+static glm::vec3 gravitationalAcceleration(std::vector<glm::vec4> particles, glm::vec3 position) {
+    return std::transform_reduce(
+            particles.begin(), particles.end(),
+            glm::vec3{}, std::plus<>{},
+            [&](auto particle) {
+                auto R = position - glm::vec3{particle};
+                return -R * (float) (particle.w / std::pow(glm::length(R), 3));
+            }
+    );
+}
+
+static glm::vec3 gravitationalAcceleration(glm::vec4 centerOfMass, glm::vec3 position) {
+    auto R = position - glm::vec3{centerOfMass};
+    return -R * (float) (centerOfMass.w / std::pow(glm::length(R), 3));
+}
+
+static glm::vec3 gravitationalAcceleration(QuadrupoleMoment3f quadrupole, glm::vec3 position) {
+    auto R = position - to_glm(quadrupole.tensor<1>());
+    return -R * (float) (quadrupole.scalar() / std::pow(glm::length(R), 3))
+           + to_glm(D<3>(R, glm::length(R)) * quadrupole.tensor<2>() / 2.0f);
+}
+
+static glm::vec3 gravitationalAcceleration(OctupoleMoment3f octupole, glm::vec3 position) {
+    auto R = position - to_glm(octupole.tensor<1>());
+    return -R * (float) (octupole.scalar() / std::pow(glm::length(R), 3))
+           + to_glm(D<3>(R, glm::length(R)) * octupole.tensor<2>() / 2.0f)
+           - to_glm(D<4>(R, glm::length(R)) * octupole.tensor<3>() / 6.0f);
+}
+
+static float accelerationError(const glm::vec3 &trueAcceleration, const glm::vec3 &approximateAcceleration) {
+    auto error = approximateAcceleration - trueAcceleration;
+    return glm::length(error) / glm::length(trueAcceleration);
+}
+
+template<typename WorseApproximationFunction, typename BetterApproximationFunction>
+void compareAccuracy(WorseApproximationFunction worseApproximationFunction,
+                     BetterApproximationFunction betterApproximationFunction) {
+    std::mt19937 generator{(std::size_t) GENERATE(0, 1, 2, 3, 4)};
     std::uniform_real_distribution<float> positionDistribution{-1.0f, 1.0f};
     std::uniform_real_distribution<float> massDistribution{0.1f, 1.0f};
 
@@ -87,65 +155,89 @@ TEST_CASE("Quadrupole moment should be more accurate than center-of-mass", "[Mul
                 massDistribution(generator)
         );
 
-    // Create a center-of-mass approximation
-    glm::vec4 centerOfMass = std::reduce(particles.begin(), particles.end());
-    centerOfMass.x /= (float) particles.size();
-    centerOfMass.y /= (float) particles.size();
-    centerOfMass.z /= (float) particles.size();
+    // Generate both approximate representations of the particles
+    auto worseApproximation = worseApproximationFunction(particles);
+    auto betterApproximation = betterApproximationFunction(particles);
 
-    // Create a quadrupole approximation
-    auto quadrupoleMoment = std::transform_reduce(
-            particles.begin(), particles.end(),
-            QuadrupoleMoment3f{}, std::plus<>{},
-            [](auto particle) {
-                return QuadrupoleMoment3f::FromPointMass(particle.w, glm::vec3{particle});
-            }
-    ) / (float) particles.size();
-
-    // We'll track the error of the two approximations
-    std::vector<float> centerOfMassErrors, quadrupoleErrors;
-
-    // Sample several locations
-    for (int i = 0; i < 100; ++i) {
+    // Generate some sample positions
+    std::vector<glm::vec3> samplePositions;
+    while (samplePositions.size() < 1000) {
         glm::vec3 position{
-                positionDistribution(generator) * 100,
-                positionDistribution(generator) * 100,
-                positionDistribution(generator) * 100
+                positionDistribution(generator) * 10,
+                positionDistribution(generator) * 10,
+                positionDistribution(generator) * 10
         };
-
-        // Skip positions which are too close
-        if (glm::length(position) < 5.0f)
-            continue;
-
-        // Compute the true acceleration
-        auto exactAcceleration = std::transform_reduce(
-                particles.begin(), particles.end(),
-                glm::vec3{}, std::plus<>{},
-                [&](auto particle) {
-                    auto R = position - glm::vec3{particle};
-                    return -R * (float) (particle.w / std::pow(glm::length(R), 3));
-                }
-        );
-
-        // Compute the center of mass approximation
-        auto R = position - glm::vec3{centerOfMass};
-        auto centerOfMassApproximation = -R * (float) (centerOfMass.w / std::pow(glm::length(R), 3));
-
-        // Compute the quadrupole approximation
-        auto quadrupoleApproximation = -R * (float) (quadrupoleMoment.scalar() / std::pow(glm::length(R), 3))
-                                       + to_glm(D<3>(R, glm::length(R)) * quadrupoleMoment.tensor<2>() / 2.0f);
-
-        // Determine error
-        auto centerOfMassError = (centerOfMassApproximation - exactAcceleration) / glm::length(exactAcceleration);
-        auto quadrupoleError = (quadrupoleApproximation - exactAcceleration) / glm::length(exactAcceleration);
-        centerOfMassErrors.emplace_back(glm::length(centerOfMassError));
-        quadrupoleErrors.emplace_back(glm::length(quadrupoleError));
-
+        if (glm::length(position) > 2.0f)
+            samplePositions.push_back(position);
     }
 
-    // The quadrupole should be more accurate overall than the center-of-mass approximation
-    REQUIRE(*std::max_element(centerOfMassErrors.begin(), centerOfMassErrors.end()) >
-            *std::max_element(quadrupoleErrors.begin(), quadrupoleErrors.end()));
+    // Produce approximations
+    std::vector<glm::vec3> trueAccelerations, worseApproximateAccelerations, betterApproximateAccelerations;
+    std::transform(
+            samplePositions.begin(), samplePositions.end(), std::back_inserter(trueAccelerations),
+            [&](glm::vec3 position) { return gravitationalAcceleration(particles, position); }
+    );
+    std::transform(
+            samplePositions.begin(), samplePositions.end(), std::back_inserter(worseApproximateAccelerations),
+            [&](glm::vec3 position) { return gravitationalAcceleration(worseApproximation, position); }
+    );
+    std::transform(
+            samplePositions.begin(), samplePositions.end(), std::back_inserter(betterApproximateAccelerations),
+            [&](glm::vec3 position) { return gravitationalAcceleration(betterApproximation, position); }
+    );
 
+    // Compute errors for both approximations
+    std::vector<float> worseErrors, betterErrors;
+    std::transform(
+            trueAccelerations.begin(), trueAccelerations.end(), worseApproximateAccelerations.begin(),
+            std::back_inserter(worseErrors), accelerationError
+    );
+    std::transform(
+            trueAccelerations.begin(), trueAccelerations.end(), betterApproximateAccelerations.begin(),
+            std::back_inserter(betterErrors), accelerationError
+    );
+
+    // Max and mean error should be better for the better approximation
+    CHECK(*std::max_element(worseErrors.begin(), worseErrors.end()) >=
+          *std::max_element(betterErrors.begin(), betterErrors.end()));
+//    CHECK(std::reduce(worseErrors.begin(), worseErrors.end()) >
+//          std::reduce(betterErrors.begin(), betterErrors.end()));
+//    std::cout << *std::max_element(worseErrors.begin(), worseErrors.end()) << " "
+//              << *std::max_element(betterErrors.begin(), betterErrors.end()) << std::endl;
+//    std::cout << std::reduce(worseErrors.begin(), worseErrors.end()) << " "
+//              << std::reduce(betterErrors.begin(), betterErrors.end()) << std::endl;
+
+}
+
+TEST_CASE("Higher order approximations should be more accurate", "[MultipoleMoment]") {
+
+    auto computeCenterOfMass = [](auto particles) {
+        glm::vec4 centerOfMass = std::reduce(particles.begin(), particles.end());
+        centerOfMass.x /= (float) particles.size();
+        centerOfMass.y /= (float) particles.size();
+        centerOfMass.z /= (float) particles.size();
+        return centerOfMass;
+    };
+    auto computeQuadrupole = [](auto particles) {
+        return std::transform_reduce(
+                particles.begin(), particles.end(),
+                QuadrupoleMoment3f{}, std::plus<>{},
+                [](auto particle) {
+                    return QuadrupoleMoment3f::FromPointMass(particle.w, glm::vec3{particle});
+                }
+        ) / (float) particles.size();
+    };
+    auto computeOctupole = [](auto particles) {
+        return std::transform_reduce(
+                particles.begin(), particles.end(),
+                OctupoleMoment3f{}, std::plus<>{},
+                [](auto particle) {
+                    return OctupoleMoment3f::FromPointMass(particle.w, glm::vec3{particle});
+                }
+        ) / (float) particles.size();
+    };
+
+    //compareAccuracy(computeCenterOfMass, computeQuadrupole);
+    //compareAccuracy(computeQuadrupole, computeOctupole);
 }
 

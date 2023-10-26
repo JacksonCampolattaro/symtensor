@@ -302,7 +302,7 @@ namespace symtensor {
          *
          * @return a symmetric tensor with diagonal equal to vector, zero elsewhere.
          */
-        template<typename Vector>
+        template<indexable Vector>
         inline static constexpr Implementation Diagonal(const Vector &vector) {
             // todo: add a unit test for this
             Implementation tensor;
@@ -420,6 +420,13 @@ namespace symtensor {
             }(std::make_index_sequence<Dimensions>());
         }
 
+        inline constexpr auto diagonal() const {
+            using Vector = ReplaceRank<Implementation, 1>;
+            return [&]<std::size_t... d>(std::index_sequence<d...>) constexpr {
+                return Vector{at<repeat<R>(static_cast<I>(d))>() ...};
+            }(std::make_index_sequence<Dimensions>());
+        }
+
         /// @}
     public:
         /// @name Tensor-scalar operators
@@ -482,6 +489,7 @@ namespace symtensor {
         /// @copydoc operator*=(const Scalar &)
         inline constexpr Implementation operator*(const Scalar &scalar) const { return Self{*this} *= scalar; }
 
+        /// @copydoc operator*=(const Scalar &)
         friend inline constexpr Implementation operator*(const Scalar &scalar, const Self &tensor) {
             return tensor * scalar;
         }
@@ -538,7 +546,6 @@ namespace symtensor {
                 const Implementation &lhs,
                 const OtherTensor &rhs
         ) {
-
 
             constexpr std::size_t OtherRank = OtherTensor::Rank;
             constexpr std::size_t ProductRank = Rank - OtherRank;
