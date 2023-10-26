@@ -141,7 +141,7 @@
             </dt>
             <dd>Constructor by repeated cartesian product.</dd>
             <dt>
-              <div class="m-doc-template">template&lt;typename Vector&gt;</div>
+              <div class="m-doc-template">template&lt;indexable Vector&gt;</div>
               <span class="m-doc-wrap-bumper">static auto <a href="#a4bdb22efbddb72b1aa257884680ce910" class="m-doc">Diagonal</a>(</span><span class="m-doc-wrap">const Vector&amp; vector) -&gt; Implementation <span class="m-label m-flat m-primary">constexpr</span></span>
             </dt>
             <dd>Constructor with a set vector as the diagonal.</dd>
@@ -222,6 +222,11 @@
               <span class="m-doc-wrap-bumper">auto <a href="#a3223efee820173c6c7290a9590022445" class="m-doc">operator/</a>(</span><span class="m-doc-wrap">const Scalar&amp; scalar) const -&gt; Implementation <span class="m-label m-flat m-primary">constexpr</span></span>
             </dt>
             <dd>Element-wise division by a scalar.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#a88c00125948a1f4f6a58895e524a47d7" class="m-doc">operator*</a>(</span><span class="m-doc-wrap">const Scalar&amp; scalar,
+              const <a href="classsymtensor_1_1SymmetricTensorBase.html" class="m-doc">Self</a>&amp; tensor) -&gt; Implementation <span class="m-label m-flat m-primary">constexpr</span></span>
+            </dt>
+            <dd>Element-wise multiplication by a scalar.</dd>
           </dl>
         </section>
         <section id="tensor-tensor-element-wise-operations">
@@ -404,7 +409,7 @@
             <h3>
               <div class="m-doc-template">
                 template&lt;class Implementation, typename S, std::size_t D, std::size_t R, typename I&gt;
-                template&lt;typename Vector&gt;
+                template&lt;indexable Vector&gt;
               </div>
               <span class="m-doc-wrap-bumper">static Implementation symtensor::<wbr />SymmetricTensorBase&lt;Implementation, S, D, R, I&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a4bdb22efbddb72b1aa257884680ce910" class="m-doc-self">Diagonal</a>(</span><span class="m-doc-wrap">const Vector&amp; vector) <span class="m-label m-primary">constexpr</span></span></span>
             </h3>
@@ -798,6 +803,37 @@
                 <tr>
                   <td style="width: 1%">scalar</td>
                   <td>value to divide each element of the tensor by.</td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <th>Returns</th>
+                  <td>the modified tensor</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div></section>
+          <section class="m-doc-details" id="a88c00125948a1f4f6a58895e524a47d7"><div>
+            <h3>
+              <div class="m-doc-template">
+                template&lt;class Implementation, typename S, std::size_t D, std::size_t R, typename I&gt;
+              </div>
+              <span class="m-doc-wrap-bumper">Implementation symtensor::<wbr />SymmetricTensorBase&lt;Implementation, S, D, R, I&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a88c00125948a1f4f6a58895e524a47d7" class="m-doc-self">operator*</a>(</span><span class="m-doc-wrap">const Scalar&amp; scalar,
+              const <a href="classsymtensor_1_1SymmetricTensorBase.html" class="m-doc">Self</a>&amp; tensor) <span class="m-label m-primary">constexpr</span></span></span>
+            </h3>
+            <p>Element-wise multiplication by a scalar.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">scalar</td>
+                  <td>value to multiply each element of the tensor by.</td>
+                </tr>
+                <tr>
+                  <td>tensor</td>
+                  <td></td>
                 </tr>
               </tbody>
               <tfoot>
