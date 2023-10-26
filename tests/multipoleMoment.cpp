@@ -63,19 +63,19 @@ template<std::size_t Order>
 
     } else if constexpr (Order == 4) {
 
-        auto A = g4 * SymmetricTensor3f<4>::CartesianPower(R);
+        auto A = g4 * SymmetricTensor3f < 4 > ::CartesianPower(R);
 
         // Why doesn't R at factored into this term?
         SymmetricTensor3f<4> B{};
         B.at<X, X, Y, Y>() = 1;
         B.at<X, X, Z, Z>() = 1;
         B.at<Y, Y, Z, Z>() = 1;
-        B += SymmetricTensor3f<4>::Diagonal(glm::vec3{3, 3, 3});
+        B += SymmetricTensor3f < 4 > ::Diagonal(glm::vec3{3, 3, 3});
         B *= g2;
 
         SymmetricTensor3f<4> C{};
-        SymmetricTensor3f<2> R2 = SymmetricTensor3f<2>::CartesianPower(R);
-        C += 6.0f * SymmetricTensor3f<4>::Diagonal(R2.diagonal());
+        SymmetricTensor3f<2> R2 = SymmetricTensor3f < 2 > ::CartesianPower(R);
+        C += 6.0f * SymmetricTensor3f < 4 > ::Diagonal(R2.diagonal());
         C.at<X, X, X, Y>() = 3 * R2.at<X, Y>();
         C.at<X, Y, Y, Y>() = 3 * R2.at<X, Y>();
         C.at<X, X, X, Z>() = 3 * R2.at<X, Z>();
@@ -141,13 +141,13 @@ static float accelerationError(const glm::vec3 &trueAcceleration, const glm::vec
 template<typename WorseApproximationFunction, typename BetterApproximationFunction>
 void compareAccuracy(WorseApproximationFunction worseApproximationFunction,
                      BetterApproximationFunction betterApproximationFunction) {
-    std::mt19937 generator{(std::size_t) GENERATE(0, 1, 2, 3, 4)};
+    std::mt19937 generator{3};
     std::uniform_real_distribution<float> positionDistribution{-1.0f, 1.0f};
     std::uniform_real_distribution<float> massDistribution{0.1f, 1.0f};
 
     // Generate a handful of random particles
     std::vector<glm::vec4> particles{};
-    for (int i = 0; i < 100; ++i)
+    for (int i = 0; i < 10; ++i)
         particles.emplace_back(
                 positionDistribution(generator),
                 positionDistribution(generator),
@@ -161,13 +161,13 @@ void compareAccuracy(WorseApproximationFunction worseApproximationFunction,
 
     // Generate some sample positions
     std::vector<glm::vec3> samplePositions;
-    while (samplePositions.size() < 1000) {
+    while (samplePositions.size() < 10000) {
         glm::vec3 position{
                 positionDistribution(generator) * 10,
                 positionDistribution(generator) * 10,
                 positionDistribution(generator) * 10
         };
-        if (glm::length(position) > 2.0f)
+        if (glm::length(position) > 3.0f)
             samplePositions.push_back(position);
     }
 
@@ -200,44 +200,52 @@ void compareAccuracy(WorseApproximationFunction worseApproximationFunction,
     // Max and mean error should be better for the better approximation
     CHECK(*std::max_element(worseErrors.begin(), worseErrors.end()) >=
           *std::max_element(betterErrors.begin(), betterErrors.end()));
-//    CHECK(std::reduce(worseErrors.begin(), worseErrors.end()) >
-//          std::reduce(betterErrors.begin(), betterErrors.end()));
-//    std::cout << *std::max_element(worseErrors.begin(), worseErrors.end()) << " "
-//              << *std::max_element(betterErrors.begin(), betterErrors.end()) << std::endl;
-//    std::cout << std::reduce(worseErrors.begin(), worseErrors.end()) << " "
-//              << std::reduce(betterErrors.begin(), betterErrors.end()) << std::endl;
+    CHECK(std::reduce(worseErrors.begin(), worseErrors.end()) >
+          std::reduce(betterErrors.begin(), betterErrors.end()));
+    std::cout << *std::max_element(worseErrors.begin(), worseErrors.end()) << " "
+              << *std::max_element(betterErrors.begin(), betterErrors.end()) << std::endl;
+    std::cout << std::reduce(worseErrors.begin(), worseErrors.end()) << " "
+              << std::reduce(betterErrors.begin(), betterErrors.end()) << std::endl;
 
 }
 
 TEST_CASE("Higher order approximations should be more accurate", "[MultipoleMoment]") {
+    // todo: particles must be weighted by mass!
 
-    auto computeCenterOfMass = [](auto particles) {
-        glm::vec4 centerOfMass = std::reduce(particles.begin(), particles.end());
-        centerOfMass.x /= (float) particles.size();
-        centerOfMass.y /= (float) particles.size();
-        centerOfMass.z /= (float) particles.size();
-        return centerOfMass;
+    auto computeCenterOfMass = [](const std::vector<glm::vec4> &particles) {
+        glm::vec3 centerOfMass{};
+        float totalMass = 0;
+        for (auto &particle: particles) {
+            totalMass += particle.w;
+            centerOfMass += glm::vec3{particle} * particle.w;
+        }
+        centerOfMass /= totalMass;
+        return glm::vec4{centerOfMass.x, centerOfMass.y, centerOfMass.z, totalMass};
     };
     auto computeQuadrupole = [](auto particles) {
+        float totalMass = 0;
         return std::transform_reduce(
                 particles.begin(), particles.end(),
                 QuadrupoleMoment3f{}, std::plus<>{},
-                [](auto particle) {
-                    return QuadrupoleMoment3f::FromPointMass(particle.w, glm::vec3{particle});
+                [&](auto particle) {
+                    totalMass += particle.w;
+                    return QuadrupoleMoment3f::FromPointMass(particle.w, glm::vec3{particle}) * particle.w;
                 }
-        ) / (float) particles.size();
+        ) / totalMass;
     };
     auto computeOctupole = [](auto particles) {
+        float totalMass = 0;
         return std::transform_reduce(
                 particles.begin(), particles.end(),
                 OctupoleMoment3f{}, std::plus<>{},
-                [](auto particle) {
-                    return OctupoleMoment3f::FromPointMass(particle.w, glm::vec3{particle});
+                [&](auto particle) {
+                    totalMass += particle.w;
+                    return OctupoleMoment3f::FromPointMass(particle.w, glm::vec3{particle}) * particle.w;
                 }
-        ) / (float) particles.size();
+        ) / totalMass;
     };
 
-    //compareAccuracy(computeCenterOfMass, computeQuadrupole);
-    //compareAccuracy(computeQuadrupole, computeOctupole);
+    compareAccuracy(computeCenterOfMass, computeQuadrupole);
+    compareAccuracy(computeQuadrupole, computeOctupole);
 }
 
