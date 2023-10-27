@@ -1,13 +1,12 @@
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/generators/catch_generators.hpp>
+#include <catch2/catch_template_test_macros.hpp>
 #include <random>
 
 #include <symtensor/MultipoleMoment.h>
 #include <symtensor/glm.h>
 
 #include <iostream>
-
-#define GLM_FORCE_SWIZZLE
 
 #include <glm/vec4.hpp>
 #include <glm/gtx/string_cast.hpp>
@@ -145,9 +144,11 @@ void compareAccuracy(WorseApproximationFunction worseApproximationFunction,
     std::uniform_real_distribution<float> positionDistribution{-1.0f, 1.0f};
     std::uniform_real_distribution<float> massDistribution{0.1f, 1.0f};
 
+    std::size_t clusterSize = GENERATE(16, 32, 64);
+
     // Generate a handful of random particles
     std::vector<glm::vec4> particles{};
-    for (int i = 0; i < 10; ++i)
+    for (int i = 0; i < clusterSize; ++i)
         particles.emplace_back(
                 positionDistribution(generator),
                 positionDistribution(generator),
@@ -163,11 +164,11 @@ void compareAccuracy(WorseApproximationFunction worseApproximationFunction,
     std::vector<glm::vec3> samplePositions;
     while (samplePositions.size() < 10000) {
         glm::vec3 position{
-                positionDistribution(generator) * 10,
-                positionDistribution(generator) * 10,
-                positionDistribution(generator) * 10
+                positionDistribution(generator) * 100,
+                positionDistribution(generator) * 100,
+                positionDistribution(generator) * 100
         };
-        if (glm::length(position) > 3.0f)
+        if (glm::length(position) > 10.0f)
             samplePositions.push_back(position);
     }
 
@@ -198,18 +199,29 @@ void compareAccuracy(WorseApproximationFunction worseApproximationFunction,
     );
 
     // Max and mean error should be better for the better approximation
-    CHECK(*std::max_element(worseErrors.begin(), worseErrors.end()) >=
-          *std::max_element(betterErrors.begin(), betterErrors.end()));
-    CHECK(std::reduce(worseErrors.begin(), worseErrors.end()) >
-          std::reduce(betterErrors.begin(), betterErrors.end()));
-    std::cout << *std::max_element(worseErrors.begin(), worseErrors.end()) << " "
-              << *std::max_element(betterErrors.begin(), betterErrors.end()) << std::endl;
-    std::cout << std::reduce(worseErrors.begin(), worseErrors.end()) << " "
-              << std::reduce(betterErrors.begin(), betterErrors.end()) << std::endl;
+    CAPTURE(clusterSize);
+    CAPTURE(typeid(worseApproximation).name());
+    CAPTURE(typeid(betterApproximation).name());
+    REQUIRE(*std::max_element(worseErrors.begin(), worseErrors.end()) >=
+            *std::max_element(betterErrors.begin(), betterErrors.end()));
+    REQUIRE(std::reduce(worseErrors.begin(), worseErrors.end()) >
+            std::reduce(betterErrors.begin(), betterErrors.end()));
+    float meanAdvantage = std::transform_reduce(
+            worseErrors.begin(), worseErrors.end(), betterErrors.begin(),
+            0.0f, std::plus<>{},
+            [&](auto worse, auto better) {
+                return (worse - better) / worse;
+            }
+    ) / worseErrors.size();
+//    std::cout << meanAdvantage << std::endl;
+//    std::cout << *std::max_element(worseErrors.begin(), worseErrors.end()) << " "
+//              << *std::max_element(betterErrors.begin(), betterErrors.end()) << std::endl;
+//    std::cout << std::reduce(worseErrors.begin(), worseErrors.end()) << " "
+//              << std::reduce(betterErrors.begin(), betterErrors.end()) << std::endl;
 
 }
 
-TEST_CASE("Higher order approximations should be more accurate", "[MultipoleMoment]") {
+TEST_CASE("Higher order approximations should be more accurate", "[MultipoleMoment]",) {
     // todo: particles must be weighted by mass!
 
     auto computeCenterOfMass = [](const std::vector<glm::vec4> &particles) {
@@ -245,7 +257,7 @@ TEST_CASE("Higher order approximations should be more accurate", "[MultipoleMome
         ) / totalMass;
     };
 
-    compareAccuracy(computeCenterOfMass, computeQuadrupole);
-    compareAccuracy(computeQuadrupole, computeOctupole);
+    SECTION("Center of Mass vs Quadrupole") { compareAccuracy(computeCenterOfMass, computeQuadrupole); }//
+    SECTION("Quadrupole vs Octupole") { compareAccuracy(computeQuadrupole, computeOctupole); }//
 }
 
