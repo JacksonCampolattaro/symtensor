@@ -1,12 +1,13 @@
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/generators/catch_generators.hpp>
-#include <catch2/catch_template_test_macros.hpp>
 #include <random>
 
 #include <symtensor/MultipoleMoment.h>
 #include <symtensor/glm.h>
 
 #include <iostream>
+
+#define GLM_FORCE_SWIZZLE
 
 #include <glm/vec4.hpp>
 #include <glm/gtx/string_cast.hpp>
@@ -44,37 +45,37 @@ template<std::size_t Order>
 
     } else if constexpr (Order == 2) {
 
-        return (g2 * SymmetricTensor3f < 2 > ::CartesianPower(R)) + (g1 * SymmetricTensor3f < 2 > ::Identity());
+        return (g2 * SymmetricTensor3f<2>::CartesianPower(R)) + (g1 * SymmetricTensor3f<2>::Identity());
 
     } else if constexpr (Order == 3) {
 
-        auto A = g3 * SymmetricTensor3f < 3 > ::CartesianPower(R);
-        auto B = SymmetricTensor3f < 3 > {};
+        auto A = g3 * SymmetricTensor3f<3>::CartesianPower(R);
+        auto B = SymmetricTensor3f<3>{};
         B.at<X, Y, Y>() = R.x;
         B.at<X, Z, Z>() = R.x;
         B.at<Y, X, X>() = R.y;
         B.at<Y, Z, Z>() = R.y;
         B.at<Z, X, X>() = R.z;
         B.at<Z, Y, Y>() = R.z;
-        B += 3 * SymmetricTensor3f < 3 > ::Diagonal(R);
+        B += 3 * SymmetricTensor3f<3>::Diagonal(R);
         B *= g2;
         return A + B;
 
     } else if constexpr (Order == 4) {
 
-        auto A = g4 * SymmetricTensor3f < 4 > ::CartesianPower(R);
+        auto A = g4 * SymmetricTensor3f<4>::CartesianPower(R);
 
         // Why doesn't R at factored into this term?
         SymmetricTensor3f<4> B{};
         B.at<X, X, Y, Y>() = 1;
         B.at<X, X, Z, Z>() = 1;
         B.at<Y, Y, Z, Z>() = 1;
-        B += SymmetricTensor3f < 4 > ::Diagonal(glm::vec3{3, 3, 3});
+        B += SymmetricTensor3f<4>::Diagonal(glm::vec3{3, 3, 3});
         B *= g2;
 
         SymmetricTensor3f<4> C{};
-        SymmetricTensor3f<2> R2 = SymmetricTensor3f < 2 > ::CartesianPower(R);
-        C += 6.0f * SymmetricTensor3f < 4 > ::Diagonal(R2.diagonal());
+        SymmetricTensor3f<2> R2 = SymmetricTensor3f<2>::CartesianPower(R);
+        C += 6.0f * SymmetricTensor3f<4>::Diagonal(R2.diagonal());
         C.at<X, X, X, Y>() = 3 * R2.at<X, Y>();
         C.at<X, Y, Y, Y>() = 3 * R2.at<X, Y>();
         C.at<X, X, X, Z>() = 3 * R2.at<X, Z>();
@@ -98,7 +99,7 @@ TEST_CASE("Multipole moment constructors", "[MultipoleMoment]") {
 
     REQUIRE(QuadrupoleMoment3f{} == QuadrupoleMoment3f{0, {0, 0, 0}, {0, 0, 0, 0, 0, 0}});
 
-    REQUIRE(QuadrupoleMoment3f::FromPointMass(1.0f, glm::vec3{1, 2, 3}) ==
+    REQUIRE(QuadrupoleMoment3f::FromPosition(glm::vec3{1, 2, 3}) ==
             QuadrupoleMoment3f{1, {1, 2, 3}, {1, 2, 3, 4, 6, 9}});
 
 }
@@ -140,11 +141,11 @@ static float accelerationError(const glm::vec3 &trueAcceleration, const glm::vec
 template<typename WorseApproximationFunction, typename BetterApproximationFunction>
 void compareAccuracy(WorseApproximationFunction worseApproximationFunction,
                      BetterApproximationFunction betterApproximationFunction) {
-    std::mt19937 generator{3};
-    std::uniform_real_distribution<float> positionDistribution{-1.0f, 1.0f};
+    std::mt19937 generator{GENERATE(0u)};
+    std::uniform_real_distribution<float> positionDistribution{-0.5f, 0.5f};
     std::uniform_real_distribution<float> massDistribution{0.1f, 1.0f};
 
-    std::size_t clusterSize = GENERATE(16, 32, 64);
+    std::size_t clusterSize = GENERATE(32, 64, 128, 256, 512, 1024, 2048);
 
     // Generate a handful of random particles
     std::vector<glm::vec4> particles{};
@@ -162,13 +163,13 @@ void compareAccuracy(WorseApproximationFunction worseApproximationFunction,
 
     // Generate some sample positions
     std::vector<glm::vec3> samplePositions;
-    while (samplePositions.size() < 10000) {
+    while (samplePositions.size() < 1000) {
         glm::vec3 position{
-                positionDistribution(generator) * 100,
-                positionDistribution(generator) * 100,
-                positionDistribution(generator) * 100
+                positionDistribution(generator) * 10,
+                positionDistribution(generator) * 10,
+                positionDistribution(generator) * 10
         };
-        if (glm::length(position) > 10.0f)
+        if (glm::length(position) > 3.0f)
             samplePositions.push_back(position);
     }
 
@@ -198,31 +199,44 @@ void compareAccuracy(WorseApproximationFunction worseApproximationFunction,
             std::back_inserter(betterErrors), accelerationError
     );
 
-    // Max and mean error should be better for the better approximation
-    CAPTURE(clusterSize);
-    CAPTURE(typeid(worseApproximation).name());
-    CAPTURE(typeid(betterApproximation).name());
-    REQUIRE(*std::max_element(worseErrors.begin(), worseErrors.end()) >=
-            *std::max_element(betterErrors.begin(), betterErrors.end()));
-    REQUIRE(std::reduce(worseErrors.begin(), worseErrors.end()) >
-            std::reduce(betterErrors.begin(), betterErrors.end()));
+    // Compute error statistics
     float meanAdvantage = std::transform_reduce(
             worseErrors.begin(), worseErrors.end(), betterErrors.begin(),
             0.0f, std::plus<>{},
             [&](auto worse, auto better) {
-                return (worse - better) / worse;
+                if (worse == 0) return 1.0f;
+                return better / worse;
             }
     ) / worseErrors.size();
-//    std::cout << meanAdvantage << std::endl;
-//    std::cout << *std::max_element(worseErrors.begin(), worseErrors.end()) << " "
-//              << *std::max_element(betterErrors.begin(), betterErrors.end()) << std::endl;
-//    std::cout << std::reduce(worseErrors.begin(), worseErrors.end()) << " "
-//              << std::reduce(betterErrors.begin(), betterErrors.end()) << std::endl;
+    float maxWorseError = *std::max_element(worseErrors.begin(), worseErrors.end());
+    float maxBetterError = *std::max_element(betterErrors.begin(), betterErrors.end());
+    float meanWorseError = std::reduce(worseErrors.begin(), worseErrors.end()) / (float) samplePositions.size();
+    float meanBetterError = std::reduce(betterErrors.begin(), betterErrors.end()) / (float) samplePositions.size();
+    CAPTURE(multipoleName<decltype(worseApproximation)>());
+    CAPTURE(multipoleName<decltype(betterApproximation)>());
+    CAPTURE(clusterSize);
+    CAPTURE(maxWorseError);
+    CAPTURE(maxBetterError);
+    CAPTURE(meanWorseError);
+    CAPTURE(meanBetterError);
+    CAPTURE(meanAdvantage);
+
+    // Max and mean error should be better for the better approximation
+    REQUIRE(maxWorseError >= maxBetterError);
+    REQUIRE(meanWorseError >= meanBetterError);
+    std::cout
+            << multipoleName<decltype(worseApproximation)>() << " vs "
+            << multipoleName<decltype(betterApproximation)>()
+            << " (n=" << clusterSize << ")" << std::endl;
+    std::cout << meanAdvantage << std::endl;
+    std::cout << *std::max_element(worseErrors.begin(), worseErrors.end()) << " "
+              << *std::max_element(betterErrors.begin(), betterErrors.end()) << std::endl;
+    std::cout << std::reduce(worseErrors.begin(), worseErrors.end()) << " "
+              << std::reduce(betterErrors.begin(), betterErrors.end()) << std::endl;
 
 }
 
 TEST_CASE("Higher order approximations should be more accurate", "[MultipoleMoment]",) {
-    // todo: particles must be weighted by mass!
 
     auto computeCenterOfMass = [](const std::vector<glm::vec4> &particles) {
         glm::vec3 centerOfMass{};
@@ -241,7 +255,7 @@ TEST_CASE("Higher order approximations should be more accurate", "[MultipoleMome
                 QuadrupoleMoment3f{}, std::plus<>{},
                 [&](auto particle) {
                     totalMass += particle.w;
-                    return QuadrupoleMoment3f::FromPointMass(particle.w, glm::vec3{particle}) * particle.w;
+                    return QuadrupoleMoment3f::FromPosition(glm::vec3{particle}) * particle.w;
                 }
         ) / totalMass;
     };
@@ -252,7 +266,7 @@ TEST_CASE("Higher order approximations should be more accurate", "[MultipoleMome
                 OctupoleMoment3f{}, std::plus<>{},
                 [&](auto particle) {
                     totalMass += particle.w;
-                    return OctupoleMoment3f::FromPointMass(particle.w, glm::vec3{particle}) * particle.w;
+                    return OctupoleMoment3f::FromPosition(glm::vec3{particle}) * particle.w;
                 }
         ) / totalMass;
     };

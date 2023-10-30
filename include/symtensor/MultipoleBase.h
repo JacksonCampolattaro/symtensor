@@ -474,6 +474,27 @@ namespace symtensor {
         using MultipoleBase<Implementation, Tensors...>::MultipoleBase;
     };
 
+    template<class MultipoleType>
+    constexpr std::string multipoleName() {
+
+        if constexpr (requires { MultipoleType::Order; }) {
+            switch (MultipoleType::Order) {
+                case 2:
+                    return "Quadrupole";
+                case 3:
+                    return "Octupole";
+                case 4:
+                    return "Hexadecupole";
+                case 5:
+                    return "Triacontadyupole";
+                default:
+                    return "Multipole<" + std::string{MultipoleType::Order} + ">";
+            }
+        } else {
+            return "Vector";
+        }
+    }
+
 }
 
 namespace std {

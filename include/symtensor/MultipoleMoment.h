@@ -36,11 +36,11 @@ namespace symtensor {
 
         using Base::Base;
 
-        template<typename S, indexable Vector>
-        static inline constexpr MultipoleMoment FromPointMass(const S &mass, const Vector &position) {
+        template<indexable Vector>
+        static inline constexpr MultipoleMoment FromPosition(const Vector &position) {
             return [&]<std::size_t... i>(std::index_sequence<i...>) constexpr {
                 return Self{
-                        mass,
+                        Scalar{1},
                         std::tuple_element_t<i + 1, typename Self::TensorTuple>::CartesianPower(position)...
                 };
             }(std::make_index_sequence<Self::NumTensors - 1>());
@@ -52,20 +52,9 @@ namespace symtensor {
 
         template<typename T>
         inline constexpr Self &operator/=(const T &scalar) {
-            [&]<std::size_t... i>(std::index_sequence<i...>) constexpr {
-                ((this->template tensor<i + 1>() /= scalar), ...);
-            }(std::make_index_sequence<Self::NumTensors - 1>());
+            this->template tensor<1>() /= scalar;
             return *this;
         }
-
-        template<typename T>
-        inline constexpr Self &operator*=(const T &scalar) {
-            [&]<std::size_t... i>(std::index_sequence<i...>) constexpr {
-                ((this->template tensor<i + 1>() *= scalar), ...);
-            }(std::make_index_sequence<Self::NumTensors - 1>());
-            return *this;
-        }
-
 
     };
 
