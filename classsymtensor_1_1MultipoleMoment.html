@@ -192,6 +192,11 @@
             <dd>Element-wise subtraction of a scalar.</dd>
             <dt>
               <div class="m-doc-template">template&lt;typename T&gt;</div>
+              <span class="m-doc-wrap-bumper">auto <a href="classsymtensor_1_1MultipoleBase.html#a4d4c0f9aa5b4ee2ae9aabdae4bc5e824" class="m-doc">operator*=</a>(</span><span class="m-doc-wrap">const T&amp; scalar) -&gt; Implementation&amp; <span class="m-label m-flat m-primary">constexpr</span></span>
+            </dt>
+            <dd>Element-wise multiplication by a scalar.</dd>
+            <dt>
+              <div class="m-doc-template">template&lt;typename T&gt;</div>
               <span class="m-doc-wrap-bumper">auto <a href="classsymtensor_1_1MultipoleBase.html#ab3e7aa5f2bd3209ff7588918077b04a3" class="m-doc">operator+</a>(</span><span class="m-doc-wrap">const T&amp; scalar) const -&gt; Implementation <span class="m-label m-flat m-primary">constexpr</span></span>
             </dt>
             <dd>Element-wise addition of a scalar.</dd>
@@ -521,6 +526,34 @@
                 <tr>
                   <td style="width: 1%">scalar</td>
                   <td>value to subtract from each tensor of the multipole</td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <th>Returns</th>
+                  <td>the modified multipole</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div></section>
+          <section class="m-doc-details" id="a4d4c0f9aa5b4ee2ae9aabdae4bc5e824"><div>
+            <h3>
+              <div class="m-doc-include m-code m-inverted m-right-m m-text-right"><span class="cp">#include</span> <a class="cpf" href="MultipoleBase_8h.html">&lt;symtensor/MultipoleBase.h&gt;</a></div>
+              <div class="m-doc-template">
+                template&lt;std::size_t Order, typename ... Tensors&gt;
+                template&lt;typename T&gt;
+              </div>
+              <span class="m-doc-wrap-bumper">Implementation&amp; symtensor::<wbr />MultipoleMoment&lt;Order, Tensors&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a4d4c0f9aa5b4ee2ae9aabdae4bc5e824" class="m-doc-self">operator*=</a>(</span><span class="m-doc-wrap">const T&amp; scalar) <span class="m-label m-primary">constexpr</span></span></span>
+            </h3>
+            <p>Element-wise multiplication by a scalar.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">scalar</td>
+                  <td>value to multiply each tensor of the multipole by.</td>
                 </tr>
               </tbody>
               <tfoot>
