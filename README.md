@@ -7,7 +7,7 @@
 ![MIT license](https://img.shields.io/badge/license-MIT-A51931) 
 ![C++20](https://img.shields.io/badge/standard-C%2B%2B20-blue?logo=cplusplus)
 
-_For more information, see the [documentation](jackson.campolattaro.nl/symtensor)!_
+_For more information, see the [documentation](https://jackson.campolattaro.nl/symtensor)!_
 
 Symtensor is designed for working with tensors which are...
 - **Symmetric** — only the upper triangle needs to be stored.
