@@ -3,6 +3,7 @@
 #include <symtensor/SymmetricTensor.h>
 #include <symtensor/glm.h>
 
+#define GLM_ENABLE_EXPERIMENTAL
 #include <glm/matrix.hpp>
 #include <glm/gtx/io.hpp>
 

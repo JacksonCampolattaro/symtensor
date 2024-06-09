@@ -8,6 +8,7 @@
 #include <iostream>
 
 #define GLM_FORCE_SWIZZLE
+#define GLM_ENABLE_EXPERIMENTAL
 
 #include <glm/vec4.hpp>
 #include <glm/gtx/string_cast.hpp>
@@ -65,7 +66,6 @@ template<std::size_t Order>
 
         auto A = g4 * SymmetricTensor3f<4>::CartesianPower(R);
 
-        // Why doesn't R at factored into this term?
         SymmetricTensor3f<4> B{};
         B.at<X, X, Y, Y>() = 1;
         B.at<X, X, Z, Z>() = 1;
@@ -236,7 +236,7 @@ void compareAccuracy(WorseApproximationFunction worseApproximationFunction,
 
 }
 
-TEST_CASE("Higher order approximations should be more accurate", "[MultipoleMoment]",) {
+TEST_CASE("Higher order approximations should be more accurate", "[MultipoleMoment]") {
 
     auto computeCenterOfMass = [](const std::vector<glm::vec4> &particles) {
         glm::vec3 centerOfMass{};
@@ -256,6 +256,20 @@ TEST_CASE("Higher order approximations should be more accurate", "[MultipoleMome
                 [&](auto particle) {
                     totalMass += particle.w;
                     return QuadrupoleMoment3f::FromPosition(glm::vec3{particle}) * particle.w;
+                }
+        ) / totalMass;
+    };
+    auto computeTracelessQuadrupole = [](auto particles) {
+        float totalMass = 0;
+        return std::transform_reduce(
+                particles.begin(), particles.end(),
+                QuadrupoleMoment3f{}, std::plus<>{},
+                [&](auto particle) {
+                    totalMass += particle.w;
+                    return QuadrupoleMoment3f::TracelessFromPosition(
+                            glm::vec3{particle},
+                            glm::length(glm::vec3(particle))
+                    ) * particle.w;
                 }
         ) / totalMass;
     };

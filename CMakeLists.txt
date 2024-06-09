@@ -7,6 +7,7 @@ project(symtensor CXX)
 # Options
 option(SYMTENSOR_BUILD_TESTS "Build tests" ON)
 option(SYMTENSOR_BUILD_BENCHMARKS "Build benchmarks" ON)
+option(SYMTENSOR_BUILD_EXAMPLES "Build examples" ON)
 option(SYMTENSOR_BUILD_DOCUMENTATION "Build documentation" ON)
 
 # Dependencies
@@ -39,6 +40,10 @@ endif ()
 if (SYMTENSOR_BUILD_BENCHMARKS)
     message("Benchmarks enabled")
     add_subdirectory(benchmarks)
+endif ()
+if (SYMTENSOR_BUILD_EXAMPLES)
+    message("Examples enabled")
+    add_subdirectory(examples)
 endif ()
 if (SYMTENSOR_BUILD_DOCUMENTATION)
     message("Documentation enabled")

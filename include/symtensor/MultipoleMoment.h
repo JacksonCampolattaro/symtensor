@@ -46,6 +46,22 @@ namespace symtensor {
             }(std::make_index_sequence<Self::NumTensors - 1>());
         }
 
+        template<indexable Vector>
+        static inline constexpr MultipoleMoment TracelessFromPosition(const Vector &position, float magnitude) {
+            return [&]<std::size_t... i>(std::index_sequence<i...>) constexpr {
+                return Self{
+                        Scalar{1},
+                        (
+                                std::tuple_element_t<i + 1, typename Self::TensorTuple>::CartesianPower(position) * 3
+                                - (
+                                        std::tuple_element_t<i + 1, typename Self::TensorTuple>::Identity()
+                                        * magnitude
+                                )
+                        )...
+                };
+            }(std::make_index_sequence<Self::NumTensors - 1>());
+        }
+
         inline constexpr const Scalar &scalar() const { return this->template tensor<0>(); }
 
         inline constexpr Scalar &scalar() { return this->template tensor<0>(); }
@@ -63,13 +79,6 @@ namespace symtensor {
 
     template<std::size_t Order>
     using MultipoleMoment3f = MultipoleMoment<Order, SymmetricTensor3f<1>>;
-
-    template<typename ...Tensors>
-    class Quadrupole : public MultipoleMoment<2, Tensors...> {
-        using Base = MultipoleMoment<2, Tensors...>;
-    public:
-        using Base::Base;
-    };
 
     /// 2d quadrupole moment with floating point elements
     using QuadrupoleMoment2f = MultipoleMoment2f<2>;

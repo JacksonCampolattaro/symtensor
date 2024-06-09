@@ -316,6 +316,25 @@ namespace symtensor {
             return tensor;
         }
 
+        /**
+         * @brief Constructor with a set constant value along the diagonal.
+         *
+         * @tparam T scalar-like type
+         *
+         * @param value the value to be placed along the diagonal of the tensor
+         *
+         * @return a symmetric tensor with elements of the diagonal diagonal equal to value, zero elsewhere.
+         */
+        template<typename T>
+        inline static constexpr Implementation ConstantDiagonal(const T &value) {
+            // todo: add a unit test for this
+            Implementation tensor;
+            [&]<std::size_t... d>(std::index_sequence<d...>) constexpr {
+                ((tensor.template at<repeat<R>(static_cast<I>(d))>() = value), ...);
+            }(std::make_index_sequence<Dimensions>());
+            return tensor;
+        }
+
 
         /// @}
     public:
