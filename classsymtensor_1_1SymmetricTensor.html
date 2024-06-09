@@ -200,6 +200,10 @@
               <span class="m-doc-wrap-bumper">static auto <a href="classsymtensor_1_1SymmetricTensorBase.html#a4bdb22efbddb72b1aa257884680ce910" class="m-doc">Diagonal</a>(</span><span class="m-doc-wrap">const Vector&amp; vector) -&gt; <a href="classsymtensor_1_1SymmetricTensor.html" class="m-doc">SymmetricTensor</a>&lt;S, D, R, Index&lt;D&gt;&gt; <span class="m-label m-flat m-primary">constexpr</span></span>
             </dt>
             <dd>Constructor with a set vector as the diagonal.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">static auto <a href="classsymtensor_1_1SymmetricTensorBase.html#af37ee58dc654cf1883be7bcc6ff996bc" class="m-doc">ConstantDiagonal</a>(</span><span class="m-doc-wrap">const T&amp; value) -&gt; <a href="classsymtensor_1_1SymmetricTensor.html" class="m-doc">SymmetricTensor</a>&lt;S, D, R, Index&lt;D&gt;&gt; <span class="m-label m-flat m-primary">constexpr</span></span>
+            </dt>
+            <dd>Constructor with a set constant value along the diagonal.</dd>
           </dl>
         </section>
         <section id="member-access">
@@ -466,6 +470,33 @@
                 <tr>
                   <th>Returns</th>
                   <td>a symmetric tensor with diagonal equal to vector, zero elsewhere.</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div></section>
+          <section class="m-doc-details" id="af37ee58dc654cf1883be7bcc6ff996bc"><div>
+            <h3>
+              <div class="m-doc-include m-code m-inverted m-right-m m-text-right"><span class="cp">#include</span> <a class="cpf" href="SymmetricTensorBase_8h.html">&lt;symtensor/SymmetricTensorBase.h&gt;</a></div>
+              <div class="m-doc-template">
+                template&lt;typename S, std::size_t D, std::size_t R, typename I&gt;
+              </div>
+              <span class="m-doc-wrap-bumper">static <a href="classsymtensor_1_1SymmetricTensor.html" class="m-doc">SymmetricTensor</a>&lt;S, D, R, Index&lt;D&gt;&gt; symtensor::<wbr />SymmetricTensor&lt;S, D, R, I&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#af37ee58dc654cf1883be7bcc6ff996bc" class="m-doc-self">ConstantDiagonal</a>(</span><span class="m-doc-wrap">const T&amp; value) <span class="m-label m-primary">constexpr</span></span></span>
+            </h3>
+            <p>Constructor with a set constant value along the diagonal.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">value</td>
+                  <td>the value to be placed along the diagonal of the tensor</td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <th>Returns</th>
+                  <td>a symmetric tensor with elements of the diagonal diagonal equal to value, zero elsewhere.</td>
                 </tr>
               </tfoot>
             </table>
