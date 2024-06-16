@@ -11,10 +11,23 @@
 namespace symtensor::gravity {
 
     template<auto index, indexable Vector>
-    inline auto product_of_elements(const Vector &v) {
+    inline constexpr auto product_of_elements(const Vector &v) {
+        // todo: maybe don't use std::apply for this?
         return std::apply([&](auto ...i) {
             return (v[static_cast<std::size_t>(i)] * ...);
         }, index);
+    }
+
+    template<auto index_pairs, indexable Vector>
+    inline constexpr auto kronecker_product_term(const Vector &v) {
+
+        constexpr auto nonzero_index_pairs = filter<index_pairs, [](auto partition) {
+            return kronecker_delta(std::get<0>(partition));
+        }>();
+
+        return [&]<auto... i>(std::index_sequence<i...>) constexpr {
+            return (product_of_elements<std::get<1>(nonzero_index_pairs[i])>(v) + ...);
+        }(std::make_index_sequence<nonzero_index_pairs.size()>());
     }
 
     template<auto index, std::size_t N, indexable Vector>
@@ -23,22 +36,67 @@ namespace symtensor::gravity {
         if constexpr (N == 1) {
             return R[static_cast<std::size_t>(index[0])] * g[1];
         } else if constexpr (N == 2) {
-            return g[1] * kroneckerDelta(index) + g[2] * cartesian_product_term;
+            return g[1] * kronecker_delta<float>(index) + g[2] * cartesian_product_term;
         } else if constexpr (N == 3) {
             constexpr auto partitions = binomial_partitions<1>(index);
             auto kronecker_product_term = [&]<auto... i>(std::index_sequence<i...>) constexpr {
                 return ((
-                        kroneckerDelta(std::get<1>(partitions[i])) ?
+                        kronecker_delta(std::get<1>(partitions[i])) ?
                         R[static_cast<std::size_t>(std::get<0>(partitions[i])[0])] : 0
                 ) + ...);
             }(std::make_index_sequence<partitions.size()>());
-            //            auto kronecker_product_term = std::apply([&](const auto &...partition) {
+            // todo: this is much nicer, but also much slower
+            //       it turns out that std::apply doesn't propagate constexpr!
+            //            auto kronecker_product_term = std::apply([&](const auto &...partition) constexpr {
             //                return ((
-            //                        kroneckerDelta(std::get<1>(partition)) ?
+            //                        kronecker_delta(std::get<1>(partition)) ?
             //                        R[static_cast<std::size_t>(std::get<0>(partition)[0])] : 0
             //                ) + ...);
             //            }, partitions);
             return g[2] * kronecker_product_term + g[3] * cartesian_product_term;
+        } else if constexpr (N == 4) {
+            auto result = g[4] * cartesian_product_term;
+            constexpr auto partitions = binomial_partitions<2>(index);
+            {
+                constexpr auto kronecker_term = [&]<auto... i>(std::index_sequence<i...>) constexpr {
+                    return ((
+                            kronecker_delta(std::get<0>(partitions[i])) &
+                            kronecker_delta(std::get<1>(partitions[i]))
+                    ) + ...);
+                }(std::make_index_sequence<partitions.size() / 2>());
+                if constexpr (kronecker_term > 0)
+                    result += g[2] * kronecker_term;
+            }
+            {
+                //                constexpr auto nonzero_index_pairs = filter<partitions, [](auto p) constexpr {
+                //                    return kronecker_delta(std::get<0>(p));
+                //                }>();
+                //                auto kronecker_product_term = [&]<auto... i>(std::index_sequence<i...>) constexpr {
+                //                    return (product_of_elements<std::get<1>(nonzero_index_pairs[i])>(R) + ...);
+                //                }(std::make_index_sequence<nonzero_index_pairs.size()>());
+                //                result += g[3] * kronecker_product_term;
+
+                constexpr auto kronecker_product_is_nonzero = [&]<auto... i>(std::index_sequence<i...>) constexpr {
+                    return ((kronecker_delta(std::get<0>(partitions[i]))) || ...);
+                }(std::make_index_sequence<partitions.size()>());
+                //                auto kronecker_product_term = filtered_transform_sum<
+                //                        [&](const auto &partition) constexpr { return kronecker_delta(std::get<0>(partition)); }
+                //                >(
+                //                        partitions,
+                //                        [&](const auto &partition) constexpr { return product_of_elements<std::get<1>(partition)>(R); }
+                //                );
+
+                auto kronecker_product_term = [&]<auto... i>(std::index_sequence<i...>) constexpr {
+                    return ((
+                            kronecker_delta(std::get<0>(partitions[i])) ?
+                            product_of_elements<std::get<1>(partitions[i])>(R) : 0
+                    ) + ...);
+                }(std::make_index_sequence<partitions.size()>());
+                if constexpr (kronecker_product_is_nonzero)
+                    result += g[3] * kronecker_product_term;
+            }
+
+            return result;
         }
         return 0.0f;
     }
@@ -46,10 +104,12 @@ namespace symtensor::gravity {
     template<std::size_t N, indexable Vector>
     inline auto derivative(const Vector &R) {
         auto r = glm::length(R);
+        // todo: factor these out into their own function
         auto g1 = -1.0f / pow<3>(r);
         auto g2 = 3.0f / pow<5>(r);
         auto g3 = -15.0f / pow<7>(r);
-        auto g_coeffs = std::array<decltype(r), 4>{1.0, g1, g2, g3};
+        auto g4 = 105.0f / pow<9>(r);
+        auto g_coeffs = std::array<decltype(r), 5>{1.0, g1, g2, g3, g4};
         return SymmetricTensor3f<N>::NullaryExpression([&]<auto index>() constexpr {
             return derivative_at<index, N>(R, g_coeffs);
         });

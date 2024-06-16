@@ -186,7 +186,7 @@ namespace symtensor {
          * @return a symmetric tensor with a value of 1 along the diagonal, 0 elsewhere.
          */
         inline static consteval Implementation Identity() {
-            return NullaryExpression([]<auto ...indices>() consteval { return kroneckerDelta(indices...); });
+            return NullaryExpression([]<auto ...indices>() consteval { return kronecker_delta<float>(indices...); });
         }
 
         /**
@@ -443,11 +443,37 @@ namespace symtensor {
             }(std::make_index_sequence<Dimensions>());
         }
 
+        /**
+         * @brief Produces the diagonal of the tensor
+         *
+         * @return A vector containing the elements along the diagonal of the tensor.
+         */
         inline constexpr auto diagonal() const {
             using Vector = ReplaceRank<Implementation, 1>;
             return [&]<std::size_t... d>(std::index_sequence<d...>) constexpr {
                 return Vector{at<repeat<R>(static_cast<I>(d))>() ...};
             }(std::make_index_sequence<Dimensions>());
+        }
+
+
+        /**
+         * The squared Frobenius norm of the tensor.
+         *
+         * @return Norm2 of the tensor, with the same type as the tensor's elements.
+         */
+        inline constexpr auto norm2() const {
+            return [&]<std::size_t... i>(std::index_sequence<i...>) {
+                return ((pow<2>(at<lexicographicalIndices<i>()>())) + ...);
+            }(std::make_index_sequence<NumValues>());
+        }
+
+        /**
+         * The Frobenius norm of the tensor.
+         *
+         * @return Norm of the tensor, with the same type as the tensor's elements.
+         */
+        inline constexpr auto norm() const {
+            return sqrt(norm2());
         }
 
         /// @}
@@ -513,7 +539,7 @@ namespace symtensor {
         inline constexpr Implementation operator*(const Scalar &scalar) const { return Self{*this} *= scalar; }
 
         /// @copydoc operator*=(const Scalar &)
-        friend inline constexpr Implementation operator*(const Scalar &scalar, const Self &tensor) {
+        inline friend constexpr Implementation operator*(const Scalar &scalar, const Self &tensor) {
             return tensor * scalar;
         }
 
@@ -599,6 +625,59 @@ namespace symtensor {
          * @return true if all elements of the tensors are equivalent, false otherwise
          */
         inline constexpr bool operator==(const Self &other) const = default;
+
+        /**
+         * @brief Inequality comparison between symmetric tensors.
+         *
+         * @param lhs tensor on the left hand side
+         * @param rhs tensor on the right hand side
+         * @return true if all elements of lhs are less than or equal to their corresponding elements in rhs
+         */
+        inline friend auto operator<=(const Implementation &lhs, const Implementation &rhs) {
+            return [&]<std::size_t... i>(std::index_sequence<i...>) {
+                ((lhs._data[i] <= rhs._data[i]) && ...);
+            }(std::make_index_sequence<NumUniqueValues>());
+        };
+
+        /**
+         * @brief Inequality comparison between symmetric tensors.
+         *
+         * @param lhs tensor on the left hand side
+         * @param rhs tensor on the right hand side
+         * @return true if all elements of lhs are less than their corresponding elements in rhs
+         */
+        inline friend auto operator<(const Implementation &lhs, const Implementation &rhs) {
+            return [&]<std::size_t... i>(std::index_sequence<i...>) {
+                ((lhs._data[i] < rhs._data[i]) && ...);
+            }(std::make_index_sequence<NumUniqueValues>());
+        };
+
+        /**
+         * @brief Inequality comparison between symmetric tensors.
+         *
+         * @param lhs tensor on the left hand side
+         * @param rhs tensor on the right hand side
+         * @return true if all elements of lhs are greater than or equal to their corresponding elements in rhs
+         */
+        inline friend auto operator>=(const Implementation &lhs, const Implementation &rhs) {
+            return [&]<std::size_t... i>(std::index_sequence<i...>) {
+                ((lhs._data[i] >= rhs._data[i]) && ...);
+            }(std::make_index_sequence<NumUniqueValues>());
+        };
+
+        /**
+         * @brief Inequality comparison between symmetric tensors.
+         *
+         * @param lhs tensor on the left hand side
+         * @param rhs tensor on the right hand side
+         * @return true if all elements of lhs are greater their corresponding elements in rhs
+         */
+        inline friend auto operator>(const Implementation &lhs, const Implementation &rhs) {
+            return [&]<std::size_t... i>(std::index_sequence<i...>) {
+                ((lhs._data[i] > rhs._data[i]) && ...);
+            }(std::make_index_sequence<NumValues>());
+        };
+
 
         /// @}
     public: // utility functions

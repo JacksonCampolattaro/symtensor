@@ -15,7 +15,7 @@ namespace symtensor {
 
     // This is a lovely little trick!
     // see: https://artificial-mind.net/blog/2020/11/14/cpp17-consteval
-    template <auto V>
+    template<auto V>
     static constexpr auto force_consteval = V;
 
     constexpr std::size_t pow(std::size_t V, std::size_t P) {
@@ -43,13 +43,16 @@ namespace symtensor {
         return n * factorial(n - 1);
     }
 
-    template<std::size_t R, typename I>
-    static constexpr int kroneckerDelta(std::array<I, R> dimensionalIndices) {
+    template<typename T=bool, std::size_t R, typename I>
+    static constexpr T kronecker_delta(std::array<I, R> dimensionalIndices) {
         return std::all_of(
                 dimensionalIndices.begin(), dimensionalIndices.end(),
                 [&](auto i) { return i == dimensionalIndices[0]; }
         );
     }
+
+    template<auto array>
+    static consteval auto kronecker_delta() { return kronecker_delta(array); }
 
     template<std::size_t N, typename T>
     static constexpr auto repeat(const T &value) {
@@ -95,6 +98,25 @@ namespace symtensor {
         auto temp = array[i];
         array[i] = array[j];
         array[j] = temp;
+    }
+
+
+    namespace {
+
+        template<typename T, std::size_t... I>
+        constexpr auto unzip_impl(const T &input, std::index_sequence<I...>) {
+            constexpr std::size_t N = std::tuple_size_v<typename std::decay_t<T>::value_type>;
+            return std::make_tuple(
+                    std::array<std::tuple_element_t<I, typename std::decay_t<T>::value_type>, std::tuple_size_v<std::decay_t<T>>>{
+                            std::get<I>(input[I])...}...
+            );
+        }
+
+    }
+
+    template<typename T, std::size_t N>
+    constexpr auto unzip(const std::array<T, N> &input) {
+        return unzip_impl(input, std::make_index_sequence<std::tuple_size_v<T>>{});
     }
 
     template<typename T, std::size_t N, typename Tuple>
@@ -177,7 +199,7 @@ namespace symtensor {
     using expand_tuple = typename expand_tuple_helper<TemplateType, Tuple, Prefix...>::type;
 
     template<typename T, std::size_t N>
-    constexpr std::array<T, N> nth_permutation(const std::array<T, N> &array, std::size_t n) {
+    inline constexpr std::array<T, N> nth_permutation(const std::array<T, N> &array, std::size_t n) {
         std::array<T, N> result = array;
 
         // Compute factorials
@@ -205,7 +227,7 @@ namespace symtensor {
     }
 
     template<typename T, std::size_t N>
-    constexpr auto permutations(const std::array<T, N> &arr) {
+    inline constexpr auto permutations(const std::array<T, N> &arr) {
         constexpr std::size_t num_permutations = factorial(N);
         std::array<std::array<T, N>, num_permutations> result{};
 
@@ -217,7 +239,7 @@ namespace symtensor {
     }
 
     template<typename T>
-    constexpr std::size_t n_choose_k(const T &n, const T &k) {
+    inline constexpr std::size_t n_choose_k(const T &n, const T &k) {
         if (k > n) return 0;
         if (k == 0 || n == k) return 1;
         if (n - k < k) return n_choose_k(n, n - k);
@@ -231,8 +253,7 @@ namespace symtensor {
     }
 
     template<std::size_t K, typename T, std::size_t N>
-    constexpr auto binomial_partitions(const std::array<T, N> &set) {
-        // todo: could I do this without calculating the factorial? That feels expensive.
+    inline constexpr auto binomial_partitions(const std::array<T, N> &set) {
         constexpr std::size_t num_partitions = n_choose_k(N, K);
 
         auto selection = std::array<bool, N>{};
@@ -253,8 +274,106 @@ namespace symtensor {
 
             pair_out++;
         } while (std::prev_permutation(selection.begin(), selection.end()));
-        // todo
         return partitions;
+    }
+
+    template<typename T, std::size_t N, typename F>
+    inline constexpr std::size_t count_if(const std::array<T, N> &array, const F &f = {}) {
+        std::size_t count = 0;
+        for (auto v: array)
+            if (f(v)) ++count;
+        return count;
+    }
+
+    template<auto array, auto f>
+    inline consteval auto filter() {
+        // todo: this might not be workable, actually
+        using T = decltype(array)::value_type;
+        constexpr auto N = array.size();
+
+        // Create a temporary vector to store the filtered elements
+        std::vector<T> temp;
+
+        // Iterate through the array and apply the filter function
+        std::copy_if(array.begin(), array.end(), std::back_inserter(temp), f);
+
+        // Create a new array to store the filtered elements
+        constexpr std::size_t num_matches = count_if(array, f);
+        std::array<T, num_matches> result;
+        std::copy(temp.begin(), temp.end(), result.begin());
+
+        return result;
+    }
+
+    template<typename T, std::size_t N>
+    inline constexpr std::size_t num_unique_elements(const std::array<T, N> &array) {
+        std::size_t count = 0;
+
+        for (auto it = array.begin(); it != array.end(); ++it) {
+            bool found = false;
+            for (auto jt = array.begin(); jt != it; ++jt) {
+                if (*it == *jt) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                ++count;
+            }
+        }
+
+        return count;
+    }
+
+    template<auto array>
+    inline consteval auto unique() {
+        // todo: this might not be workable, actually
+        using T = decltype(array)::value_type;
+        constexpr auto N = array.size();
+
+        auto counts = std::array<std::size_t, N>{0};
+
+        // Check each element
+        for (const auto &value: array) {
+
+            // Get the index of the first appearance of this value
+            auto it = std::find_if(array.begin(), array.end(), [&](const auto &elem) { return elem == value; });
+            std::size_t index = std::distance(array.begin(), it);
+
+            // Increment the appropriate counter
+            counts[index]++;
+        }
+
+        // Construct the output container now that we know the size,
+        // and fill it with unique elements and their counts.
+        std::array<std::tuple<T, std::size_t>, num_unique_elements(array)> result{};
+        auto out = result.begin();
+        for (int i = 0; i < N; ++i) {
+            if (counts[i] > 0)
+                *(out++) = {array[i], counts[i]};
+        }
+
+        return result;
+    }
+
+    template<typename Filter, typename Transform, typename T, std::size_t N>
+    inline constexpr auto filtered_transform_sum(
+            const std::array<T, N> &values,
+            Filter filter = {},
+            Transform transform = {},
+            decltype(transform(values[0])) init = {}
+    ) {
+        using Out = decltype(transform(values[0]));
+        auto sum = Out{0};
+        [&]<auto... i>(std::index_sequence<i...>) constexpr {
+            ((filter(values[i]) ? (sum[i] += transform(values[i])) : 0), ...);
+        }(std::make_index_sequence<N>());
+        return sum;
+    }
+
+    template<typename F, typename T, std::size_t N>
+    inline constexpr auto deduplicated_sum(const std::array<T, N> &values, F function = {}) {
+        // todo: This may be very important for good performance!
     }
 
 }

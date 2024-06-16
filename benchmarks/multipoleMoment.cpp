@@ -16,17 +16,25 @@ TEST_CASE("benchmark: Multipole moment gravity approximation", "[MultipoleMoment
 TEST_CASE("benchmark: Gravity derivatives construction", "[Gravity]") {
     auto R = glm::vec3{1.0, 2.0, 3.0};
 
-    //    CHECK(gravity::D<1>(R) == gravity::derivative<1>(R));
-    //    CHECK(gravity::D<2>(R) == gravity::derivative<2>(R));
-    //    CHECK(gravity::D<3>(R) == gravity::derivative<3>(R));
-//    CHECK(gravity::D<4>(R) == gravity::derivative<4>(R));
-    //    CHECK(gravity::D<5>(R) == gravity::derivative<5>(R));
+
+    constexpr std::array<int, 5> input = {1, 2, 2, 3, 1};
+    constexpr auto result = filter<input, [&](auto v) constexpr { return v != 3; }>();
+
+    // Print the result (for non-constexpr context)
+    for (const auto &value: result) {
+        std::cout << value << std::endl;
+    }
+
+    CHECK((gravity::D<2>(R) - gravity::derivative<2>(R)).norm() < 1e-7);
+    CHECK((gravity::D<3>(R) - gravity::derivative<3>(R)).norm() < 1e-7);
+    CHECK((gravity::D<4>(R) - gravity::derivative<4>(R)).norm() < 1e-7);
 
     //        BENCHMARK("D' Construction") { return gravity::D<1>(R); };
     //        BENCHMARK("D' Construction *") { return gravity::derivative<1>(R); };
     //        BENCHMARK("D'' Construction") { return gravity::D<2>(R); };
     //        BENCHMARK("D'' Construction *") { return gravity::derivative<2>(R); };
-    BENCHMARK("D''' Construction") { return gravity::D<3>(R); };
-    BENCHMARK("D''' Construction") { return gravity::derivative<3>(R); };
-    //    BENCHMARK("D'''' Construction") { return gravity::D<4>(R); };
+    //        BENCHMARK("D''' Construction") { return gravity::D<3>(R); };
+    //        BENCHMARK("D''' Construction *") { return gravity::derivative<3>(R); };
+    BENCHMARK("D'''' Construction") { return gravity::D<4>(R); };
+    BENCHMARK("D'''' Construction *") { return gravity::derivative<4>(R); };
 }
