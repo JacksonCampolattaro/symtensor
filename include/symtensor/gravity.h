@@ -33,7 +33,7 @@ namespace symtensor::gravity {
     }
 
     template<auto index, std::size_t N, indexable Vector>
-    [[clang::always_inline, gnu::always_inline]] inline auto derivative_at(const Vector &R) {
+    ALWAYS_INLINE auto derivative_at(const Vector &R) {
 
         auto r = glm::length(R);
         auto g1 = -1.0f / pow<3>(r);
@@ -111,9 +111,8 @@ namespace symtensor::gravity {
     }
 
     template<std::size_t N, indexable Vector>
-    [[clang::always_inline, gnu::always_inline]]
-    inline auto derivative(const Vector &R) {
-        return SymmetricTensor3f<N>::NullaryExpression([&]<auto index>()  __attribute__((always_inline)) constexpr {
+    ALWAYS_INLINE auto derivative(const Vector &R) {
+        return SymmetricTensor3f<N>::NullaryExpression([&]<auto index>()  LAMBDA_ALWAYS_INLINE constexpr {
             return derivative_at<index, N>(R);
         });
 
@@ -122,7 +121,7 @@ namespace symtensor::gravity {
 
     // todo: this needs to be regularized -- there must be a pattern!
     template<std::size_t Order, indexable Vector>
-    [[gnu::always_inline]] inline auto D(const Vector &R) {
+    ALWAYS_INLINE auto D(const Vector &R) {
 
         auto r = glm::length(R);
 

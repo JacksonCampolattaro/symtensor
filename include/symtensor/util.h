@@ -296,7 +296,7 @@ namespace symtensor {
     template<auto array, auto f>
     inline consteval auto filter() {
         // todo: this might not be workable, actually
-        using T = decltype(array)::value_type;
+        using T = typename decltype(array)::value_type;
         constexpr auto N = array.size();
 
         // Create a temporary vector to store the filtered elements
@@ -336,7 +336,7 @@ namespace symtensor {
     template<auto array>
     inline consteval auto unique() {
         // todo: this might not be workable, actually
-        using T = decltype(array)::value_type;
+        using T = typename decltype(array)::value_type;
         constexpr auto N = array.size();
 
         auto counts = std::array<std::size_t, N>{0};
