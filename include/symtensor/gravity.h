@@ -112,10 +112,9 @@ namespace symtensor::gravity {
 
     template<std::size_t N, indexable Vector>
     ALWAYS_INLINE auto derivative(const Vector &R) {
-        return SymmetricTensor3f<N>::NullaryExpression([&]<auto index>()  LAMBDA_ALWAYS_INLINE constexpr {
+        return SymmetricTensor3f<N>::NullaryExpression([&]<auto index>()  LAMBDA_ALWAYS_INLINE {
             return derivative_at<index, N>(R);
         });
-
     };
 
 
