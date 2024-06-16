@@ -194,6 +194,18 @@
               <span class="m-doc-wrap-bumper">auto <a href="#adcfa7c7604504ef013c009c7f1f863b9" class="m-doc">trace</a>(</span><span class="m-doc-wrap">) const -&gt; Scalar <span class="m-label m-flat m-primary">constexpr</span></span>
             </dt>
             <dd>Computes the trace of the tensor.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#acfe8ae2525cfae8470ba7bb5f2760574" class="m-doc">diagonal</a>(</span><span class="m-doc-wrap">) const -&gt; auto <span class="m-label m-flat m-primary">constexpr</span></span>
+            </dt>
+            <dd>Produces the diagonal of the tensor.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#a499cc9eca3402a57afd3d7137e32ad70" class="m-doc">norm2</a>(</span><span class="m-doc-wrap">) const -&gt; auto <span class="m-label m-flat m-primary">constexpr</span></span>
+            </dt>
+            <dd></dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#aef7df7bfcadeb5135c126113d5ba0ddb" class="m-doc">norm</a>(</span><span class="m-doc-wrap">) const -&gt; auto <span class="m-label m-flat m-primary">constexpr</span></span>
+            </dt>
+            <dd></dd>
           </dl>
         </section>
         <section id="tensor-scalar-operators">
@@ -266,6 +278,26 @@
               <span class="m-doc-wrap-bumper">auto <a href="#ac582b6b1f8901dff568eef9e821cfa49" class="m-doc">operator==</a>(</span><span class="m-doc-wrap">const <a href="classsymtensor_1_1SymmetricTensorBase.html" class="m-doc">Self</a>&amp; other) const -&gt; bool <span class="m-label m-flat m-info">defaulted</span> <span class="m-label m-flat m-primary">constexpr</span></span>
             </dt>
             <dd>Comparison with another symmetric tensor.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#a0dcf3bd9b901a91efaccf9166cf34b9b" class="m-doc">operator&lt;=</a>(</span><span class="m-doc-wrap">const Implementation&amp; lhs,
+              const Implementation&amp; rhs) -&gt; auto</span>
+            </dt>
+            <dd>Inequality comparison between symmetric tensors.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#a2ed9723022867e26d690b0bb7f722f74" class="m-doc">operator&lt;</a>(</span><span class="m-doc-wrap">const Implementation&amp; lhs,
+              const Implementation&amp; rhs) -&gt; auto</span>
+            </dt>
+            <dd>Inequality comparison between symmetric tensors.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#a76053e11b58bb04bc04e6335ca3ff032" class="m-doc">operator&gt;=</a>(</span><span class="m-doc-wrap">const Implementation&amp; lhs,
+              const Implementation&amp; rhs) -&gt; auto</span>
+            </dt>
+            <dd>Inequality comparison between symmetric tensors.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#a0312db8f564027f96fa24a32369fac10" class="m-doc">operator&gt;</a>(</span><span class="m-doc-wrap">const Implementation&amp; lhs,
+              const Implementation&amp; rhs) -&gt; auto</span>
+            </dt>
+            <dd>Inequality comparison between symmetric tensors.</dd>
           </dl>
         </section>
         <section>
@@ -650,6 +682,57 @@
             </table>
 <p>This is equivalent to the sum of the diagonal elements.</p>
           </div></section>
+          <section class="m-doc-details" id="acfe8ae2525cfae8470ba7bb5f2760574"><div>
+            <h3>
+              <div class="m-doc-template">
+                template&lt;class Implementation, typename S, std::size_t D, std::size_t R, typename I&gt;
+              </div>
+              <span class="m-doc-wrap-bumper">auto symtensor::<wbr />SymmetricTensorBase&lt;Implementation, S, D, R, I&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#acfe8ae2525cfae8470ba7bb5f2760574" class="m-doc-self">diagonal</a>(</span><span class="m-doc-wrap">) const <span class="m-label m-primary">constexpr</span></span></span>
+            </h3>
+            <p>Produces the diagonal of the tensor.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <tfoot>
+                <tr>
+                  <th style="width: 1%">Returns</th>
+                  <td>A vector containing the elements along the diagonal of the tensor.</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div></section>
+          <section class="m-doc-details" id="a499cc9eca3402a57afd3d7137e32ad70"><div>
+            <h3>
+              <div class="m-doc-template">
+                template&lt;class Implementation, typename S, std::size_t D, std::size_t R, typename I&gt;
+              </div>
+              <span class="m-doc-wrap-bumper">auto symtensor::<wbr />SymmetricTensorBase&lt;Implementation, S, D, R, I&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a499cc9eca3402a57afd3d7137e32ad70" class="m-doc-self">norm2</a>(</span><span class="m-doc-wrap">) const <span class="m-label m-primary">constexpr</span></span></span>
+            </h3>
+            <table class="m-table m-fullwidth m-flat">
+              <tfoot>
+                <tr>
+                  <th style="width: 1%">Returns</th>
+                  <td>Norm2 of the tensor, with the same type as the tensor&#x27;s elements.</td>
+                </tr>
+              </tfoot>
+            </table>
+<p>The squared Frobenius norm of the tensor.</p>
+          </div></section>
+          <section class="m-doc-details" id="aef7df7bfcadeb5135c126113d5ba0ddb"><div>
+            <h3>
+              <div class="m-doc-template">
+                template&lt;class Implementation, typename S, std::size_t D, std::size_t R, typename I&gt;
+              </div>
+              <span class="m-doc-wrap-bumper">auto symtensor::<wbr />SymmetricTensorBase&lt;Implementation, S, D, R, I&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#aef7df7bfcadeb5135c126113d5ba0ddb" class="m-doc-self">norm</a>(</span><span class="m-doc-wrap">) const <span class="m-label m-primary">constexpr</span></span></span>
+            </h3>
+            <table class="m-table m-fullwidth m-flat">
+              <tfoot>
+                <tr>
+                  <th style="width: 1%">Returns</th>
+                  <td>Norm of the tensor, with the same type as the tensor&#x27;s elements.</td>
+                </tr>
+              </tfoot>
+            </table>
+<p>The Frobenius norm of the tensor.</p>
+          </div></section>
           <section class="m-doc-details" id="a4475f542a6e252488d6393a4a67a9b48"><div>
             <h3>
               <div class="m-doc-template">
@@ -1015,6 +1098,130 @@
                 <tr>
                   <th>Returns</th>
                   <td>true if all elements of the tensors are equivalent, false otherwise</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div></section>
+          <section class="m-doc-details" id="a0dcf3bd9b901a91efaccf9166cf34b9b"><div>
+            <h3>
+              <div class="m-doc-template">
+                template&lt;class Implementation, typename S, std::size_t D, std::size_t R, typename I&gt;
+              </div>
+              <span class="m-doc-wrap-bumper">auto symtensor::<wbr />SymmetricTensorBase&lt;Implementation, S, D, R, I&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a0dcf3bd9b901a91efaccf9166cf34b9b" class="m-doc-self">operator&lt;=</a>(</span><span class="m-doc-wrap">const Implementation&amp; lhs,
+              const Implementation&amp; rhs)</span></span>
+            </h3>
+            <p>Inequality comparison between symmetric tensors.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">lhs</td>
+                  <td>tensor on the left hand side</td>
+                </tr>
+                <tr>
+                  <td>rhs</td>
+                  <td>tensor on the right hand side</td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <th>Returns</th>
+                  <td>true if all elements of lhs are less than or equal to their corresponding elements in rhs</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div></section>
+          <section class="m-doc-details" id="a2ed9723022867e26d690b0bb7f722f74"><div>
+            <h3>
+              <div class="m-doc-template">
+                template&lt;class Implementation, typename S, std::size_t D, std::size_t R, typename I&gt;
+              </div>
+              <span class="m-doc-wrap-bumper">auto symtensor::<wbr />SymmetricTensorBase&lt;Implementation, S, D, R, I&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a2ed9723022867e26d690b0bb7f722f74" class="m-doc-self">operator&lt;</a>(</span><span class="m-doc-wrap">const Implementation&amp; lhs,
+              const Implementation&amp; rhs)</span></span>
+            </h3>
+            <p>Inequality comparison between symmetric tensors.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">lhs</td>
+                  <td>tensor on the left hand side</td>
+                </tr>
+                <tr>
+                  <td>rhs</td>
+                  <td>tensor on the right hand side</td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <th>Returns</th>
+                  <td>true if all elements of lhs are less than their corresponding elements in rhs</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div></section>
+          <section class="m-doc-details" id="a76053e11b58bb04bc04e6335ca3ff032"><div>
+            <h3>
+              <div class="m-doc-template">
+                template&lt;class Implementation, typename S, std::size_t D, std::size_t R, typename I&gt;
+              </div>
+              <span class="m-doc-wrap-bumper">auto symtensor::<wbr />SymmetricTensorBase&lt;Implementation, S, D, R, I&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a76053e11b58bb04bc04e6335ca3ff032" class="m-doc-self">operator&gt;=</a>(</span><span class="m-doc-wrap">const Implementation&amp; lhs,
+              const Implementation&amp; rhs)</span></span>
+            </h3>
+            <p>Inequality comparison between symmetric tensors.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">lhs</td>
+                  <td>tensor on the left hand side</td>
+                </tr>
+                <tr>
+                  <td>rhs</td>
+                  <td>tensor on the right hand side</td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <th>Returns</th>
+                  <td>true if all elements of lhs are greater than or equal to their corresponding elements in rhs</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div></section>
+          <section class="m-doc-details" id="a0312db8f564027f96fa24a32369fac10"><div>
+            <h3>
+              <div class="m-doc-template">
+                template&lt;class Implementation, typename S, std::size_t D, std::size_t R, typename I&gt;
+              </div>
+              <span class="m-doc-wrap-bumper">auto symtensor::<wbr />SymmetricTensorBase&lt;Implementation, S, D, R, I&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a0312db8f564027f96fa24a32369fac10" class="m-doc-self">operator&gt;</a>(</span><span class="m-doc-wrap">const Implementation&amp; lhs,
+              const Implementation&amp; rhs)</span></span>
+            </h3>
+            <p>Inequality comparison between symmetric tensors.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">lhs</td>
+                  <td>tensor on the left hand side</td>
+                </tr>
+                <tr>
+                  <td>rhs</td>
+                  <td>tensor on the right hand side</td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <th>Returns</th>
+                  <td>true if all elements of lhs are greater their corresponding elements in rhs</td>
                 </tr>
               </tfoot>
             </table>
