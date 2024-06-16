@@ -10,6 +10,8 @@
 
 namespace symtensor::gravity {
 
+
+
     template<auto index, indexable Vector>
     inline constexpr auto product_of_elements(const Vector &v) {
         // todo: maybe don't use std::apply for this?
@@ -31,12 +33,19 @@ namespace symtensor::gravity {
     }
 
     template<auto index, std::size_t N, indexable Vector>
-    inline auto derivative_at(const Vector &R, const auto &g) {
+    [[clang::always_inline, gnu::always_inline]] inline auto derivative_at(const Vector &R) {
+
+        auto r = glm::length(R);
+        auto g1 = -1.0f / pow<3>(r);
+        auto g2 = 3.0f / pow<5>(r);
+        auto g3 = -15.0f / pow<7>(r);
+        auto g4 = 105.0f / pow<9>(r);
+
         auto cartesian_product_term = product_of_elements<index>(R);
         if constexpr (N == 1) {
-            return R[static_cast<std::size_t>(index[0])] * g[1];
+            return R[static_cast<std::size_t>(index[0])] * g1;
         } else if constexpr (N == 2) {
-            return g[1] * kronecker_delta<float>(index) + g[2] * cartesian_product_term;
+            return g1 * kronecker_delta<float>(index) + g2 * cartesian_product_term;
         } else if constexpr (N == 3) {
             constexpr auto partitions = binomial_partitions<1>(index);
             auto kronecker_product_term = [&]<auto... i>(std::index_sequence<i...>) constexpr {
@@ -53,9 +62,9 @@ namespace symtensor::gravity {
             //                        R[static_cast<std::size_t>(std::get<0>(partition)[0])] : 0
             //                ) + ...);
             //            }, partitions);
-            return g[2] * kronecker_product_term + g[3] * cartesian_product_term;
+            return g2 * kronecker_product_term + g3 * cartesian_product_term;
         } else if constexpr (N == 4) {
-            auto result = g[4] * cartesian_product_term;
+            auto result = g4 * cartesian_product_term;
             constexpr auto partitions = binomial_partitions<2>(index);
             {
                 constexpr auto kronecker_term = [&]<auto... i>(std::index_sequence<i...>) constexpr {
@@ -65,7 +74,7 @@ namespace symtensor::gravity {
                     ) + ...);
                 }(std::make_index_sequence<partitions.size() / 2>());
                 if constexpr (kronecker_term > 0)
-                    result += g[2] * kronecker_term;
+                    result += g2 * kronecker_term;
             }
             {
                 //                constexpr auto nonzero_index_pairs = filter<partitions, [](auto p) constexpr {
@@ -93,7 +102,7 @@ namespace symtensor::gravity {
                     ) + ...);
                 }(std::make_index_sequence<partitions.size()>());
                 if constexpr (kronecker_product_is_nonzero)
-                    result += g[3] * kronecker_product_term;
+                    result += g3 * kronecker_product_term;
             }
 
             return result;
@@ -102,16 +111,10 @@ namespace symtensor::gravity {
     }
 
     template<std::size_t N, indexable Vector>
+    [[clang::always_inline, gnu::always_inline]]
     inline auto derivative(const Vector &R) {
-        auto r = glm::length(R);
-        // todo: factor these out into their own function
-        auto g1 = -1.0f / pow<3>(r);
-        auto g2 = 3.0f / pow<5>(r);
-        auto g3 = -15.0f / pow<7>(r);
-        auto g4 = 105.0f / pow<9>(r);
-        auto g_coeffs = std::array<decltype(r), 5>{1.0, g1, g2, g3, g4};
-        return SymmetricTensor3f<N>::NullaryExpression([&]<auto index>() constexpr {
-            return derivative_at<index, N>(R, g_coeffs);
+        return SymmetricTensor3f<N>::NullaryExpression([&]<auto index>()  __attribute__((always_inline)) constexpr {
+            return derivative_at<index, N>(R);
         });
 
     };
@@ -197,6 +200,15 @@ namespace symtensor::gravity {
             return A + B + C;
 
         }
+    }
+
+
+    auto derivative4(const glm::vec3 &R) {
+        return derivative<4>(R);
+    }
+
+    auto D4(const glm::vec3 &R) {
+        return D<4>(R);
     }
 
 }

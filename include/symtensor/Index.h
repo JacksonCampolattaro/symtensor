@@ -238,7 +238,7 @@ namespace symtensor {
         if (R == 1) return static_cast<std::size_t>(dimensionalIndices[0]) - lowestIndex;
 
         // Ensure the indices are in the canonical order
-        std::sort(dimensionalIndices.begin(), dimensionalIndices.end());
+        dimensionalIndices = sorted(dimensionalIndices);
 
         if (dimensionalIndices[0] == I{lowestIndex}) {
             // If the first index is X, then we know we are in the first portion of the range,

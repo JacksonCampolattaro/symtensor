@@ -215,15 +215,16 @@ namespace symtensor {
          * @return a symmetric tensor with each value set by evaluating the function.
          */
         template<typename F>
+        [[clang::always_inline, gnu::always_inline]]
         inline static constexpr Implementation NullaryExpression(F function = {}) {
             if constexpr (requires { function.template operator()<dimensionalIndices(0)>(); }) {
                 // If a function provides a template parameter for compile-time indexing, prefer that
-                return [&]<std::size_t... i>(std::index_sequence<i...>) constexpr {
+                return [&]<std::size_t... i>(std::index_sequence<i...>) __attribute__((always_inline)) constexpr {
                     return Implementation{static_cast<S>(function.template operator()<dimensionalIndices(i)>())...};
                 }(std::make_index_sequence<NumUniqueValues>());
             } else {
                 // Otherwise, the function must take the indices as its only argument
-                return [&]<std::size_t... i>(std::index_sequence<i...>) constexpr {
+                return [&]<std::size_t... i>(std::index_sequence<i...>) __attribute__((always_inline)) constexpr {
                     return Implementation{static_cast<S>(function(dimensionalIndices(i)))...};
                 }(std::make_index_sequence<NumUniqueValues>());
             }

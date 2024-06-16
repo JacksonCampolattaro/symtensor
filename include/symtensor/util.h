@@ -85,6 +85,12 @@ namespace symtensor {
         }
     }
 
+    template<std::size_t N, typename T>
+    inline constexpr std::array<T, N> sorted(std::array<T, N> array) {
+        std::sort(array.begin(), array.end());
+        return array;
+    }
+
     template<typename T, std::size_t NA, std::size_t NB>
     constexpr std::array<T, NA + NB> concatenate(const std::array<T, NA> &a, const std::array<T, NB> &b) {
         std::array<T, NA + NB> result{};
@@ -271,6 +277,8 @@ namespace symtensor {
                 else
                     *(b_out++) = set[i];
             }
+            get<0>(*pair_out) = sorted(get<0>(*pair_out));
+            get<1>(*pair_out) = sorted(get<1>(*pair_out));
 
             pair_out++;
         } while (std::prev_permutation(selection.begin(), selection.end()));
@@ -369,6 +377,28 @@ namespace symtensor {
             ((filter(values[i]) ? (sum[i] += transform(values[i])) : 0), ...);
         }(std::make_index_sequence<N>());
         return sum;
+    }
+
+    template<typename T, std::size_t N>
+    constexpr std::array<std::size_t, N> countAppearances(const std::array<T, N> &arr) {
+        std::array<std::size_t, N> counts = {};
+        for (std::size_t i = 0; i < N; ++i) {
+            for (std::size_t j = 0; j < N; ++j) {
+                if (arr[i] == arr[j]) {
+                    ++counts[i];
+                }
+            }
+        }
+        return counts;
+    }
+
+    template<typename T, std::size_t N>
+    constexpr std::size_t numUniquePermutations(const std::array<T, N> &arr) {
+        const auto counts = countOccurrences(arr);
+        unsigned long long divisor = 1;
+        for (std::size_t i = 0; i < N; ++i)
+            divisor *= factorial(counts[i]);
+        return factorial(N) / divisor;
     }
 
     template<typename F, typename T, std::size_t N>
