@@ -107,22 +107,17 @@ namespace symtensor {
     }
 
 
-    namespace {
+    template<typename A, std::size_t NA, typename B, std::size_t NB, std::size_t N>
+    constexpr auto unzip(const std::array<std::tuple<std::array<A, NA>, std::array<B, NB>>, N> &input) {
+        std::array<std::array<A, NA>, N> arrayA{};
+        std::array<std::array<B, NB>, N> arrayB{};
 
-        template<typename T, std::size_t... I>
-        constexpr auto unzip_impl(const T &input, std::index_sequence<I...>) {
-            constexpr std::size_t N = std::tuple_size_v<typename std::decay_t<T>::value_type>;
-            return std::make_tuple(
-                    std::array<std::tuple_element_t<I, typename std::decay_t<T>::value_type>, std::tuple_size_v<std::decay_t<T>>>{
-                            std::get<I>(input[I])...}...
-            );
+        for (std::size_t i = 0; i < N; ++i) {
+            arrayA[i] = std::get<0>(input[i]);
+            arrayB[i] = std::get<1>(input[i]);
         }
 
-    }
-
-    template<typename T, std::size_t N>
-    constexpr auto unzip(const std::array<T, N> &input) {
-        return unzip_impl(input, std::make_index_sequence<std::tuple_size_v<T>>{});
+        return std::make_tuple(arrayA, arrayB);
     }
 
     template<typename T, std::size_t N, typename Tuple>
@@ -380,20 +375,22 @@ namespace symtensor {
     }
 
     template<typename T, std::size_t N>
-    constexpr std::array<std::size_t, N> countAppearances(const std::array<T, N> &arr) {
-        std::array<std::size_t, N> counts = {};
-        for (std::size_t i = 0; i < N; ++i) {
-            for (std::size_t j = 0; j < N; ++j) {
-                if (arr[i] == arr[j]) {
-                    ++counts[i];
-                }
-            }
+    constexpr std::array<std::size_t, N> repeats_table(const std::array<T, N> &array) {
+        std::array<std::size_t, N> counts = {0};
+        for (const auto &value: array) {
+
+            // Get the index of the first appearance of this value
+            auto it = std::find_if(array.begin(), array.end(), [&](const auto &elem) { return elem == value; });
+            std::size_t index = std::distance(array.begin(), it);
+
+            // Increment the appropriate counter
+            counts[index]++;
         }
         return counts;
     }
 
     template<typename T, std::size_t N>
-    constexpr std::size_t numUniquePermutations(const std::array<T, N> &arr) {
+    constexpr std::size_t num_unique_permutations(const std::array<T, N> &arr) {
         const auto counts = countOccurrences(arr);
         unsigned long long divisor = 1;
         for (std::size_t i = 0; i < N; ++i)

@@ -1,5 +1,4 @@
-#ifndef SYMTENSOR_GRAVITY_H
-#define SYMTENSOR_GRAVITY_H
+#pragma once
 
 #define GLM_ENABLE_EXPERIMENTAL
 
@@ -10,26 +9,12 @@
 
 namespace symtensor::gravity {
 
-
-
     template<auto index, indexable Vector>
     inline constexpr auto product_of_elements(const Vector &v) {
         // todo: maybe don't use std::apply for this?
         return std::apply([&](auto ...i) {
             return (v[static_cast<std::size_t>(i)] * ...);
         }, index);
-    }
-
-    template<auto index_pairs, indexable Vector>
-    inline constexpr auto kronecker_product_term(const Vector &v) {
-
-        constexpr auto nonzero_index_pairs = filter<index_pairs, [](auto partition) {
-            return kronecker_delta(std::get<0>(partition));
-        }>();
-
-        return [&]<auto... i>(std::index_sequence<i...>) constexpr {
-            return (product_of_elements<std::get<1>(nonzero_index_pairs[i])>(v) + ...);
-        }(std::make_index_sequence<nonzero_index_pairs.size()>());
     }
 
     template<auto index, std::size_t N, indexable Vector>
@@ -48,61 +33,36 @@ namespace symtensor::gravity {
             return g1 * kronecker_delta<float>(index) + g2 * cartesian_product_term;
         } else if constexpr (N == 3) {
             constexpr auto partitions = binomial_partitions<1>(index);
-            auto kronecker_product_term = [&]<auto... i>(std::index_sequence<i...>) constexpr {
+            constexpr auto r_indices = std::get<0>(unzip(partitions));
+            constexpr auto kronecker_indices = std::get<1>(unzip(partitions));
+            constexpr auto repeats = repeats_table(kronecker_indices);
+            auto kronecker_product_term = [&]<auto... i>(std::index_sequence<i...>) LAMBDA_ALWAYS_INLINE {
                 return ((
-                        kronecker_delta(std::get<1>(partitions[i])) ?
-                        R[static_cast<std::size_t>(std::get<0>(partitions[i])[0])] : 0
+                        force_consteval<kronecker_delta<kronecker_indices[i]>() && (repeats[i] > 0)> ?
+                        product_of_elements<r_indices[i]>(R) * repeats[i] : 0
                 ) + ...);
-            }(std::make_index_sequence<partitions.size()>());
-            // todo: this is much nicer, but also much slower
-            //       it turns out that std::apply doesn't propagate constexpr!
-            //            auto kronecker_product_term = std::apply([&](const auto &...partition) constexpr {
-            //                return ((
-            //                        kronecker_delta(std::get<1>(partition)) ?
-            //                        R[static_cast<std::size_t>(std::get<0>(partition)[0])] : 0
-            //                ) + ...);
-            //            }, partitions);
+            }(std::make_index_sequence<kronecker_indices.size()>());
             return g2 * kronecker_product_term + g3 * cartesian_product_term;
         } else if constexpr (N == 4) {
             auto result = g4 * cartesian_product_term;
             constexpr auto partitions = binomial_partitions<2>(index);
+            constexpr auto kronecker_indices = std::get<0>(unzip(partitions));
+            constexpr auto r_indices = std::get<1>(unzip(partitions));
             {
                 constexpr auto kronecker_term = [&]<auto... i>(std::index_sequence<i...>) constexpr {
-                    return ((
-                            kronecker_delta(std::get<0>(partitions[i])) &
-                            kronecker_delta(std::get<1>(partitions[i]))
-                    ) + ...);
-                }(std::make_index_sequence<partitions.size() / 2>());
-                if constexpr (kronecker_term > 0)
-                    result += g2 * kronecker_term;
+                    return ((kronecker_delta(kronecker_indices[i]) & kronecker_delta(r_indices[i])) + ...);
+                }(std::make_index_sequence<kronecker_indices.size() / 2>());
+                result += g2 * kronecker_term;
             }
             {
-                //                constexpr auto nonzero_index_pairs = filter<partitions, [](auto p) constexpr {
-                //                    return kronecker_delta(std::get<0>(p));
-                //                }>();
-                //                auto kronecker_product_term = [&]<auto... i>(std::index_sequence<i...>) constexpr {
-                //                    return (product_of_elements<std::get<1>(nonzero_index_pairs[i])>(R) + ...);
-                //                }(std::make_index_sequence<nonzero_index_pairs.size()>());
-                //                result += g[3] * kronecker_product_term;
-
-                constexpr auto kronecker_product_is_nonzero = [&]<auto... i>(std::index_sequence<i...>) constexpr {
-                    return ((kronecker_delta(std::get<0>(partitions[i]))) || ...);
-                }(std::make_index_sequence<partitions.size()>());
-                //                auto kronecker_product_term = filtered_transform_sum<
-                //                        [&](const auto &partition) constexpr { return kronecker_delta(std::get<0>(partition)); }
-                //                >(
-                //                        partitions,
-                //                        [&](const auto &partition) constexpr { return product_of_elements<std::get<1>(partition)>(R); }
-                //                );
-
-                auto kronecker_product_term = [&]<auto... i>(std::index_sequence<i...>) constexpr {
+                constexpr auto repeats = repeats_table(kronecker_indices);
+                auto kronecker_product_term = [&]<auto... i>(std::index_sequence<i...>) LAMBDA_ALWAYS_INLINE {
                     return ((
-                            kronecker_delta(std::get<0>(partitions[i])) ?
-                            product_of_elements<std::get<1>(partitions[i])>(R) : 0
+                            force_consteval<kronecker_delta<kronecker_indices[i]>() && (repeats[i] > 0)> ?
+                            product_of_elements<r_indices[i]>(R) * repeats[i] : 0
                     ) + ...);
-                }(std::make_index_sequence<partitions.size()>());
-                if constexpr (kronecker_product_is_nonzero)
-                    result += g3 * kronecker_product_term;
+                }(std::make_index_sequence<kronecker_indices.size()>());
+                result += g3 * kronecker_product_term;
             }
 
             return result;
@@ -210,5 +170,3 @@ namespace symtensor::gravity {
     }
 
 }
-
-#endif //SYMTENSOR_GRAVITY_H

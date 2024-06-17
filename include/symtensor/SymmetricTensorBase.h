@@ -231,18 +231,18 @@ namespace symtensor {
         }
 
         template<typename F>
-        inline static constexpr Implementation LexicographicalNullaryExpression(F function = {}) {
+        ALWAYS_INLINE static constexpr Implementation LexicographicalNullaryExpression(F function = {}) {
             // todo: There may be cases where this provides a performance benefit
             Self tensor;
             if constexpr (requires { function.template operator()<dimensionalIndices(0)>(); }) {
                 // If a function provides a template parameter for compile-time indexing, prefer that
-                [&]<std::size_t... i>(std::index_sequence<i...>) constexpr {
+                [&]<std::size_t... i>(std::index_sequence<i...>) LAMBDA_ALWAYS_INLINE {
                     ((tensor.at<lexicographicalIndices(i)>()
                               = function.template operator()<lexicographicalIndices(i)>()), ...);
                 }(std::make_index_sequence<NumValues>());
             } else {
                 // Otherwise, the function must take the indices as its only argument
-                [&]<std::size_t... i>(std::index_sequence<i...>) constexpr {
+                [&]<std::size_t... i>(std::index_sequence<i...>) LAMBDA_ALWAYS_INLINE {
                     ((tensor.at<lexicographicalIndices(i)>()
                               = function(lexicographicalIndices(i))), ...);
                 }(std::make_index_sequence<NumValues>());
