@@ -692,16 +692,16 @@ namespace symtensor {
             static_assert(NumValues > 0);
 
             // Use a lookup table when the range of options is small enough
-            if constexpr (R < 3)
-                return [&]<std::size_t... i>(std::index_sequence<i...>) {
-                    return as_lookup_table<
-                            decltype([](std::array<I, R> ind) consteval { return symtensor::flatIndex(ind, D); }),
-                            std::array<I, R>,
-                            lexicographicalIndices(i)...
-                    >(indices);
-                }(std::make_index_sequence<NumValues>());
-            else
-                return symtensor::flatIndex(indices, D);
+//            if constexpr (R < 3)
+//                return [&]<std::size_t... i>(std::index_sequence<i...>) {
+//                    return as_lookup_table<
+//                            decltype([](std::array<I, R> ind) consteval { return symtensor::flatIndex(ind, D); }),
+//                            std::array<I, R>,
+//                            lexicographicalIndices(i)...
+//                    >(indices);
+//                }(std::make_index_sequence<NumValues>());
+//            else
+            return symtensor::flatIndex(indices, D);
         }
 
         static inline constexpr std::array<I, R> dimensionalIndices(std::size_t flatIndex) {

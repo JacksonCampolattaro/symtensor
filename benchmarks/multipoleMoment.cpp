@@ -29,12 +29,15 @@ TEST_CASE("benchmark: Gravity derivatives construction", "[Gravity]") {
     CHECK((gravity::D<3>(R) - gravity::derivative<3>(R)).norm() < 1e-7);
     CHECK((gravity::D<4>(R) - gravity::derivative<4>(R)).norm() < 1e-7);
 
-    BENCHMARK("D' Construction") { return gravity::D<1>(R); };
-    BENCHMARK("D' Construction *") { return gravity::derivative<1>(R); };
-    BENCHMARK("D'' Construction") { return gravity::D<2>(R); };
-    BENCHMARK("D'' Construction *") { return gravity::derivative<2>(R); };
-    BENCHMARK("D''' Construction") { return gravity::D<3>(R); };
-    BENCHMARK("D''' Construction *") { return gravity::derivative<3>(R); };
-    BENCHMARK("D'''' Construction") { return gravity::D<4>(R); };
-    BENCHMARK("D'''' Construction *") { return gravity::derivative<4>(R); };
+//    BENCHMARK("D' Construction") { return gravity::D<1>(R); };
+//    BENCHMARK("D' Construction *") { return gravity::derivative<1>(R); };
+//    BENCHMARK("D'' Construction") { return gravity::D<2>(R); };
+//    BENCHMARK("D'' Construction *") { return gravity::derivative<2>(R); };
+//    BENCHMARK("D''' Construction") { return gravity::D<3>(R); };
+//    BENCHMARK("D''' Construction *") { return gravity::derivative<3>(R); };
+//    BENCHMARK("D'''' Construction") { return gravity::D<4>(R); };
+//    BENCHMARK("D'''' Construction *") { return gravity::derivative<4>(R); };
+
+    BENCHMARK("D1-4 Construction") { return gravity::Ds<4>(R); };
+    BENCHMARK("D1-4 Construction (improved)") { return gravity::derivatives<4>(R); };
 }

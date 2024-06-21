@@ -7,6 +7,7 @@
 
 #include <symtensor/SymmetricTensor.h>
 #include <symtensor/Index.h>
+#include <symtensor/concepts.h>
 #include <symtensor/util.h>
 
 namespace symtensor {
@@ -141,7 +142,7 @@ namespace symtensor {
          * @param types The values for each tensor contained in the multipole.
          *   So long as each tensor type has an implicit constructor, initializer-list syntax works.
          */
-        explicit inline constexpr MultipoleBase(const Tensors &...types) : _tuple(types...) {}
+        ALWAYS_INLINE explicit constexpr MultipoleBase(const Tensors &...types) : _tuple(types...) {}
         //explicit inline constexpr MultipoleBase(Tensors &&...types) : _tuple(std::forward<Tensors>(types)...) {}
 
         /**
@@ -153,7 +154,7 @@ namespace symtensor {
          * @param vector base vector
          */
         template<indexable Vector>
-        explicit inline constexpr MultipoleBase(const Vector &vector) {
+        ALWAYS_INLINE explicit constexpr MultipoleBase(const Vector &vector) {
             tensor<1>() = vector;
             [&]<std::size_t... i>(std::index_sequence<i...>) {
                 ((tensor<i + 2>() = TensorType<i + 2>::CartesianPower(vector)), ...);
@@ -180,7 +181,7 @@ namespace symtensor {
          * @param vector base vector
          */
         template<indexable Vector>
-        static inline constexpr Implementation FromVector(const Vector &vector) {
+        ALWAYS_INLINE static constexpr Implementation FromVector(const Vector &vector) {
             // todo: this assumes that all Tensor types have a CartesianPower method
             return [&]<std::size_t... i>(std::index_sequence<i...>) constexpr {
                 return Implementation{std::tuple_element_t<i, TensorTuple>::CartesianPower(vector) ...};
@@ -505,7 +506,8 @@ namespace std {
      * @tparam T multipole type.
      *  must be derived from a specialization of @ref MultipoleBase, enforced by a concept
      */
-    template<symtensor::derived_from_template<symtensor::MultipoleBase> T>
+    template<symtensor::derived_from_template<symtensor::MultipoleBase> T> //
+    requires requires { typename T::TensorTuple; }
     struct tuple_size<T> : tuple_size<typename T::TensorTuple> {
     };
 
@@ -516,7 +518,8 @@ namespace std {
      * @tparam T multipole type.
      *  must be derived from a specialization of @ref MultipoleBase, enforced by a concept
      */
-    template<std::size_t I, symtensor::derived_from_template<symtensor::MultipoleBase> T>
+    template<std::size_t I, symtensor::derived_from_template<symtensor::MultipoleBase> T> //
+    requires requires { typename T::TensorTuple; }
     struct tuple_element<I, T> : tuple_element<I, typename T::TensorTuple> {
     };
 }

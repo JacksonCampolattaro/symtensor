@@ -77,6 +77,14 @@ namespace symtensor::gravity {
         });
     };
 
+    template<std::size_t N, indexable Vector>
+    ALWAYS_INLINE auto derivatives(const Vector &R) {
+        return [&]<auto... i>(std::index_sequence<i...>) LAMBDA_ALWAYS_INLINE {
+//            return Multipole3f<N>(derivative<i + 1>(R) ...);
+            return std::make_tuple(derivative<i + 1>(R) ...);
+        }(std::make_index_sequence<N>());
+    };
+
 
     // todo: this needs to be regularized -- there must be a pattern!
     template<std::size_t Order, indexable Vector>
@@ -84,14 +92,14 @@ namespace symtensor::gravity {
 
         auto r = glm::length(R);
 
-        #if (__cpp_using_enum && !__clang__) || (__clang_major__ > 15)
+#if (__cpp_using_enum && !__clang__) || (__clang_major__ > 15)
         using
         enum SymmetricTensor3f<1>::Index;
-        #else
+#else
         using Index<3>::X;
         using Index<3>::Y;
         using Index<3>::Z;
-        #endif
+#endif
 
         float f1 = -1.0f / pow<2>(r);
         float f2 = 3.0f / pow<3>(r);
@@ -160,13 +168,20 @@ namespace symtensor::gravity {
         }
     }
 
+    template<std::size_t N, indexable Vector>
+    ALWAYS_INLINE auto Ds(const Vector &R) {
+        return [&]<auto... i>(std::index_sequence<i...>) LAMBDA_ALWAYS_INLINE {
+            return std::make_tuple(D<i + 1>(R) ...);
+        }(std::make_index_sequence<N>());
+    };
+
 
     auto derivative4(const glm::vec3 &R) {
-        return derivative<4>(R);
+        return derivatives<4>(R);
     }
 
     auto D4(const glm::vec3 &R) {
-        return D<4>(R);
+        return Ds<4>(R);
     }
 
 }
