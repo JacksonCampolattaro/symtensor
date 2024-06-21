@@ -143,17 +143,17 @@
             </dt>
             <dd>Default constructor.</dd>
             <dt>
-              <span class="m-doc-wrap-bumper"><a href="#a9bde82e7c0ccceef305ba9fdd936838f" class="m-doc">MultipoleBase</a>(</span><span class="m-doc-wrap">const Tensors&amp;... types) <span class="m-label m-flat m-info">explicit</span>  <span class="m-label m-flat m-primary">constexpr</span></span>
+              <span class="m-doc-wrap-bumper">auto <a href="#aa548d196d394030f5315cd0263731afe" class="m-doc">MultipoleBase</a>(</span><span class="m-doc-wrap">const Tensors&amp;... types) -&gt; ALWAYS_INLINE <span class="m-label m-flat m-info">explicit</span>  <span class="m-label m-flat m-primary">constexpr</span></span>
             </dt>
             <dd>Constructor from a sequence of tensors.</dd>
             <dt>
               <div class="m-doc-template">template&lt;indexable Vector&gt;</div>
-              <span class="m-doc-wrap-bumper"><a href="#a3cbc4ec2ec684001e7100266385f67c3" class="m-doc">MultipoleBase</a>(</span><span class="m-doc-wrap">const Vector&amp; vector) <span class="m-label m-flat m-info">explicit</span>  <span class="m-label m-flat m-primary">constexpr</span></span>
+              <span class="m-doc-wrap-bumper">auto <a href="#aa735a8fe501206897b21d5cd9e80cbfc" class="m-doc">MultipoleBase</a>(</span><span class="m-doc-wrap">const Vector&amp; vector) -&gt; ALWAYS_INLINE <span class="m-label m-flat m-info">explicit</span>  <span class="m-label m-flat m-primary">constexpr</span></span>
             </dt>
             <dd>Constructor from a single vector.</dd>
             <dt>
               <div class="m-doc-template">template&lt;indexable Vector&gt;</div>
-              <span class="m-doc-wrap-bumper">static auto <a href="#af8fe287fdb9ef5f44d046317d9eeb086" class="m-doc">FromVector</a>(</span><span class="m-doc-wrap">const Vector&amp; vector) -&gt; Implementation <span class="m-label m-flat m-primary">constexpr</span></span>
+              <span class="m-doc-wrap-bumper">static auto <a href="#a17a244ceccd98127d46e8f52e64d1158" class="m-doc">FromVector</a>(</span><span class="m-doc-wrap">const Vector&amp; vector) -&gt; ALWAYS_INLINE Implementation <span class="m-label m-flat m-primary">constexpr</span></span>
             </dt>
             <dd>Creator method from a single vector.</dd>
           </dl>
@@ -314,12 +314,12 @@
             <p>Default constructor.</p>
 <p>Invokes the default constructor for all contained tensors.</p>
           </div></section>
-          <section class="m-doc-details" id="a9bde82e7c0ccceef305ba9fdd936838f"><div>
+          <section class="m-doc-details" id="aa548d196d394030f5315cd0263731afe"><div>
             <h3>
               <div class="m-doc-template">
                 template&lt;class Implementation, typename ... Tensors&gt;
               </div>
-              <span class="m-doc-wrap-bumper"> symtensor::<wbr />MultipoleBase&lt;Implementation, Tensors&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a9bde82e7c0ccceef305ba9fdd936838f" class="m-doc-self">MultipoleBase</a>(</span><span class="m-doc-wrap">const Tensors&amp;... types) <span class="m-label m-info">explicit</span>  <span class="m-label m-primary">constexpr</span></span></span>
+              <span class="m-doc-wrap-bumper">ALWAYS_INLINE symtensor::<wbr />MultipoleBase&lt;Implementation, Tensors&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#aa548d196d394030f5315cd0263731afe" class="m-doc-self">MultipoleBase</a>(</span><span class="m-doc-wrap">const Tensors&amp;... types) <span class="m-label m-info">explicit</span>  <span class="m-label m-primary">constexpr</span></span></span>
             </h3>
             <p>Constructor from a sequence of tensors.</p>
             <table class="m-table m-fullwidth m-flat">
@@ -334,13 +334,13 @@
               </tbody>
             </table>
           </div></section>
-          <section class="m-doc-details" id="a3cbc4ec2ec684001e7100266385f67c3"><div>
+          <section class="m-doc-details" id="aa735a8fe501206897b21d5cd9e80cbfc"><div>
             <h3>
               <div class="m-doc-template">
                 template&lt;class Implementation, typename ... Tensors&gt;
                 template&lt;indexable Vector&gt;
               </div>
-              <span class="m-doc-wrap-bumper"> symtensor::<wbr />MultipoleBase&lt;Implementation, Tensors&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a3cbc4ec2ec684001e7100266385f67c3" class="m-doc-self">MultipoleBase</a>(</span><span class="m-doc-wrap">const Vector&amp; vector) <span class="m-label m-info">explicit</span>  <span class="m-label m-primary">constexpr</span></span></span>
+              <span class="m-doc-wrap-bumper">ALWAYS_INLINE symtensor::<wbr />MultipoleBase&lt;Implementation, Tensors&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#aa735a8fe501206897b21d5cd9e80cbfc" class="m-doc-self">MultipoleBase</a>(</span><span class="m-doc-wrap">const Vector&amp; vector) <span class="m-label m-info">explicit</span>  <span class="m-label m-primary">constexpr</span></span></span>
             </h3>
             <p>Constructor from a single vector.</p>
             <table class="m-table m-fullwidth m-flat">
@@ -365,13 +365,13 @@
             </table>
 <p>Tensors are produced by repeatedly performing cartesian products with the vector.</p>
           </div></section>
-          <section class="m-doc-details" id="af8fe287fdb9ef5f44d046317d9eeb086"><div>
+          <section class="m-doc-details" id="a17a244ceccd98127d46e8f52e64d1158"><div>
             <h3>
               <div class="m-doc-template">
                 template&lt;class Implementation, typename ... Tensors&gt;
                 template&lt;indexable Vector&gt;
               </div>
-              <span class="m-doc-wrap-bumper">static Implementation symtensor::<wbr />MultipoleBase&lt;Implementation, Tensors&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#af8fe287fdb9ef5f44d046317d9eeb086" class="m-doc-self">FromVector</a>(</span><span class="m-doc-wrap">const Vector&amp; vector) <span class="m-label m-primary">constexpr</span></span></span>
+              <span class="m-doc-wrap-bumper">static ALWAYS_INLINE Implementation symtensor::<wbr />MultipoleBase&lt;Implementation, Tensors&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a17a244ceccd98127d46e8f52e64d1158" class="m-doc-self">FromVector</a>(</span><span class="m-doc-wrap">const Vector&amp; vector) <span class="m-label m-primary">constexpr</span></span></span>
             </h3>
             <p>Creator method from a single vector.</p>
             <table class="m-table m-fullwidth m-flat">
