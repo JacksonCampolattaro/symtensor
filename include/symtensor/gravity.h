@@ -20,11 +20,21 @@ namespace symtensor::gravity {
     template<auto index, std::size_t N, indexable Vector>
     ALWAYS_INLINE auto derivative_at(const Vector &R) {
 
-        auto r = glm::length(R);
-        auto g1 = -1.0f / pow<3>(r);
-        auto g2 = 3.0f / pow<5>(r);
-        auto g3 = -15.0f / pow<7>(r);
-        auto g4 = 105.0f / pow<9>(r);
+        auto r2 = glm::length2(R);
+        auto r = sqrt(r2);
+        auto inv_r2 = 1.0f / r2;
+        auto g1 = -inv_r2 / r;
+        auto g2 = -3.0f * g1 * inv_r2;
+        auto g3 = -5.0f * g2 * inv_r2;
+        auto g4 = -7.0f * g3 * inv_r2;
+        auto g5 = -9.0f * g4 * inv_r2;
+
+//        auto r = glm::length(R);
+//        auto g1 = -1.0f / pow<3>(r);
+//        auto g2 = 3.0f / pow<5>(r);
+//        auto g3 = -15.0f / pow<7>(r);
+//        auto g4 = 105.0f / pow<9>(r);
+//        auto g5 = -945.0f / pow<11>(r);
 
         auto cartesian_product_term = product_of_elements<index>(R);
         if constexpr (N == 1) {
@@ -66,6 +76,9 @@ namespace symtensor::gravity {
             }
 
             return result;
+        } else if constexpr (N == 5) {
+            auto result = g5 * cartesian_product_term;
+            return result;
         }
         return 0.0f;
     }
@@ -92,14 +105,14 @@ namespace symtensor::gravity {
 
         auto r = glm::length(R);
 
-#if (__cpp_using_enum && !__clang__) || (__clang_major__ > 15)
+        #if (__cpp_using_enum && !__clang__) || (__clang_major__ > 15)
         using
         enum SymmetricTensor3f<1>::Index;
-#else
+        #else
         using Index<3>::X;
         using Index<3>::Y;
         using Index<3>::Z;
-#endif
+        #endif
 
         float f1 = -1.0f / pow<2>(r);
         float f2 = 3.0f / pow<3>(r);
@@ -165,6 +178,75 @@ namespace symtensor::gravity {
 
             return A + B + C;
 
+        } else if constexpr (Order == 5) {
+
+
+            SymmetricTensor3f<2> R2 = SymmetricTensor3f<2>::CartesianPower(R);
+            SymmetricTensor3f<3> R3 = SymmetricTensor3f<3>::CartesianPower(R);
+
+            auto A = g5 * SymmetricTensor3f<5>::CartesianPower(R);
+
+            // ~~~
+
+            SymmetricTensor3f<5> B{};
+            B.at<X, X, X, X, X>() += 15 * g3 * R.x;
+            B.at<Y, Y, Y, Y, Y>() += 15 * g3 * R.y;
+            B.at<Z, Z, Z, Z, Z>() += 15 * g3 * R.z;
+
+            B.at<X, X, X, X, Y>() += 3 * g3 * R.y;
+            B.at<X, X, X, X, Z>() += 3 * g3 * R.z;
+            B.at<X, Y, Y, Y, Y>() += 3 * g3 * R.x;
+            B.at<X, Z, Z, Z, Z>() += 3 * g3 * R.x;
+            B.at<Y, Y, Y, Y, Z>() += 3 * g3 * R.z;
+            B.at<Y, Z, Z, Z, Z>() += 3 * g3 * R.y;
+
+            B.at<X, X, X, Y, Y>() += 3 * g3 * R.x;
+            B.at<X, X, X, Z, Z>() += 3 * g3 * R.x;
+            B.at<X, X, Y, Y, Y>() += 3 * g3 * R.y;
+            B.at<X, X, Z, Z, Z>() += 3 * g3 * R.z;
+            B.at<Y, Y, Y, Z, Z>() += 3 * g3 * R.y;
+            B.at<Y, Y, Z, Z, Z>() += 3 * g3 * R.z;
+
+            B.at<X, X, Y, Z, Z>() += g3 * R.y;
+            B.at<X, X, Y, Y, Z>() += g3 * R.z;
+            B.at<X, Y, Y, Z, Z>() += g3 * R.x;
+
+            B.at<X, X, X, Y, Z>() += 0;
+            B.at<X, Y, Y, Y, Z>() += 0;
+            B.at<X, Y, Z, Z, Z>() += 0;
+
+            // ~~~
+
+            SymmetricTensor3f<5> C{};
+            C.at<X, X, X, X, X>() += 10 * g4 * R3.at<X, X, X>();
+            C.at<Y, Y, Y, Y, Y>() += 10 * g4 * R3.at<Y, Y, Y>();
+            C.at<Z, Z, Z, Z, Z>() += 10 * g4 * R3.at<Z, Z, Z>();
+
+            C.at<X, X, X, X, Y>() += 6 * g4 * R3.at<X, X, Y>();
+            C.at<X, X, X, X, Z>() += 6 * g4 * R3.at<X, X, Z>();
+            C.at<X, Y, Y, Y, Y>() += 6 * g4 * R3.at<Y, Y, X>();
+            C.at<X, Z, Z, Z, Z>() += 6 * g4 * R3.at<Z, Z, X>();
+            C.at<Y, Y, Y, Y, Z>() += 6 * g4 * R3.at<Y, Y, Z>();
+            C.at<Y, Z, Z, Z, Z>() += 6 * g4 * R3.at<Z, Z, Y>();
+
+            C.at<X, X, X, Y, Y>() += g4 * R3.at<X, X, X>() + 3 * g4 * R3.at<X, Y, Y>();
+            C.at<X, X, X, Z, Z>() += g4 * R3.at<X, X, X>() + 3 * g4 * R3.at<X, Z, Z>();
+            C.at<X, X, Y, Y, Y>() += g4 * R3.at<Y, Y, Y>() + 3 * g4 * R3.at<Y, X, X>();
+            C.at<X, X, Z, Z, Z>() += g4 * R3.at<Z, Z, Z>() + 3 * g4 * R3.at<Z, X, X>();
+            C.at<Y, Y, Y, Z, Z>() += g4 * R3.at<Y, Y, Y>() + 3 * g4 * R3.at<Y, Z, Z>();
+            C.at<Y, Y, Z, Z, Z>() += g4 * R3.at<Z, Z, Z>() + 3 * g4 * R3.at<Z, Y, Y>();
+
+            C.at<X, X, Y, Z, Z>() += g4 * R3.at<Y, Z, Z>() + g4 * R3.at<X, X, Y>();
+            C.at<X, X, Y, Y, Z>() += g4 * R3.at<Y, Y, Z>() + g4 * R3.at<X, X, Z>();
+            C.at<X, Y, Y, Z, Z>() += g4 * R3.at<X, Z, Z>() + g4 * R3.at<X, Y, Y>();
+
+            C.at<X, X, X, Y, Z>() += 3 * g4 * R3.at<X, Y, Z>();
+            C.at<X, Y, Y, Y, Z>() += 3 * g4 * R3.at<X, Y, Z>();
+            C.at<X, Y, Z, Z, Z>() += 3 * g4 * R3.at<X, Y, Z>();
+
+            // todo: is this right?
+
+            return A + B + C;
         }
     }
 

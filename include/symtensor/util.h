@@ -28,7 +28,11 @@ namespace symtensor {
     template<std::size_t P, typename T>
     inline T pow(T value) {
         if constexpr (P == 0)
-            return T(1);
+            return T{1};
+        else if constexpr (P % 2 == 0)
+            return pow<P/2>(value * value);
+        else if constexpr (P % 3 == 0)
+            return pow<P/3>(value * value * value);
         else
             return value * pow<P - 1>(value);
     }
