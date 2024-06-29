@@ -168,6 +168,13 @@ namespace symtensor {
         }
 
         /**
+         * @brief Constructor from an std::array of scalars.
+         *
+         * @param s an array of scalar values to initialize the tensor.
+         */
+        explicit constexpr SymmetricTensorBase(const std::array<S, NumUniqueValues> &values) : _data{values} {}
+
+        /**
          * @brief (Implicit) constructor from a sequence of values.
          *
          * @param s a sequence of scalar values to initialize the tensor.
@@ -692,15 +699,15 @@ namespace symtensor {
             static_assert(NumValues > 0);
 
             // Use a lookup table when the range of options is small enough
-//            if constexpr (R < 3)
-//                return [&]<std::size_t... i>(std::index_sequence<i...>) {
-//                    return as_lookup_table<
-//                            decltype([](std::array<I, R> ind) consteval { return symtensor::flatIndex(ind, D); }),
-//                            std::array<I, R>,
-//                            lexicographicalIndices(i)...
-//                    >(indices);
-//                }(std::make_index_sequence<NumValues>());
-//            else
+            //            if constexpr (R < 3)
+            //                return [&]<std::size_t... i>(std::index_sequence<i...>) {
+            //                    return as_lookup_table<
+            //                            decltype([](std::array<I, R> ind) consteval { return symtensor::flatIndex(ind, D); }),
+            //                            std::array<I, R>,
+            //                            lexicographicalIndices(i)...
+            //                    >(indices);
+            //                }(std::make_index_sequence<NumValues>());
+            //            else
             return symtensor::flatIndex(indices, D);
         }
 

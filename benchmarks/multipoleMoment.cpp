@@ -5,7 +5,10 @@
 #include <glm/geometric.hpp>
 
 #include <symtensor/Multipole.h>
-#include <symtensor/gravity.h>
+
+#include "symtensor/gravity/direct.h"
+#include "symtensor/gravity/einsum.h"
+#include "symtensor/gravity/tensorlib.h"
 
 using namespace symtensor;
 
@@ -16,31 +19,39 @@ TEST_CASE("benchmark: Multipole moment gravity approximation", "[MultipoleMoment
 TEST_CASE("benchmark: Gravity derivatives construction", "[Gravity]") {
     auto R = glm::vec3{1.0, 2.0, 3.0};
 
+    // Einsum must match direct form
+    CHECK((gravity::direct::derivative<2>(R) - gravity::einsum::derivative<2>(R)).norm() < 1e-7);
+    CHECK((gravity::direct::derivative<3>(R) - gravity::einsum::derivative<3>(R)).norm() < 1e-7);
+    CHECK((gravity::direct::derivative<4>(R) - gravity::einsum::derivative<4>(R)).norm() < 1e-7);
+    // CHECK((gravity::D<5>(R) - gravity::derivative<5>(R)).norm() < 1e-7); // todo: unimplemented
 
-    constexpr std::array<int, 5> input = {1, 2, 2, 3, 1};
-    constexpr auto result = filter<input, [&](auto v) constexpr { return v != 3; }>();
+    // Tensorlib must match direct form
+    CHECK((gravity::direct::derivative<2>(R) - gravity::tensorlib::derivative<2>(R)).norm() < 1e-7);
+    CHECK((gravity::direct::derivative<3>(R) - gravity::tensorlib::derivative<3>(R)).norm() < 1e-7);
+    CHECK((gravity::direct::derivative<4>(R) - gravity::tensorlib::derivative<4>(R)).norm() < 1e-7);
+    CHECK((gravity::direct::derivative<5>(R) - gravity::tensorlib::derivative<5>(R)).norm() < 1e-7);
 
-    // Print the result (for non-constexpr context)
-    for (const auto &value: result) {
-        std::cout << value << std::endl;
-    }
+    BENCHMARK("D' (direct)") { return gravity::direct::derivative<1>(R); };
+    BENCHMARK("D' (einsum)") { return gravity::einsum::derivative<1>(R); };
+    BENCHMARK("D' (tensorlib)") { return gravity::tensorlib::derivative<1>(R); };
+    BENCHMARK("D'' (direct)") { return gravity::direct::derivative<2>(R); };
+    BENCHMARK("D'' (einsum)") { return gravity::einsum::derivative<2>(R); };
+    BENCHMARK("D'' (tensorlib)") { return gravity::tensorlib::derivative<2>(R); };
+    BENCHMARK("D''' (direct)") { return gravity::direct::derivative<3>(R); };
+    BENCHMARK("D''' (einsum)") { return gravity::einsum::derivative<3>(R); };
+    BENCHMARK("D''' (tensorlib)") { return gravity::tensorlib::derivative<3>(R); };
+    BENCHMARK("D'''' (direct)") { return gravity::direct::derivative<4>(R); };
+    BENCHMARK("D'''' (einsum)") { return gravity::einsum::derivative<4>(R); };
+    BENCHMARK("D'''' (tensorlib)") { return gravity::tensorlib::derivative<4>(R); };
 
-    CHECK((gravity::D<2>(R) - gravity::derivative<2>(R)).norm() < 1e-7);
-    CHECK((gravity::D<3>(R) - gravity::derivative<3>(R)).norm() < 1e-7);
-    CHECK((gravity::D<4>(R) - gravity::derivative<4>(R)).norm() < 1e-7);
-    CHECK((gravity::D<5>(R) - gravity::derivative<5>(R)).norm() < 1e-7); // todo
+    BENCHMARK("D' - D'''' (direct)") { return gravity::direct::derivatives<4>(R); };
+    BENCHMARK("D' - D'''' (einsum)") { return gravity::einsum::derivatives<4>(R); };
+    BENCHMARK("D' - D'''' (tensorlib)") { return gravity::tensorlib::derivatives<4>(R); };
 
-//    BENCHMARK("D' Construction") { return gravity::D<1>(R); };
-//    BENCHMARK("D' Construction (improved)") { return gravity::derivative<1>(R); };
-//    BENCHMARK("D'' Construction") { return gravity::D<2>(R); };
-//    BENCHMARK("D'' Construction (improved)") { return gravity::derivative<2>(R); };
-//    BENCHMARK("D''' Construction") { return gravity::D<3>(R); };
-//    BENCHMARK("D''' Construction (improved)") { return gravity::derivative<3>(R); };
-//    BENCHMARK("D'''' Construction") { return gravity::D<4>(R); };
-//    BENCHMARK("D'''' Construction (improved)") { return gravity::derivative<4>(R); };
-//    BENCHMARK("D''''' Construction") { return gravity::D<5>(R); };
-//    BENCHMARK("D''''' Construction (improved)") { return gravity::derivative<5>(R); }; // todo
+    BENCHMARK("D' - D''''' (direct)") { return gravity::direct::derivatives<5>(R); };
+    //BENCHMARK("D' - D''''' (einsum)") { return gravity::einsum::derivatives<5>(R); }; // todo: unimplemented
+    BENCHMARK("D' - D''''' (tensorlib)") { return gravity::tensorlib::derivatives<5>(R); };
 
-    BENCHMARK("D1-4 Construction") { return gravity::Ds<4>(R); };
-    BENCHMARK("D1-4 Construction (improved)") { return gravity::derivatives<4>(R); };
+    //    BENCHMARK("D1-5 Construction (direct)") { return gravity::direct::derivatives<5>(R); };
+    //    BENCHMARK("D1-5 Construction (tensorlib)") { return gravity::tensorlib::derivatives<5>(R); };
 }

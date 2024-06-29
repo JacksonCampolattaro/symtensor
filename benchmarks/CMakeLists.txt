@@ -27,3 +27,8 @@ target_link_libraries(benchmarks PRIVATE
         Catch2::Catch2WithMain
         symtensor::symtensor
 )
+target_compile_options(
+        benchmarks PRIVATE
+        $<$<CXX_COMPILER_ID:Clang>:-fassociative-math>
+        $<$<CXX_COMPILER_ID:AppleClang>:-fassociative-math>
+)
