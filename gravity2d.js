@@ -1,134 +1,83 @@
-Highcharts.chart('container', {
-    chart: {
-        height: '100%',
-        events: {
-            click: function (e) {
-                // const x = Math.round(e.xAxis[0].value),
-                //     y = Math.round(e.yAxis[0].value);
-                this.series[1].addPoint([e.xAxis[0].value, e.yAxis[0].value]);
+// Function to calculate heatmap values
 
-                // Update heatmap values
-                updateHeatmap(this);
-            }
-        },
-    },
+// Initial scatter data
+let points = [
+    [25, 25],
+    [30, 30],
+];
+const resolution = 256
+const heatmapZ = Array.from(Array(resolution), () => new Array(resolution));
+
+// Plotly data and layout
+const data = [
+    {
+        z: heatmapZ,
+        type: 'heatmap',
+        zsmooth: 'best',
+        // type: 'contour',
+        // line:{
+        //     width:0
+        // },
+        colorscale: 'Hot',
+        showscale: false,
+        hovertemplate: '(%{x}, %{y})<extra>%{z}</extra>'
+    }
+];
+
+const layout = {
     title: {
         text: 'Gravitational Field Surrounding Several Points',
-        align: 'left'
+        x: 0.05
     },
-    subtitle: {
-        text: 'Click the plot area to add a point. Click a point to remove it.',
-        align: 'left'
-    },
-    accessibility: {
-        announceNewData: {
-            enabled: true
-        }
-    },
-    xAxis: {
-        min: 0,
-        max: 100,
-        gridLineWidth: 1,
+    xaxis: {
+        range: [0, resolution],
+        showgrid: false,
+        zeroline: false,
         visible: false,
     },
-    yAxis: {
-        min: 0,
-        max: 100,
-        gridLineWidth: 1,
+    yaxis: {
+        range: [0, resolution],
+        showgrid: false,
+        zeroline: false,
         visible: false,
     },
-    legend: {
-        enabled: false
-    },
-    colorAxis: {
-        stops: [
-            [0, '#000004'],
-            [0.1, '#140B3A'],
-            [0.2, '#3B0F70'],
-            [0.3, '#641A80'],
-            [0.4, '#8C2981'],
-            [0.5, '#B63679'],
-            [0.6, '#E65163'],
-            [0.7, '#FB8761'],
-            [0.8, '#FEC287'],
-            [0.9, '#FEEE9E'],
-            [1, '#FCFDBF']
-        ],
-        min: 0,
-        max: 1,
-    },
-    plotOptions: {
-        series: {
-            stickyTracking: false,
-            point: {
-                events: {
-                    // Remove points on click
-                    click: function () {
-                        if (this.series.data.length > 1) {
-                            this.remove();
-                            updateHeatmap(Highcharts.charts[0]);
-                        }
-                    }
-                }
-            }
-        }
-    },
-    series: [
-        {
-            name: "field",
-            type: "heatmap",
-            data: [],
-            enableMouseTracking: false,
-            backgroundColor: '#000000',
-            states: {
-                inactive: {
-                    enabled: false,
-                    opacity: 1,
-                }
-            }
-        },
-        {
-            name: "sources",
-            type: "scatter",
-            data: [[20, 20], [25, 25]],
-            marker: {
-                radius: 8
-            },
-        },
-    ]
+    showlegend: false,
+    margin: {t: 50, l: 50, r: 50, b: 50}
+};
+
+Plotly.newPlot('container', data, layout);
+
+// Click event handler
+document.getElementById('container').on('plotly_click', function (event) {
+    const x = Math.round(event.points[0].x);
+    const y = Math.round(event.points[0].y);
+    points.push([x, y]);
+    updateHeatmap();
 });
 
-function updateHeatmap(chart) {
-    const heatmapSeries = chart.series[0];
-    const scatterSeries = chart.series[1];
-    const scatterData = scatterSeries.data.map(point => [point.x, point.y]);
-    const gridSize = 100;
-
-
-    const calculateValue = (x, y) => {
-        return scatterData.reduce((sum, [sx, sy]) => {
+function updateHeatmap() {
+    const gravitationalPotential = (x, y) => {
+        return points.reduce((sum, [sx, sy]) => {
             const dx = x - sx;
             const dy = y - sy;
             const distanceSquared = dx * dx + dy * dy;
-            return sum + (distanceSquared > 0 ? 1 / distanceSquared : 0);
+            return sum + 1 / (distanceSquared + Number.EPSILON);
         }, 0);
     };
 
-
-
-    // Calculate values and find max value for normalization
-    const heatmapData = [];
-    for (let x = 0; x < gridSize; x++) {
-        for (let y = 0; y < gridSize; y++) {
-            const value = calculateValue(x, y);
-            heatmapData.push([x, y, value]);
+    console.log("s")
+    for (let x = 0; x < resolution; x++) {
+        for (let y = 0; y < resolution; y++) {
+            heatmapZ[y][x] = Math.min(gravitationalPotential(x, y), 1.0);
         }
     }
+    console.log("e")
 
-
-    heatmapSeries.setData(heatmapData); // Ensure proper redraw
+    Plotly.restyle('container', {
+        z: [heatmapZ],
+    });
 }
 
-// Initial update of the heatmap
-const chart = Highcharts.charts[0];
-updateHeatmap(chart);
+window.onload = function () {
+    updateHeatmap()
+};
