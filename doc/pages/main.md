@@ -19,4 +19,4 @@ There are a handful of projects which aim to solve the same problems as this one
 
 The goal of this project is to produce a library which combines the modern sensibilities of _Tensor_ with the performance of _GADGET-4_'s library and the flexibility of _fmmgen_.
 
-Eventually, I intend to incorporate symtensor into a larger _n_-body solver built from the ground up. To this end, [Christoph Peters](https://momentsingraphics.de/About.html) has been a big help by generating derivatives of the Newton's gravity equation up to arbitrarily high orders.
+Eventually, I intend to incorporate symtensor into a larger _n_-body solver built from the ground up. To this end, [Christoph Peters](https://momentsingraphics.de/About.html) has been a big help by generating derivatives of Newton's gravity equation up to arbitrarily high orders.

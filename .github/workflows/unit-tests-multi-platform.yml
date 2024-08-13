@@ -73,6 +73,7 @@ jobs:
           -DCMAKE_C_COMPILER=${{ matrix.c_compiler }}
           -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
           -DSYMTENSOR_BUILD_DOCUMENTATION=OFF
+          -DSYMTENSOR_BUILD_EXAMPLES=OFF
           -DSYMTENSOR_BUILD_BENCHMARKS=OFF
           -S ${{ github.workspace }}
 

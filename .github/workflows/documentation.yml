@@ -35,6 +35,7 @@ jobs:
           -DCMAKE_CXX_COMPILER=g++
           -DSYMTENSOR_BUILD_DOCUMENTATION=ON
           -DSYMTENSOR_BUILD_BENCHMARKS=OFF
+          -DSYMTENSOR_BUILD_EXAMPLES=OFF
           -DSYMTENSOR_BUILD_TESTS=OFF
           -S ${{ github.workspace }}
 
