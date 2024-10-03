@@ -22,6 +22,7 @@ add_executable(
         symmetricTensor.cpp
         multipole.cpp
         multipoleMoment.cpp
+        gravity.cpp
 )
 target_link_libraries(benchmarks PRIVATE
         Catch2::Catch2WithMain

@@ -12,10 +12,6 @@
 
 using namespace symtensor;
 
-TEST_CASE("benchmark: Multipole moment gravity approximation", "[MultipoleMoment]") {
-    // todo
-}
-
 TEST_CASE("benchmark: Gravity derivatives construction", "[Gravity]") {
     auto R = glm::vec3{1.0, 2.0, 3.0};
 

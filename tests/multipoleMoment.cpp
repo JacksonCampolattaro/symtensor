@@ -285,7 +285,7 @@ TEST_CASE("Higher order approximations should be more accurate", "[MultipoleMome
         ) / totalMass;
     };
 
-    SECTION("Center of Mass vs Quadrupole") { compareAccuracy(computeCenterOfMass, computeQuadrupole); }//
-    SECTION("Quadrupole vs Octupole") { compareAccuracy(computeQuadrupole, computeOctupole); }//
+    SECTION("Center of Mass vs Quadrupole") { compareAccuracy(computeCenterOfMass, computeQuadrupole); };
+    SECTION("Quadrupole vs Octupole") { compareAccuracy(computeQuadrupole, computeOctupole); };
 }
 
