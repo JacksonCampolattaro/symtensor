@@ -55,20 +55,21 @@ document.getElementById('container').on('plotly_click', function (event) {
     updateHeatmap();
 });
 
+function gravitationalPotential(x, y, points) {
+    return points.reduce((sum, [sx, sy]) => {
+        const dx = x - sx;
+        const dy = y - sy;
+        const distanceSquared = dx * dx + dy * dy;
+        return sum + 1 / (distanceSquared + Number.EPSILON);
+    }, 0);
+}
+
 function updateHeatmap() {
-    const gravitationalPotential = (x, y) => {
-        return points.reduce((sum, [sx, sy]) => {
-            const dx = x - sx;
-            const dy = y - sy;
-            const distanceSquared = dx * dx + dy * dy;
-            return sum + 1 / (distanceSquared + Number.EPSILON);
-        }, 0);
-    };
 
     console.log("s")
     for (let x = 0; x < resolution; x++) {
         for (let y = 0; y < resolution; y++) {
-            heatmapZ[y][x] = Math.min(gravitationalPotential(x, y), 1.0);
+            heatmapZ[y][x] = Math.min(gravitationalPotential(x, y, points), 1.0);
         }
     }
     console.log("e")

@@ -193,12 +193,12 @@
             <dd>Produces a type which modifies the rank of a symmetric tensor.</dd>
             <dt>
               <div class="m-doc-template">template&lt;class ST&gt;</div>
-              using <a href="#a33bccc62448a25eabe93f15595800cb7" class="m-doc">NextHigherRank</a> = <a href="namespacesymtensor.html#a68e34bb9b75d60c4c11a5931046deb31" class="m-doc">ReplaceRank</a>&lt;ST, ST::Rank+1&gt;
+              using <a href="#a33bccc62448a25eabe93f15595800cb7" class="m-doc">NextHigherRank</a> = <a href="#a68e34bb9b75d60c4c11a5931046deb31" class="m-doc">ReplaceRank</a>&lt;ST, ST::Rank+1&gt;
             </dt>
             <dd>Given a symmetric tensor type, finds the symmetric tensor of the next higher rank.</dd>
             <dt>
               <div class="m-doc-template">template&lt;class ST&gt;</div>
-              using <a href="#a1a832fa82578a917096b65c1bdf27a3a" class="m-doc">NextLowerRank</a> = <a href="namespacesymtensor.html#a68e34bb9b75d60c4c11a5931046deb31" class="m-doc">ReplaceRank</a>&lt;ST, ST::Rank - 1&gt;
+              using <a href="#a1a832fa82578a917096b65c1bdf27a3a" class="m-doc">NextLowerRank</a> = <a href="#a68e34bb9b75d60c4c11a5931046deb31" class="m-doc">ReplaceRank</a>&lt;ST, ST::Rank - 1&gt;
             </dt>
             <dd>Given a symmetric tensor type, finds the symmetric tensor of the next lower rank.</dd>
           </dl>
@@ -320,7 +320,7 @@
                 </tr>
                 <tr>
                   <td>PrefixTensors</td>
-                  <td>at least one low-order tensor which will be used to define higher order tensors. The last tensor of PrefixTensors is used to produce higher order tensors through repeated use of <a href="namespacesymtensor.html#a33bccc62448a25eabe93f15595800cb7" class="m-doc">NextHigherRank</a>.</td>
+                  <td>at least one low-order tensor which will be used to define higher order tensors. The last tensor of PrefixTensors is used to produce higher order tensors through repeated use of <a href="#a33bccc62448a25eabe93f15595800cb7" class="m-doc">NextHigherRank</a>.</td>
                 </tr>
               </tbody>
             </table>
@@ -423,7 +423,7 @@
               <div class="m-doc-template">
                 template&lt;class ST&gt;
               </div>
-              using symtensor::<wbr /><a href="#a33bccc62448a25eabe93f15595800cb7" class="m-doc-self">NextHigherRank</a> = <a href="namespacesymtensor.html#a68e34bb9b75d60c4c11a5931046deb31" class="m-doc">ReplaceRank</a>&lt;ST, ST::Rank+1&gt;
+              using symtensor::<wbr /><a href="#a33bccc62448a25eabe93f15595800cb7" class="m-doc-self">NextHigherRank</a> = <a href="#a68e34bb9b75d60c4c11a5931046deb31" class="m-doc">ReplaceRank</a>&lt;ST, ST::Rank+1&gt;
             </h3>
             <p>Given a symmetric tensor type, finds the symmetric tensor of the next higher rank.</p>
             <table class="m-table m-fullwidth m-flat">
@@ -445,7 +445,7 @@
               <div class="m-doc-template">
                 template&lt;class ST&gt;
               </div>
-              using symtensor::<wbr /><a href="#a1a832fa82578a917096b65c1bdf27a3a" class="m-doc-self">NextLowerRank</a> = <a href="namespacesymtensor.html#a68e34bb9b75d60c4c11a5931046deb31" class="m-doc">ReplaceRank</a>&lt;ST, ST::Rank - 1&gt;
+              using symtensor::<wbr /><a href="#a1a832fa82578a917096b65c1bdf27a3a" class="m-doc-self">NextLowerRank</a> = <a href="#a68e34bb9b75d60c4c11a5931046deb31" class="m-doc">ReplaceRank</a>&lt;ST, ST::Rank - 1&gt;
             </h3>
             <p>Given a symmetric tensor type, finds the symmetric tensor of the next lower rank.</p>
             <table class="m-table m-fullwidth m-flat">
@@ -566,7 +566,7 @@ $ D^R $
               <tbody>
                 <tr>
                   <td>flatIndex</td>
-                  <td>1-dimensional index, in the range [0, N)<br />where N can be found using <a href="namespacesymtensor.html#a4be9cfcf5e1293d38436e4c3a26be795" class="m-doc">numUniqueValuesInSymmetricTensor</a></td>
+                  <td>1-dimensional index, in the range [0, N)<br />where N can be found using <a href="#a4be9cfcf5e1293d38436e4c3a26be795" class="m-doc">numUniqueValuesInSymmetricTensor</a></td>
                 </tr>
                 <tr>
                   <td>D</td>
@@ -646,7 +646,7 @@ $ 3 \times 3 \times 3 $
                 </tr>
               </tfoot>
             </table>
-<p>First puts the index in &quot;canonical&quot; form, where indices are sorted as follows:</p><div class="m-text-center">{X, X, Y} or {X, Y, X} or {Y, X, X} --&gt; {X, X, Y}</div><p>Next, converts the indices to a flat index using the reverse process of <a href="namespacesymtensor.html#a68ad6ef618ea44aacdf5648cde9f8d62" class="m-doc">dimensionalIndices()</a></p><div class="m-text-center">X, X, X --&gt; 0<br />X, X, Y --&gt; 1<br />X, X, Z --&gt; 2<br />X, Y, Y --&gt; 3<br />X, Y, Z --&gt; 4<br />X, Z, Z --&gt; 5<br />Y, Y, Y --&gt; 6<br />Y, Y, Z --&gt; 7<br />Y, Z, Z --&gt; 8<br />Z, Z, Z --&gt; 9<br /></div>
+<p>First puts the index in &quot;canonical&quot; form, where indices are sorted as follows:</p><div class="m-text-center">{X, X, Y} or {X, Y, X} or {Y, X, X} --&gt; {X, X, Y}</div><p>Next, converts the indices to a flat index using the reverse process of <a href="#a68ad6ef618ea44aacdf5648cde9f8d62" class="m-doc">dimensionalIndices()</a></p><div class="m-text-center">X, X, X --&gt; 0<br />X, X, Y --&gt; 1<br />X, X, Z --&gt; 2<br />X, Y, Y --&gt; 3<br />X, Y, Z --&gt; 4<br />X, Z, Z --&gt; 5<br />Y, Y, Y --&gt; 6<br />Y, Y, Z --&gt; 7<br />Y, Z, Z --&gt; 8<br />Z, Z, Z --&gt; 9<br /></div>
           </div></section>
         </section>
       </div>
